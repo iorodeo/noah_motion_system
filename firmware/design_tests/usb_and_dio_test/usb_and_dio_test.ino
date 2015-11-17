@@ -6,7 +6,7 @@ const int NumDataPts = 5;
 const int NumberOfDio = 12;
 const int DioBegin = 2;
 const int DioEnd = DioBegin + NumberOfDio;
-const int DioTimerPeriod = 5;
+const int DioTimerPeriod = 4;
 
 const bool UseUSBTimer = false;
 const int USBTimerPeriod = 5000;
