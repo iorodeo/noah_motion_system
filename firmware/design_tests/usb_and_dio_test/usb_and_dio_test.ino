@@ -6,11 +6,18 @@ const int NumDataPts = 5;
 const int NumberOfDio = 12;
 const int DioBegin = 2;
 const int DioEnd = DioBegin + NumberOfDio;
+const int DioTimerPeriod = 5;
+
+const bool UseUSBTimer = false;
+const int USBTimerPeriod = 5000;
+unsigned long lastUSBTime = 0;
+bool usbSendFlag = false;
 
 IntervalTimer dioTimer;
+IntervalTimer usbTimer;
 
 
-void timerCallback()
+void dioTimerCallback()
 {
     static bool state = false;
 
@@ -31,6 +38,12 @@ void timerCallback()
     }
 }
 
+
+void usbTimerCallback()
+{
+    usbSendFlag = true;
+}
+
 void setup()
 {
     Serial.begin(BaudRate); 
@@ -41,7 +54,13 @@ void setup()
         digitalWrite(i,LOW);
     }
     dioTimer.priority(1);
-    dioTimer.begin(timerCallback, 5);
+    dioTimer.begin(dioTimerCallback, DioTimerPeriod);
+
+    if (UseUSBTimer)
+    {
+        usbTimer.priority(2);
+        usbTimer.begin(usbTimerCallback, USBTimerPeriod);
+    }
 }
 
 
@@ -69,7 +88,14 @@ void loop()
                 break;
 
             case 't':
-                Serial << time << endl;
+                if (UseUSBTimer)
+                {
+                    lastUSBTime = time;
+                }
+                else
+                {
+                    Serial << time << endl;
+                }
                 break;
 
             default:
@@ -77,4 +103,11 @@ void loop()
                 
         }
     }
+
+    if (usbSendFlag)
+    {
+        usbSendFlag = false;
+        Serial << micros() << " " << lastUSBTime << endl;
+    }
+
 }

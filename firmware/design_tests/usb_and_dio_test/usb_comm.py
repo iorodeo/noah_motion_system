@@ -27,8 +27,34 @@ class USBComm(serial.Serial):
         rsp = int(rsp)
         return rsp
 
-    def hello(self):
-        print('hello')
+
+    def continuousReceive(self,num):
+
+        # Flushout old data
+        while (self.inWaiting() > 0):
+            self.readline()
+            
+        cnt = 0
+        self.ctlTimeList = []
+        self.usbTimeList = []
+        while cnt < num: 
+            rsp = self.readline()
+            self.write('t\n')
+            rsp = rsp.strip()
+            rsp = rsp.split(" ")
+            haveData = False
+            cnt += 1
+            try:
+                rsp = [int(x) for x in rsp]
+                t0 = rsp[0]
+                t1 = rsp[1]
+                haveData = True 
+            except:
+                continue
+            self.ctlTimeList.append(t0)
+            self.usbTimeList.append(t1)
+            print(cnt,t0,t1)
+        return self.ctlTimeList, self.usbTimeList
 
 
 # -----------------------------------------------------------------------------
@@ -42,7 +68,7 @@ if __name__ == '__main__':
 
     dev = USBComm(port)
 
-    for i in range(10):
+    for i in range(100):
         d = dev.getData()
         t = dev.getTime()
         print(i,d,t)

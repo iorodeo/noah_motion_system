@@ -59,7 +59,9 @@ class USBTimerTest(QtGui.QMainWindow, Ui_MainWindow):
 
             plt.clf()
             fig = plt.figure(1)
-            numBin = int(max([0.01*dt.shape[0],20]))
+            numBin = int(0.01*dt.shape[0])
+            print('numBin:            ', numBin)
+            numBin = max([numBin,20]) 
             print('numBin:            ', numBin)
             plt.hist(dt,numBin)
             plt.xlabel('dt (sec)')
@@ -82,11 +84,11 @@ class USBTimerTest(QtGui.QMainWindow, Ui_MainWindow):
             self.startStopPushButton.setText('Start');
 
     def onTimer(self):
-        #d = self.dev.getData()
         t = self.dev.getTime()
         self.timeList.append(t)
         self.count += 1
         self.outfile.write('{0} {1}\n'.format(self.count,t))
+        self.dev.getTime()
         print(self.count, t)
 
 
