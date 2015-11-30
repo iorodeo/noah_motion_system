@@ -14,7 +14,7 @@ class USBTimerTest(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self,port, parent=None):
         super(USBTimerTest,self).__init__(parent)
         self.setupUi(self)
-        self.freq = 100.0
+        self.freq = 50.0
         self.running = False
 
         self.startStopPushButton.clicked.connect(self.startStopClicked_Callback)
