@@ -35,9 +35,11 @@ const double pgain = 0.075;
 const double fgain = 1.0;
 
 const double dt = 0.005;
-const double mass = 5.0;
+const double mass = 10.0;
 const double damping = 3.0;
-const double force_const = 1000.0;
+const double springk = 0.0;
+const double spring0 = 0.0;
+const double force_const = 5000.0;
 
 
 bool quit_flag = false;
@@ -72,7 +74,7 @@ int main(int argc, char *argv[])
     CmdMsg cmd_msg;
     DevMsg dev_msg;
     Joystick joystick(0);
-    DynamicModel model(mass, damping);
+    DynamicModel model(mass, damping, springk, spring0);
     model.initialize(0.0,0.0);
 
     // Ensure that it was found and that we can use it
@@ -143,10 +145,11 @@ int main(int argc, char *argv[])
             cmd_msg.velocity[0] = velocity;
             rval = dev.sendData(&cmd_msg);
 
-            std::cout << std::fixed << std::showpoint << std::setprecision(5);
             int wint = 7;
             int wdbl = 15;
+            std::cout << std::fixed << std::showpoint << std::setprecision(5);
             std::cout  << t; 
+            std::cout << std::setw(wdbl) << force;
             std::cout << std::setw(wdbl) << velocity; 
             std::cout << std::setw(wdbl) << model.velocity();
             std::cout << std::setw(wint) << pos_curr; 

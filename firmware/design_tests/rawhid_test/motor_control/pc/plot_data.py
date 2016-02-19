@@ -20,8 +20,17 @@ data = scipy.loadtxt('data.txt')
 t = data[:,0]
 xc = data[:,1]
 xn = data[:,2]
+er = data[:,3]
 
-plt.plot(t,xn,'r')
+plt.subplot(211)
 plt.plot(t,xc,'b')
+plt.plot(t,xn,'r')
+plt.ylabel('position (steps)')
+plt.title('trajectory outscan - demo')
 plt.grid('on')
+plt.subplot(212)
+plt.plot(t,er,'b')
+plt.grid('on')
+plt.ylabel('tracking error (steps)')
+plt.xlabel('t (sec)')
 plt.show()

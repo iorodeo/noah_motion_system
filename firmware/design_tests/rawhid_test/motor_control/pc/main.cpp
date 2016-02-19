@@ -17,14 +17,15 @@ limitations under the License.
 #include <iostream>
 #include <cmath>
 #include <csignal>
+#include <iomanip>
 #include "rawhid_device.hpp"
 
 const int NumMotor = 8;
 const int CmdIdSetVelocity = 1;
 const double Amplitude = 1000.0;
-const double Period = 3.0;
+const double Period = 8.0;
 const double StepSize = 0.005;
-const double pgain = 0.075;
+const double pgain = 0.1;
 const double fgain = 1.0;
 
 
@@ -86,6 +87,7 @@ int main(int argc, char *argv[])
 
     uint64_t cnt = 0;
     double t = 0.0;
+    int32_t pos_offset = 0;
     while (!quit_flag)
     {
         // Recive data
@@ -101,27 +103,32 @@ int main(int argc, char *argv[])
             uint32_t index = uint32_t(cnt % traj.size());
             int32_t pos_curr = dev_msg.position[0];
             int32_t pos_next = int32_t(traj[index].pos);
-            int32_t error = pos_next - pos_curr;
-            float velocity = (pgain/StepSize)*float(error) + fgain*traj[index].vel; 
+            if (cnt == 0)
+            {
+                pos_offset = pos_next -  pos_curr;
+            }
+            int32_t pos_error = pos_next - pos_curr - pos_offset;
+            float velocity = (pgain/StepSize)*float(pos_error) + fgain*traj[index].vel; 
 
             cmd_msg.id = CmdIdSetVelocity;
             cmd_msg.velocity[0] = velocity;
             rval = dev.sendData(&cmd_msg);
 
-            //std::cout << "t        " << t << std::endl;
-            //std::cout << "dt (us)  " << dt << std::endl;
-            //std::cout << "pos_curr " << pos_curr << std::endl;
-            //std::cout << "pos_next " << pos_next << std::endl;
-            //std::cout << "error    " << error << std::endl;
-            //std::cout << "velocity " << velocity << std::endl;
-            std::cout << t << " " << pos_curr << " " << pos_next << " " << error << " " << velocity << std::endl;
+            int wint = 7;
+            int wdbl = 15;
+            std::cout << std::fixed << std::showpoint << std::setprecision(5);
+            std::cout << t; 
+            std::cout << std::setw(wint) << (pos_curr+pos_offset); 
+            std::cout << std::setw(wint) << pos_next; 
+            std::cout << std::setw(wint) << pos_error; 
+            std::cout << std::endl;
 
             cnt++;
             t += StepSize;
         }
     }
 
-    for (int i=0; i<2; i++)
+    for (int i=0; i<4; i++)
     {
         rval = dev.recvData(&dev_msg);
         cmd_msg.id = CmdIdSetVelocity;

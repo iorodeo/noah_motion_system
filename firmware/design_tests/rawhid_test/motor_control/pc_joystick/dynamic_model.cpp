@@ -16,10 +16,12 @@ limitations under the License.
 #include "dynamic_model.hpp"
 
 
-DynamicModel::DynamicModel(double mass, double damping)
+DynamicModel::DynamicModel(double mass, double damping, double springk, double spring0)
 {
     mass_ = mass;
     damping_ = damping;
+    springk_ = springk;
+    spring0_ = spring0;
     initialize();
 }
 
@@ -52,7 +54,7 @@ double DynamicModel::velocity()
 
 void DynamicModel::update(double force, double dt)
 {
-    double newVelocity = velocity_ + (dt/mass_)*(force - damping_*velocity_);
+    double newVelocity = velocity_ + (dt/mass_)*(force - damping_*velocity_ - springk_*(position_ - spring0_));
     double newPosition = position_ + dt*velocity_;
     position_ = newPosition;
     velocity_ = newVelocity;
