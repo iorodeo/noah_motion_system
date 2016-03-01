@@ -31,7 +31,7 @@ const double fgain = 1.0;
 
 bool quit_flag = false;
 
-struct CmdMsg
+struct VelMsg
 {
     uint16_t id;
     float velocity[NumMotor];
@@ -64,12 +64,12 @@ int main(int argc, char *argv[])
     std::vector<TrajData> traj = get_cosine_traj(Amplitude,Period,StepSize);
     bool rval;
 
-    CmdMsg cmd_msg;
+    VelMsg vel_msg;
     DevMsg dev_msg;
 
     for (int j=0; j<NumMotor;j++)
     {
-        cmd_msg.velocity[j] = 0;
+        vel_msg.velocity[j] = 0;
     }
 
     std::signal(SIGINT,sig_int_handler);
@@ -110,9 +110,9 @@ int main(int argc, char *argv[])
             int32_t pos_error = pos_next - pos_curr - pos_offset;
             float velocity = (pgain/StepSize)*float(pos_error) + fgain*traj[index].vel; 
 
-            cmd_msg.id = CmdIdSetVelocity;
-            cmd_msg.velocity[0] = velocity;
-            rval = dev.sendData(&cmd_msg);
+            vel_msg.id = CmdIdSetVelocity;
+            vel_msg.velocity[0] = velocity;
+            rval = dev.sendData(&vel_msg);
 
             int wint = 7;
             int wdbl = 15;
@@ -131,9 +131,9 @@ int main(int argc, char *argv[])
     for (int i=0; i<4; i++)
     {
         rval = dev.recvData(&dev_msg);
-        cmd_msg.id = CmdIdSetVelocity;
-        cmd_msg.velocity[0] = 0;
-        rval = dev.sendData(&cmd_msg);
+        vel_msg.id = CmdIdSetVelocity;
+        vel_msg.velocity[0] = 0;
+        rval = dev.sendData(&vel_msg);
     }
 
     dev.close();
