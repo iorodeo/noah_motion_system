@@ -10,6 +10,6 @@ struct TrajData
 };
 
 std::vector<TrajData> get_cosine_traj(double dt);
-
+std::vector<TrajData> get_multicosine_traj(double dt);
 
 #endif
