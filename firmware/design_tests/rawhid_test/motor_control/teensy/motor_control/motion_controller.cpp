@@ -10,7 +10,7 @@ void timer_callback()
     static uint32_t cnt = 0;
     motionController.stepper_update();
 
-    if (cnt%250==0)
+    if (cnt%constants::VeloUpdateCnt==0)
     {
         motionController.velo_update_flag_ = true;
     }

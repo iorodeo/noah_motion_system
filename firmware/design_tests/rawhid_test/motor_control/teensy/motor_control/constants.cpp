@@ -2,11 +2,9 @@
 
 namespace constants
 {
-
     const int MsgSize = 64;
     const int CmdModeMsgTimeout = 50;
     const int VelModeMsgTimeout = 50;
-    //const unsigned long TimerPeriod = 5000;
     const unsigned long TimerPeriod = 40ul;
     const unsigned long VeloUpdateCnt = 5000ul/TimerPeriod;
 
