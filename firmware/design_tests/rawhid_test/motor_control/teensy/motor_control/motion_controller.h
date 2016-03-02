@@ -11,6 +11,7 @@ class MotionController
         MotionController();
         void initialize();
         void update();
+        void update_display();
 
     protected:
 
@@ -28,6 +29,7 @@ class MotionController
         void cmd_mode_update();
         void vel_mode_update();
         void velo_timer_callback();
+
 };
 
 #endif

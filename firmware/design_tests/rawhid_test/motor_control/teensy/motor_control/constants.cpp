@@ -8,7 +8,12 @@ namespace constants
     const int VelModeMsgTimeout = 50;
     const unsigned long TimerPeriod = 5000;
 
-    const MotorPin MotorPinArray[NumMotor] = {{2,3},{4,5},{6,7},{8,9},{10,11},{12,13}};
+    const MotorPin MotorPinArray[NumMotor] = {{6,7},{8,9},{10,11},{12,13},{14,15},{16,17}};
     const float MaxMotorSpeed = 50000.0;
+
+    const int DisplayDC = 5;
+    const int DisplayCS = 3;
+    const int DisplayReset = 4;
+    const SPISettings DisplaySPISettings(4000000,MSBFIRST,SPI_MODE0);
 
 } // namespace constants

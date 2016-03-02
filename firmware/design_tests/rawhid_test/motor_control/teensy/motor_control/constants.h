@@ -1,6 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include <Arduino.h>
+#include <SPI.h>
 #include "motor_pin.h"
 
 namespace constants
@@ -37,6 +38,11 @@ namespace constants
     extern const unsigned long TimerPeriod;
     extern const MotorPin MotorPinArray[NumMotor];
     extern const float MaxMotorSpeed;
+
+    extern const int DisplayDC;
+    extern const int DisplayCS;
+    extern const int DisplayReset;
+    extern const SPISettings DisplaySPISettings;
 
 
 } // namespace constants 
