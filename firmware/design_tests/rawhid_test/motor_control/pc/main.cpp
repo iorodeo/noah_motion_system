@@ -28,9 +28,9 @@ void sig_int_handler(int param);
 int main(int argc, char *argv[])
 {
     // Captive trajectory parameters (if enabled)
-    const double mass = 10.0;
-    const double damping = 3.0;
-    const double spring_const = 0.0;
+    const double mass = 2.0;
+    const double damping = 1.0;
+    const double spring_const = 10.0;
     const double spring_zero = 0.0;
     const int captive_axis_num = 0;
 
