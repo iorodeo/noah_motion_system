@@ -4,14 +4,19 @@
 #include <cstring>
 #include <csignal>
 #include <iomanip>
+#include <limits>
 #include "msg_types.h"
 #include "constants.h"
+#include "joystick.hpp"
 
 extern bool quit_flag;
-
+const int32_t Int16Max = std::numeric_limits<int16_t>::max();
 
 const std::string  MotionController::Default_Output_Filename("data.txt");
 
+
+// MotionController public methods
+// ----------------------------------------------------------------------------
 MotionController::MotionController(int vid, int pid)
 {
     hid_dev_ = RawHIDDevice(constants::Vid,constants::Pid);
@@ -39,6 +44,19 @@ bool MotionController::close()
 
 bool MotionController::run()
 {
+    Joystick joystick(0); 
+    double force = 0.0;
+
+    // Check for joystick if using captive trajectory
+    if (!axis_to_model_map_.empty())
+    {
+        if (!joystick.isFound())
+        {
+            std::cerr << "error: can't find joystick" << std::endl;
+            return false;
+        }
+    }
+
     // Set to trejctory start position and zero velocity
     if (!set_pos_to_start()) 
     { 
@@ -50,7 +68,7 @@ bool MotionController::run()
     }
 
     // Set to velocity mode
-    if (!set_to_vel_mode())  
+    if (!enable_vel_ctlr_mode())  
     { 
         return false; 
     }
@@ -89,6 +107,21 @@ bool MotionController::run()
             break;
         }
 
+        // Get force measurement
+        if (!axis_to_model_map_.empty())
+        {
+            JoystickEvent event;
+            if (joystick.sample(&event))
+            {
+                if (event.isAxis() && (event.number==1))
+                {
+                    double value = double(event.value)/double(Int16Max);
+                    force = constants::JoyToForce*value;
+                }
+            }
+        }
+
+
         // Compute new motor velocities and send controller
         double t = 1.0e-6*float(pos_msg.time);
         uint32_t index = uint32_t(cnt%trajectory_.size());
@@ -101,15 +134,34 @@ bool MotionController::run()
 
         for (int i=0; i<constants::NumMotor; i++)
         {
-            int32_t pos_error = int32_t(trajectory_[index].pos[i]) - pos_msg.position[i]; 
+            double setpt_pos = 0.0;
+            double setpt_vel = 0.0;
+
+            if (axis_to_model_map_.count(i) > 0)
+            {
+                axis_to_model_map_[i].update(force,constants::Dt);
+                setpt_pos = axis_to_model_map_[i].position();
+                setpt_vel = axis_to_model_map_[i].velocity();
+            }
+            else
+            {
+                setpt_pos = trajectory_[index].pos[i];
+                setpt_vel = trajectory_[index].vel[i];
+            }
+            int32_t pos_error = int32_t(setpt_pos) - pos_msg.position[i]; 
             vel_msg.velocity[i] = (constants::PGain/constants::Dt)*float(pos_error); 
-            vel_msg.velocity[i] +=  constants::FGain*trajectory_[index].vel[i]; 
-            outfile << int32_t(trajectory_[index].pos[i]) << " " << pos_msg.position[i] << " ";
+            vel_msg.velocity[i] +=  constants::FGain*setpt_vel; 
+            outfile << int32_t(setpt_pos) << " " << pos_msg.position[i] << " ";
         }
         outfile << std::endl;
 
         std::cout << std::fixed << std::showpoint << std::setprecision(5);
-        std::cout << t << " " << pos_msg.position[0] << std::endl;
+        std::cout << t << " " << pos_msg.position[0]; 
+        if (!axis_to_model_map_.empty())
+        {
+            std::cout << " " << force;
+        }
+        std::cout << std::endl;
 
         if (!hid_dev_.sendData(&vel_msg))
         {
@@ -148,10 +200,26 @@ void MotionController::set_trajectory(std::vector<TrajData> trajectory)
 std::vector<TrajData> MotionController::get_trajectory()
 {
     return trajectory_;
+}        
+
+
+void MotionController::enable_captive_trajectory(int axis, DynamicModel model)
+{
+    if ((axis >=0) && (axis < constants::NumMotor))
+    {
+        axis_to_model_map_[axis] = model;
+    }
 }
 
 
-// Protected methods
+void MotionController::disable_captive_trajectory(int axis)
+{
+    axis_to_model_map_.erase(axis);
+}
+
+
+
+// MotionController protected methods
 // ----------------------------------------------------------------------------
 bool MotionController::set_pos_to_start()
 {
@@ -161,7 +229,14 @@ bool MotionController::set_pos_to_start()
     int32_t pos[constants::NumMotor];
     for (int i=0; i<constants::NumMotor; i++)
     {
-        pos[i] = int32_t(trajectory_[0].pos[i]);
+        if (axis_to_model_map_.count(i) > 0)
+        {
+            pos[i] = int32_t(axis_to_model_map_[i].position());
+        }
+        else
+        {
+            pos[i] = int32_t(trajectory_[0].pos[i]);
+        }
     }
     std::memcpy(cmd_msg.data,pos,sizeof(pos));
 
@@ -197,7 +272,7 @@ bool MotionController::set_vel_to_zero()
 }
 
 
-bool MotionController::set_to_vel_mode()
+bool MotionController::enable_vel_ctlr_mode()
 {
     CmdMsg cmd_msg;
     cmd_msg.msg_id = constants::CmdMsgId;
@@ -211,3 +286,23 @@ bool MotionController::set_to_vel_mode()
     }
     return rval;
 }
+
+
+//double MotionController::get_joystick_force()
+//{
+//    static double force = 0.0;
+//    std::cout << "get_force" << std::endl;
+//    if (!axis_to_model_map_.empty())
+//    {
+//        JoystickEvent event;
+//        if (joystick_.sample(&event))
+//        {
+//            if (event.isAxis() && (event.number==1))
+//            {
+//                double value = double(event.value)/double(Int16Max);
+//                force = constants::JoyToForce*value;
+//            }
+//        }
+//    }
+//    return force;
+//}

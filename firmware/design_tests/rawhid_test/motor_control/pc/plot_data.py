@@ -17,20 +17,17 @@ import scipy
 import matplotlib.pyplot as plt
 
 data = scipy.loadtxt('data.txt')
+print data.shape
 t = data[:,0]
-xc = data[:,1]
-xn = data[:,2]
-er = data[:,3]
 
-plt.subplot(211)
-plt.plot(t,xc,'b')
-plt.plot(t,xn,'r')
-plt.ylabel('position (steps)')
-plt.title('trajectory outscan - demo')
-plt.grid('on')
-plt.subplot(212)
-plt.plot(t,er,'b')
-plt.grid('on')
-plt.ylabel('tracking error (steps)')
-plt.xlabel('t (sec)')
+num_plot = (data.shape[1]-1)/2
+for i in range(num_plot):
+    n = 2*i + 1
+    m = 2*i + 2
+    p = data[:,n]
+    q = data[:,m]
+    plt.plot(t,p,'b')
+    plt.plot(t,q,'r')
+    plt.grid('on')
+
 plt.show()

@@ -2,9 +2,10 @@
 #include <cmath>
 #include <iostream>
 
+const double pi = std::acos(-1);
+
 std::vector<TrajData> get_cosine_traj(double dt)
 {
-    const double pi = std::acos(-1);
     std::vector<double> amplitude(constants::NumMotor); 
     double period = 10.0;
 
@@ -33,7 +34,6 @@ std::vector<TrajData> get_cosine_traj(double dt)
 
 std::vector<TrajData> get_multicosine_traj(double dt)
 {
-    const double pi = std::acos(-1);
     std::vector<double> amplitude(constants::NumMotor); 
     double period = 10.0;
 

@@ -10,5 +10,6 @@ namespace constants
     const double PGain = 0.5;
     const double FGain = 1.0;
     const double Dt = 0.005;
+    const double JoyToForce = 5000.0;
 
 } 

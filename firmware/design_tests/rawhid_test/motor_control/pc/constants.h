@@ -36,6 +36,7 @@ namespace constants
     extern const double PGain;
     extern const double FGain;
     extern const double Dt;
+    extern const double JoyToForce;
 
 } // namespace constants 
 
