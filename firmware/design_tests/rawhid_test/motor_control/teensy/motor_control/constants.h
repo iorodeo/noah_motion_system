@@ -5,6 +5,8 @@
 
 namespace constants
 {
+    const int NumMotor = 2;
+
     enum MsgId
     {
         ErrMsgId       = 0,
@@ -29,7 +31,6 @@ namespace constants
         OpModeVel = 2
     };
 
-    const int NumMotor = 6;
 
     extern const int MsgSize;
     extern const int CmdModeMsgTimeout;

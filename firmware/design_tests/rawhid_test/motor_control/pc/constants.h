@@ -3,7 +3,7 @@
 
 namespace constants
 {
-    const int NumMotor = 6;
+    const int NumMotor = 2;
 
     enum MsgId
     {

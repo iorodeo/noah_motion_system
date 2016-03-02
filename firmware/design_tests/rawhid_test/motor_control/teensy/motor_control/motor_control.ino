@@ -1,4 +1,5 @@
-#include <AccelStepper.h>
+//#include <AccelStepper.h>
+#include "stepper.h"
 #include "motor_pin.h"
 #include "msg_types.h"
 #include "constants.h"
@@ -8,7 +9,7 @@ MotionController motionController;
 
 void setup()
 {
-    //Serial.begin(115200);
+    Serial.begin(115200);
     motionController.initialize();
 
 }

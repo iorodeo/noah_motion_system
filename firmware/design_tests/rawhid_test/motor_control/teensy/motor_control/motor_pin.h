@@ -1,5 +1,6 @@
 #ifndef MOTOR_PIN_H
 #define MOTOR_PIN_H
+#include <Arduino.h>
 
 struct MotorPin
 {

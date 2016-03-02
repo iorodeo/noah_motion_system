@@ -135,8 +135,8 @@ bool MotionController::run()
 
         for (int i=0; i<constants::NumMotor; i++)
         {
-            double setpt_pos = 0.0;
-            double setpt_vel = 0.0;
+            float setpt_pos = 0.0;
+            float setpt_vel = 0.0;
 
             if (axis_to_model_map_.count(i) > 0)
             {
@@ -153,11 +153,12 @@ bool MotionController::run()
             vel_msg.velocity[i] = (constants::PGain/constants::Dt)*float(pos_error); 
             vel_msg.velocity[i] +=  constants::FGain*setpt_vel; 
             outfile << int32_t(setpt_pos) << " " << pos_msg.position[i] << " ";
+
         }
         outfile << std::endl;
 
         std::cout << std::fixed << std::showpoint << std::setprecision(5);
-        std::cout << t << " " << pos_msg.position[0]; 
+        std::cout << t << " " << pos_msg.position[0] << " " << vel_msg.velocity[0];
         if (!axis_to_model_map_.empty())
         {
             std::cout << " " << force;
