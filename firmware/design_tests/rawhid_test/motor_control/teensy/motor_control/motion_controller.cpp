@@ -1,13 +1,8 @@
 #include "motion_controller.h"
 #include "msg_types.h"
 #include <cstring>
-#include <SPI.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 
 extern MotionController motionController;
-extern Adafruit_SSD1306 display;
 
 MotionController::MotionController()
 {
@@ -50,24 +45,9 @@ void MotionController::update()
     }
 }
 
-void MotionController::update_display()
-{
-    SPI.beginTransaction(constants::DisplaySPISettings);
-    display.clearDisplay();   
-    display.setCursor(0,0);
-    for (int i=0; i<constants::NumMotor; i++)
-    {
-        display.print("AX");
-        display.print(i);
-        display.print(": ");
-        display.println(motor_[i].currentPosition());
-    }
-    display.display();
-    SPI.endTransaction();
-}
 
 // Protected methods
-
+// ----------------------------------------------------------------------------
 void MotionController::cmd_mode_update()
 { 
     CmdMsg cmd_msg;
