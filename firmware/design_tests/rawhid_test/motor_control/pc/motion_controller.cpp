@@ -17,10 +17,11 @@ const std::string  MotionController::Default_Output_Filename("data.txt");
 
 // MotionController public methods
 // ----------------------------------------------------------------------------
-MotionController::MotionController(int vid, int pid)
+MotionController::MotionController(int vid, int pid, int joystick_num)
 {
     hid_dev_ = RawHIDDevice(constants::Vid,constants::Pid);
     output_filename_ = Default_Output_Filename;
+    joystick_num_ = joystick_num;
 }
 
 
@@ -44,7 +45,7 @@ bool MotionController::close()
 
 bool MotionController::run()
 {
-    Joystick joystick(0); 
+    Joystick joystick(joystick_num_); 
     double force = 0.0;
 
     // Check for joystick if using captive trajectory

@@ -43,9 +43,14 @@ int main(int argc, char *argv[])
     {
         enable_captive_axis = true;
     }
+    int joystick_num = 0;
+    if (std::find(args.begin(), args.end(), "js1") != args.end())
+    {
+        joystick_num = 1;
+    }
 
     // Setup up motion controller
-    MotionController controller(constants::Vid, constants::Pid);
+    MotionController controller(constants::Vid, constants::Pid, joystick_num);
     if (!controller.open()) 
     {
         exit(EXIT_FAILURE); 

@@ -12,7 +12,7 @@ class MotionController
     public:
         static const std::string  Default_Output_Filename;
 
-        MotionController(int vid=0, int pid=0);
+        MotionController(int vid=0, int pid=0, int joystick_num=0);
 
         bool open();
         bool close();
@@ -33,6 +33,7 @@ class MotionController
         std::string output_filename_;
         std::vector<TrajData> trajectory_;
         std::map<int,DynamicModel> axis_to_model_map_;
+        int joystick_num_;
 
         bool set_pos_to_start();
         bool set_vel_to_zero();
