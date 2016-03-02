@@ -78,8 +78,11 @@ bool MotionController::run()
     // Loop over trajectory until done
     std::ofstream outfile;
     uint64_t cnt = 0;
+    double t_last = 0.0;
 
     outfile.open(output_filename_);
+
+
 
     while (true)
     {
@@ -158,7 +161,8 @@ bool MotionController::run()
         outfile << std::endl;
 
         std::cout << std::fixed << std::showpoint << std::setprecision(5);
-        std::cout << t << " " << pos_msg.position[0] << " " << vel_msg.velocity[0];
+        std::cout << t << " " << t-t_last; 
+        //std::cout << t << " " << t-t_last << " " << pos_msg.position[0] << " " << vel_msg.velocity[0];
         if (!axis_to_model_map_.empty())
         {
             std::cout << " " << force;
@@ -170,6 +174,7 @@ bool MotionController::run()
             std::cerr << "error: sendData" << std::endl;
         }
         cnt++;
+        t_last = t;
     }
 
     // Set to trejctory start position and zero velocity

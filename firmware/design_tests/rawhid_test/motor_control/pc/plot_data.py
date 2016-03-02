@@ -13,21 +13,30 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import sys
 import scipy
 import matplotlib.pyplot as plt
 
-data = scipy.loadtxt('data.txt')
-print data.shape
+data = scipy.loadtxt(sys.argv[1])
 t = data[:,0]
 
-num_plot = (data.shape[1]-1)/2
-for i in range(num_plot):
-    n = 2*i + 1
-    m = 2*i + 2
-    p = data[:,n]
-    q = data[:,m]
-    plt.plot(t,p,'b')
-    plt.plot(t,q,'r')
+if data.shape[1] == 2:
+
+    x = data[:,1]
+    plt.plot(t,x)
     plt.grid('on')
 
+else:
+
+    num_plot = (data.shape[1]-1)/2
+    for i in range(num_plot):
+        n = 2*i + 1
+        m = 2*i + 2
+        p = data[:,n]
+        q = data[:,m]
+        plt.plot(t,p,'b')
+        plt.plot(t,q,'r')
+        plt.grid('on')
+
+plt.xlabel('time (sec)')
 plt.show()

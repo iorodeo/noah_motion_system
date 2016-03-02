@@ -2,7 +2,6 @@
 #define MOTION_CONTROLLER_H
 #include "constants.h"
 #include "stepper.h"
-//#include <AccelStepper.h>
 
 
 class MotionController
@@ -20,7 +19,6 @@ class MotionController
     protected:
 
         constants::OperatingModeId operating_mode_; 
-        //AccelStepper motor_[constants::NumMotor];
         Stepper motor_[constants::NumMotor];
 
         IntervalTimer velo_timer_;
@@ -32,7 +30,6 @@ class MotionController
         void cmd_mode_update();
         void vel_mode_update();
 
-        //void velo_timer_callback();
 };
 
 inline void MotionController::stepper_update()

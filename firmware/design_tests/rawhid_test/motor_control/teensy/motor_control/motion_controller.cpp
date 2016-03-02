@@ -32,10 +32,6 @@ void MotionController::initialize()
         uint8_t clkPin = constants::MotorPinArray[i].clk;
         uint8_t dirPin = constants::MotorPinArray[i].dir;
 
-        //motor_[i] = AccelStepper(AccelStepper::DRIVER, clkPin, dirPin); 
-        //motor_[i].setMaxSpeed(constants::MaxMotorSpeed);
-        //motor_[i].setSpeed(0.0);
-
         motor_[i] = Stepper(clkPin, dirPin); 
         motor_[i].initialize();
         motor_[i].set_velocity(0.0);
@@ -104,7 +100,6 @@ void MotionController::cmd_mode_update()
             velo_update_flag_ = false;
             velo_quit_flag_ = false;
             velo_timer_.priority(1);
-            //velo_timer_.begin([](){motionController.velo_timer_callback();}, constants::TimerPeriod);
             velo_timer_.begin(timer_callback, constants::TimerPeriod);
             break;
 
@@ -113,9 +108,6 @@ void MotionController::cmd_mode_update()
             std::memcpy(pos,cmd_msg.data,sizeof(pos));
             for (int i=0; i<constants::NumMotor; i++)
             {
-                //motor_[i].setSpeed(0.0);
-                //motor_[i].setCurrentPosition(pos[i]);
-
                 motor_[i].set_velocity(0.0);
                 motor_[i].set_position(pos[i]);
             }
@@ -126,7 +118,6 @@ void MotionController::cmd_mode_update()
             std::memcpy(vel,cmd_msg.data,sizeof(vel));
             for (int i=0; i<constants::NumMotor; i++)
             {
-                //motor_[i].setSpeed(vel[i]);
                 motor_[i].set_velocity(vel[i]);
             }
             break;
@@ -175,7 +166,6 @@ void MotionController::vel_mode_update()
         pos_msg.time = time_us_;
         for (int i=0; i<constants::NumMotor; i++)
         {
-            //pos_msg.position[i] = motor_[i].currentPosition();
             pos_msg.position[i] = motor_[i].position();
         }
         pos_msg.quit_flag = velo_quit_flag_;
@@ -193,29 +183,14 @@ void MotionController::vel_mode_update()
             return; // Is this the right thing to do ...
         }
 
-        Serial.print(micros_dt);
-        Serial.print(" ");
+        //Serial.print(micros_dt);
+        //Serial.println();
 
         for (int i=0; i<constants::NumMotor; i++)
         {
-            //motor_[i].setSpeed(vel_msg.velocity[i]);
             motor_[i].set_velocity(vel_msg.velocity[i]);
-            Serial.print(vel_msg.velocity[i]);
-            Serial.print(" ");
         }
-        Serial.println();
         velo_quit_flag_ = vel_msg.quit_flag;
     }
-    
-    // Update motors
-    //for (int i=0; i<constants::NumMotor; i++)
-    //{
-    //    motor_[i].runSpeed();
-    //}
 }
 
-
-//void MotionController::velo_timer_callback()
-//{
-//    velo_update_flag_ = true;
-//}

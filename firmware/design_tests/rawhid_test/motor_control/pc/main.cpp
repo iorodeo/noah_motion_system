@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     controller.set_output_filename("data.txt");
 
     // Create motor trajectory and pass it to controller 
-    std::vector<TrajData> trajectory = get_cosine_traj(constants::Dt);
+    std::vector<TrajData> trajectory = get_multicosine_traj(constants::Dt);
     controller.set_trajectory(trajectory);
 
     // Setup captive trajectory

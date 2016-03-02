@@ -11,7 +11,7 @@ std::vector<TrajData> get_cosine_traj(double dt)
 
     for (int i=0; i<constants::NumMotor; i++)
     {
-        amplitude[i] = 8000.0 + 200.0*i;
+        amplitude[i] = 8000.0 + 500.0*i;
     }
 
     std::vector<TrajData> traj;
@@ -39,7 +39,7 @@ std::vector<TrajData> get_multicosine_traj(double dt)
 
     for (int i=0; i<constants::NumMotor; i++)
     {
-        amplitude[i] = 1000.0 + 200.0*i;
+        amplitude[i] = 10000.0 + 500.0*i;
     }
 
     std::vector<TrajData> traj;

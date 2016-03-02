@@ -5,7 +5,7 @@
 
 namespace constants
 {
-    const int NumMotor = 2;
+    const int NumMotor = 6;
 
     enum MsgId
     {
@@ -36,6 +36,7 @@ namespace constants
     extern const int CmdModeMsgTimeout;
     extern const int VelModeMsgTimeout;
     extern const unsigned long TimerPeriod;
+    extern const unsigned long VeloUpdateCnt;
     extern const MotorPin MotorPinArray[NumMotor];
     extern const float MaxMotorSpeed;
 
