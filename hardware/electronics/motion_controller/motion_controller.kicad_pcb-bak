@@ -2579,7 +2579,7 @@
   )
 
   (module SM0805 (layer F.Cu) (tedit 5091495C) (tstamp 57040299)
-    (at 449.834 -82.677)
+    (at 58.928 44.577)
     (path /56F3B13A)
     (attr smd)
     (fp_text reference C3 (at 0 -0.3175) (layer F.SilkS)
@@ -2611,7 +2611,7 @@
   )
 
   (module SM0805 (layer F.Cu) (tedit 5091495C) (tstamp 570402A6)
-    (at 449.834 -80.264)
+    (at 62.611 44.577)
     (path /56F3B134)
     (attr smd)
     (fp_text reference C4 (at 0 -0.3175) (layer F.SilkS)
@@ -4275,7 +4275,7 @@
   )
 
   (module SM0805 (layer F.Cu) (tedit 5091495C) (tstamp 5704054A)
-    (at 451.231 -66.929)
+    (at 4.191 51.943)
     (path /56F34ABE)
     (attr smd)
     (fp_text reference R7 (at 0 -0.3175) (layer F.SilkS)
@@ -4339,7 +4339,7 @@
   )
 
   (module SM0805 (layer F.Cu) (tedit 5091495C) (tstamp 57040564)
-    (at 457.581 -73.025)
+    (at -3.302 51.943)
     (path /56F34AB2)
     (attr smd)
     (fp_text reference R6 (at 0 -0.3175) (layer F.SilkS)
@@ -5017,7 +5017,7 @@
   )
 
   (module OP07 (layer F.Cu) (tedit 5703D9FC) (tstamp 57040661)
-    (at 426.847 -66.675)
+    (at -16.764 40.132)
     (path /56F328BD)
     (fp_text reference U7 (at -3.8 0 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
@@ -5062,7 +5062,7 @@
   )
 
   (module OP07 (layer F.Cu) (tedit 5703D9FC) (tstamp 57040672)
-    (at 460.375 -66.802)
+    (at 0.762 40.132)
     (path /56F34AA5)
     (fp_text reference U8 (at -3.8 0 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
@@ -5197,7 +5197,7 @@
   )
 
   (module OP07 (layer F.Cu) (tedit 5703D9FC) (tstamp 570406A5)
-    (at 19.431 30.48)
+    (at 425.831 -66.802)
     (path /56F34C31)
     (fp_text reference U14 (at -3.8 0 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
@@ -5986,7 +5986,7 @@
   )
 
   (module CONNBLOCK3 (layer F.Cu) (tedit 4D3748F9) (tstamp 570407E9)
-    (at 462.407 -82.296)
+    (at 457.581 -81.28)
     (path /56F1F1D8)
     (fp_text reference K7 (at 0.8001 5.19938) (layer F.SilkS)
       (effects (font (size 1.524 1.524) (thickness 0.3048)))
