@@ -3657,7 +3657,7 @@ Text Label 16500 2150 0    60   ~ 0
 Text Label 15200 2150 2    60   ~ 0
 GND
 Text Label 16650 2550 0    60   ~ 0
-SG0
+SG1
 $Comp
 L R R69
 U 1 1 5703753D
@@ -3707,7 +3707,7 @@ Text Label 16500 3250 0    60   ~ 0
 Text Label 15200 3250 2    60   ~ 0
 GND
 Text Label 16650 3650 0    60   ~ 0
-SG0
+SG2
 $Comp
 L R R71
 U 1 1 5703779D
@@ -3757,7 +3757,7 @@ Text Label 16500 4350 0    60   ~ 0
 Text Label 15200 4350 2    60   ~ 0
 GND
 Text Label 16650 4750 0    60   ~ 0
-SG0
+SG3
 $Comp
 L R R73
 U 1 1 570377B8
@@ -3807,7 +3807,7 @@ Text Label 16550 5400 0    60   ~ 0
 Text Label 15250 5400 2    60   ~ 0
 GND
 Text Label 16700 5800 0    60   ~ 0
-SG0
+SG4
 $Comp
 L R R75
 U 1 1 570377D3
@@ -3857,7 +3857,7 @@ Text Label 16550 6500 0    60   ~ 0
 Text Label 15250 6500 2    60   ~ 0
 GND
 Text Label 16700 6900 0    60   ~ 0
-SG0
+SG5
 $Comp
 L R R77
 U 1 1 570377EE
@@ -3907,7 +3907,7 @@ Text Label 16550 7600 0    60   ~ 0
 Text Label 15250 7600 2    60   ~ 0
 GND
 Text Label 16700 8000 0    60   ~ 0
-SG0
+SG6
 $Comp
 L R R79
 U 1 1 57037809
@@ -3957,7 +3957,7 @@ Text Label 16550 8700 0    60   ~ 0
 Text Label 15250 8700 2    60   ~ 0
 GND
 Text Label 16700 9100 0    60   ~ 0
-SG0
+SG7
 $Comp
 L R R81
 U 1 1 57037824
@@ -4007,7 +4007,7 @@ Text Label 16550 9800 0    60   ~ 0
 Text Label 15250 9800 2    60   ~ 0
 GND
 Text Label 16700 10200 0    60   ~ 0
-SG0
+SG8
 $Comp
 L R R83
 U 1 1 5703783F
@@ -4057,7 +4057,7 @@ Text Label 16550 10900 0    60   ~ 0
 Text Label 15250 10900 2    60   ~ 0
 GND
 Text Label 16700 11300 0    60   ~ 0
-SG0
+SG9
 $Comp
 L R R85
 U 1 1 5703785A
