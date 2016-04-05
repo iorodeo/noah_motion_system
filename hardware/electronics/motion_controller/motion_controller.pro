@@ -1,4 +1,4 @@
-update=Fri 01 Apr 2016 07:29:32 PM PDT
+update=Mon 04 Apr 2016 09:47:46 PM PDT
 version=1
 last_client=eeschema
 [cvpcb]
@@ -12,10 +12,10 @@ version=1
 version=1
 LastNetListRead=
 UseCmpFile=1
-PadDrill="    0.600000"
-PadDrillOvalY="    0.600000"
-PadSizeH="    1.500000"
-PadSizeV="    1.500000"
+PadDrill="    0.000000"
+PadDrillOvalY="    0.000000"
+PadSizeH="    0.530000"
+PadSizeV="    1.980000"
 PcbTextSizeV="    1.500000"
 PcbTextSizeH="    1.500000"
 PcbTextThickness="    0.300000"
@@ -26,7 +26,7 @@ SolderMaskClearance="    0.000000"
 SolderMaskMinWidth="    0.000000"
 DrawSegmentWidth="    0.200000"
 BoardOutlineThickness="    0.100000"
-ModuleOutlineThickness="    0.150000"
+ModuleOutlineThickness="    0.200000"
 [pcbnew/libraries]
 LibDir=
 LibName1=sockets
@@ -47,6 +47,11 @@ LibName15=pga_sockets
 LibName16=valves
 LibName17=TEENSY3X
 LibName18=TE_CONN_DSUB_RA_68
+LibName19=OST_CONNBLOCKS
+LibName20=5X2_SHRD_HEADER
+LibName21=DCJACK_2PIN_HC
+LibName22=SC-70-6
+LibName23=MAXIM-S8
 [eeschema]
 version=1
 LibDir=
@@ -95,3 +100,4 @@ LibName36=nc7wz04
 LibName37=mea1d0512sc
 LibName38=max6176aasa
 LibName39=max4505
+LibName40=bas07-04
