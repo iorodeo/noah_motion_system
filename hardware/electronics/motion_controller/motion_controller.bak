@@ -46,7 +46,7 @@ $Descr User 18000 14450
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "5 apr 2016"
+Date "7 apr 2016"
 Rev ""
 Comp ""
 Comment1 ""
@@ -4102,4 +4102,6 @@ Connection ~ 14900 3650
 Connection ~ 14900 2550
 Text Notes 15450 850  0    60   ~ 0
 BAS70-04-E3-08 
+Text Notes 750  -150 0    300  ~ 0
+Add SPI based SD card
 $EndSCHEMATC
