@@ -39,6 +39,7 @@ LIBS:mea1d0512sc
 LIBS:max6176aasa
 LIBS:max4505
 LIBS:bas07-04
+LIBS:pjrc_sd_card
 LIBS:motion_controller-cache
 EELAYER 27 0
 EELAYER END
@@ -2293,19 +2294,19 @@ Text Label 11600 12600 1    60   ~ 0
 $Comp
 L CONN_2 P1
 U 1 1 56F4265C
-P 8900 1150
-F 0 "P1" V 8850 1150 40  0000 C CNN
-F 1 "CONN_2" V 8950 1150 40  0000 C CNN
-F 2 "" H 8900 1150 60  0000 C CNN
-F 3 "" H 8900 1150 60  0000 C CNN
-	1    8900 1150
+P 4000 7450
+F 0 "P1" V 3950 7450 40  0000 C CNN
+F 1 "CONN_2" V 4050 7450 40  0000 C CNN
+F 2 "" H 4000 7450 60  0000 C CNN
+F 3 "" H 4000 7450 60  0000 C CNN
+	1    4000 7450
 	1    0    0    -1  
 $EndComp
-Text Label 8300 1050 2    60   ~ 0
+Text Label 3400 7350 2    60   ~ 0
 AOUT
-Text Label 8300 1250 2    60   ~ 0
+Text Label 3400 7550 2    60   ~ 0
 GND
-Text Notes 8100 1550 0    60   ~ 0
+Text Notes 3200 7850 0    60   ~ 0
 Analog Output (0-3.3V)
 $Comp
 L CONN_3 K5
@@ -2521,7 +2522,7 @@ $EndComp
 Text Label 16500 1050 0    60   ~ 0
 3V3_TNY
 Text Label 15200 1050 2    60   ~ 0
-GND
+AGND
 Text Label 16650 1450 0    60   ~ 0
 SG0
 $Comp
@@ -3569,9 +3570,9 @@ Wire Wire Line
 Wire Wire Line
 	11600 13200 11600 13400
 Wire Wire Line
-	8550 1050 8300 1050
+	3650 7350 3400 7350
 Wire Wire Line
-	8550 1250 8300 1250
+	3650 7550 3400 7550
 Wire Wire Line
 	3600 6550 3400 6550
 Wire Wire Line
@@ -3655,7 +3656,7 @@ $EndComp
 Text Label 16500 2150 0    60   ~ 0
 3V3_TNY
 Text Label 15200 2150 2    60   ~ 0
-GND
+AGND
 Text Label 16650 2550 0    60   ~ 0
 SG1
 $Comp
@@ -3705,7 +3706,7 @@ $EndComp
 Text Label 16500 3250 0    60   ~ 0
 3V3_TNY
 Text Label 15200 3250 2    60   ~ 0
-GND
+AGND
 Text Label 16650 3650 0    60   ~ 0
 SG2
 $Comp
@@ -3755,7 +3756,7 @@ $EndComp
 Text Label 16500 4350 0    60   ~ 0
 3V3_TNY
 Text Label 15200 4350 2    60   ~ 0
-GND
+AGND
 Text Label 16650 4750 0    60   ~ 0
 SG3
 $Comp
@@ -3805,7 +3806,7 @@ $EndComp
 Text Label 16550 5400 0    60   ~ 0
 3V3_TNY
 Text Label 15250 5400 2    60   ~ 0
-GND
+AGND
 Text Label 16700 5800 0    60   ~ 0
 SG4
 $Comp
@@ -3855,7 +3856,7 @@ $EndComp
 Text Label 16550 6500 0    60   ~ 0
 3V3_TNY
 Text Label 15250 6500 2    60   ~ 0
-GND
+AGND
 Text Label 16700 6900 0    60   ~ 0
 SG5
 $Comp
@@ -3905,7 +3906,7 @@ $EndComp
 Text Label 16550 7600 0    60   ~ 0
 3V3_TNY
 Text Label 15250 7600 2    60   ~ 0
-GND
+AGND
 Text Label 16700 8000 0    60   ~ 0
 SG6
 $Comp
@@ -3955,7 +3956,7 @@ $EndComp
 Text Label 16550 8700 0    60   ~ 0
 3V3_TNY
 Text Label 15250 8700 2    60   ~ 0
-GND
+AGND
 Text Label 16700 9100 0    60   ~ 0
 SG7
 $Comp
@@ -4005,7 +4006,7 @@ $EndComp
 Text Label 16550 9800 0    60   ~ 0
 3V3_TNY
 Text Label 15250 9800 2    60   ~ 0
-GND
+AGND
 Text Label 16700 10200 0    60   ~ 0
 SG8
 $Comp
@@ -4055,7 +4056,7 @@ $EndComp
 Text Label 16550 10900 0    60   ~ 0
 3V3_TNY
 Text Label 15250 10900 2    60   ~ 0
-GND
+AGND
 Text Label 16700 11300 0    60   ~ 0
 SG9
 $Comp
@@ -4102,8 +4103,45 @@ Connection ~ 14900 3650
 Connection ~ 14900 2550
 Text Notes 15450 850  0    60   ~ 0
 BAS70-04-E3-08 
-Text Notes 750  -150 0    300  ~ 0
-Add SPI based SD card
 Text Notes 14250 450  0    200  ~ 0
 Change to AGND on diode
+$Comp
+L PJRC_SD_CARD U18
+U 1 1 57081353
+P 8600 1250
+F 0 "U18" H 8600 1600 60  0000 C CNN
+F 1 "PJRC_SD_CARD" H 8600 900 60  0000 C CNN
+F 2 "~" H 8850 1150 60  0000 C CNN
+F 3 "~" H 8850 1150 60  0000 C CNN
+	1    8600 1250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8000 1050 7800 1050
+Wire Wire Line
+	8000 1150 7800 1150
+Wire Wire Line
+	8000 1250 7800 1250
+Wire Wire Line
+	8000 1350 7800 1350
+Wire Wire Line
+	8000 1450 7800 1450
+Wire Wire Line
+	9200 1050 9400 1050
+NoConn ~ 9200 1150
+NoConn ~ 9200 1250
+NoConn ~ 9200 1350
+NoConn ~ 9200 1450
+Text Label 7800 1050 2    60   ~ 0
+GND
+Text Label 7800 1250 2    60   ~ 0
+D13,SCK
+Text Label 7800 1150 2    60   ~ 0
+PWM4,D10,CS
+Text Label 7800 1350 2    60   ~ 0
+D11,MOSI
+Text Label 7800 1450 2    60   ~ 0
+D12,MISO
+Text Label 9400 1050 0    60   ~ 0
+5V_TNY
 $EndSCHEMATC

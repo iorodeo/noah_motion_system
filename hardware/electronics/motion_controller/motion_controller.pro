@@ -1,4 +1,4 @@
-update=Tue 05 Apr 2016 08:55:44 AM PDT
+update=Fri 08 Apr 2016 01:23:01 PM PDT
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -57,14 +57,15 @@ LibName37=mea1d0512sc
 LibName38=max6176aasa
 LibName39=max4505
 LibName40=bas07-04
+LibName41=pjrc_sd_card
 [pcbnew]
 version=1
 LastNetListRead=
 UseCmpFile=1
 PadDrill="    1.016000"
 PadDrillOvalY="    1.016000"
-PadSizeH="    1.651000"
-PadSizeV="    1.651000"
+PadSizeH="    1.524000"
+PadSizeV="    1.524000"
 PcbTextSizeV="    1.500000"
 PcbTextSizeH="    1.500000"
 PcbTextThickness="    0.300000"
@@ -75,7 +76,7 @@ SolderMaskClearance="    0.000000"
 SolderMaskMinWidth="    0.000000"
 DrawSegmentWidth="    0.200000"
 BoardOutlineThickness="    0.100000"
-ModuleOutlineThickness="    0.200000"
+ModuleOutlineThickness="    0.150000"
 [pcbnew/libraries]
 LibDir=
 LibName1=sockets
@@ -103,3 +104,4 @@ LibName22=SC-70-6
 LibName23=MAXIM-S8
 LibName24=OP07
 LibName25=MEA1
+LibName26=PJRC_SD_CARD

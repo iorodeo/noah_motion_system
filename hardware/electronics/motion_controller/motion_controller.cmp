@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Tue 05 Apr 2016 09:23:57 AM PDT
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Fri 08 Apr 2016 01:27:40 PM PDT
 
 BeginCmp
 TimeStamp = /56F39EC5;
@@ -1265,6 +1265,13 @@ TimeStamp = /56F372AA;
 Reference = U17;
 ValeurCmp = MEA1D0512SC;
 IdModule  = MEA1;
+EndCmp
+
+BeginCmp
+TimeStamp = /57081353;
+Reference = U18;
+ValeurCmp = PJRC_SD_CARD;
+IdModule  = PJRC_SD_CARD;
 EndCmp
 
 EndListe
