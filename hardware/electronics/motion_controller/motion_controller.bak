@@ -1075,7 +1075,7 @@ SG0_OUT
 Text Label 12000 1450 2    60   ~ 0
 10V_REF
 Text Label 11550 1650 2    60   ~ 0
-GND
+AGND
 $Comp
 L OP07 U8
 U 1 1 56F34AA5
@@ -1937,7 +1937,7 @@ F 3 "~" H 10800 1350 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 10950 1650 3    60   ~ 0
-GND
+AGND
 Text Label 10800 1100 1    60   ~ 0
 +12V
 Text Label 11100 1100 1    60   ~ 0
@@ -1965,7 +1965,7 @@ F 3 "~" H 10800 2450 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 10950 2750 3    60   ~ 0
-GND
+AGND
 Text Label 10800 2200 1    60   ~ 0
 +12V
 Text Label 11100 2200 1    60   ~ 0
@@ -1993,7 +1993,7 @@ F 3 "~" H 10800 3550 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 10950 3850 3    60   ~ 0
-GND
+AGND
 Text Label 10800 3300 1    60   ~ 0
 +12V
 Text Label 11100 3300 1    60   ~ 0
@@ -2021,7 +2021,7 @@ F 3 "~" H 10800 4650 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 10950 4950 3    60   ~ 0
-GND
+AGND
 Text Label 10800 4400 1    60   ~ 0
 +12V
 Text Label 11100 4400 1    60   ~ 0
@@ -2049,7 +2049,7 @@ F 3 "~" H 10850 5700 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 11000 6000 3    60   ~ 0
-GND
+AGND
 Text Label 10850 5450 1    60   ~ 0
 +12V
 Text Label 11150 5450 1    60   ~ 0
@@ -2077,7 +2077,7 @@ F 3 "~" H 10850 6800 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 11000 7100 3    60   ~ 0
-GND
+AGND
 Text Label 10850 6550 1    60   ~ 0
 +12V
 Text Label 11150 6550 1    60   ~ 0
@@ -2105,7 +2105,7 @@ F 3 "~" H 10850 7900 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 11000 8200 3    60   ~ 0
-GND
+AGND
 Text Label 10850 7650 1    60   ~ 0
 +12V
 Text Label 11150 7650 1    60   ~ 0
@@ -2133,7 +2133,7 @@ F 3 "~" H 10850 9000 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 11000 9300 3    60   ~ 0
-GND
+AGND
 Text Label 10850 8750 1    60   ~ 0
 +12V
 Text Label 11150 8750 1    60   ~ 0
@@ -2161,7 +2161,7 @@ F 3 "~" H 10850 10100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 11000 10400 3    60   ~ 0
-GND
+AGND
 Text Label 10850 9850 1    60   ~ 0
 +12V
 Text Label 11150 9850 1    60   ~ 0
@@ -2268,7 +2268,7 @@ F 3 "~" H 10850 11200 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 11000 11500 3    60   ~ 0
-GND
+AGND
 Text Label 10850 10950 1    60   ~ 0
 +12V
 Text Label 11150 10950 1    60   ~ 0
@@ -2338,7 +2338,7 @@ F 3 "~" H 11900 1650 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 2750 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R57
 U 1 1 56FDBB5B
@@ -2351,7 +2351,7 @@ F 3 "~" H 11900 2750 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 3850 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R58
 U 1 1 56FDBB64
@@ -2364,7 +2364,7 @@ F 3 "~" H 11900 3850 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 4950 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R59
 U 1 1 56FDBB6D
@@ -2377,7 +2377,7 @@ F 3 "~" H 11900 4950 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 6000 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R60
 U 1 1 56FDBB76
@@ -2390,7 +2390,7 @@ F 3 "~" H 11900 6000 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 7100 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R61
 U 1 1 56FDBB7F
@@ -2403,7 +2403,7 @@ F 3 "~" H 11900 7100 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 8200 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R62
 U 1 1 56FDBB88
@@ -2416,7 +2416,7 @@ F 3 "~" H 11900 8200 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 9300 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R63
 U 1 1 56FDBB91
@@ -2429,7 +2429,7 @@ F 3 "~" H 11900 9300 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 10400 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R64
 U 1 1 56FDBB9A
@@ -2442,7 +2442,7 @@ F 3 "~" H 11900 10400 30  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 Text Label 11550 11500 2    60   ~ 0
-GND
+AGND
 $Comp
 L R R65
 U 1 1 56FDBBA3
