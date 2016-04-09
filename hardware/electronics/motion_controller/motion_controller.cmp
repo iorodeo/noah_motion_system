@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Fri 08 Apr 2016 01:27:40 PM PDT
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Fri 08 Apr 2016 06:17:14 PM PDT
 
 BeginCmp
 TimeStamp = /56F39EC5;
@@ -551,6 +551,34 @@ TimeStamp = /56F3130F;
 Reference = P29;
 ValeurCmp = CONN_2;
 IdModule  = CONNBLOCK2;
+EndCmp
+
+BeginCmp
+TimeStamp = /57085C98;
+Reference = P30;
+ValeurCmp = CONN_1;
+IdModule  = MOUNT_HOLE_4_40;
+EndCmp
+
+BeginCmp
+TimeStamp = /57085CA7;
+Reference = P31;
+ValeurCmp = CONN_1;
+IdModule  = MOUNT_HOLE_4_40;
+EndCmp
+
+BeginCmp
+TimeStamp = /57085CB6;
+Reference = P32;
+ValeurCmp = CONN_1;
+IdModule  = MOUNT_HOLE_4_40;
+EndCmp
+
+BeginCmp
+TimeStamp = /57085CC5;
+Reference = P33;
+ValeurCmp = CONN_1;
+IdModule  = MOUNT_HOLE_4_40;
 EndCmp
 
 BeginCmp

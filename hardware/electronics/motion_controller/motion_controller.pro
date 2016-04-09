@@ -1,4 +1,4 @@
-update=Fri 08 Apr 2016 01:23:01 PM PDT
+update=Fri 08 Apr 2016 06:16:58 PM PDT
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -75,8 +75,8 @@ ModuleTextSizeThickness="    0.150000"
 SolderMaskClearance="    0.000000"
 SolderMaskMinWidth="    0.000000"
 DrawSegmentWidth="    0.200000"
-BoardOutlineThickness="    0.100000"
-ModuleOutlineThickness="    0.150000"
+BoardOutlineThickness="    0.254000"
+ModuleOutlineThickness="    0.254000"
 [pcbnew/libraries]
 LibDir=
 LibName1=sockets
@@ -105,3 +105,4 @@ LibName23=MAXIM-S8
 LibName24=OP07
 LibName25=MEA1
 LibName26=PJRC_SD_CARD
+LibName27=MOUNT_HOLE_4_40

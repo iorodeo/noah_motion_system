@@ -47,7 +47,7 @@ $Descr User 18000 14450
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "8 apr 2016"
+Date "9 apr 2016"
 Rev ""
 Comp ""
 Comment1 ""
@@ -2522,7 +2522,7 @@ $EndComp
 Text Label 16500 1050 0    60   ~ 0
 3V3_TNY
 Text Label 15200 1050 2    60   ~ 0
-GND
+AGND
 Text Label 16650 1450 0    60   ~ 0
 SG0
 $Comp
@@ -3656,7 +3656,7 @@ $EndComp
 Text Label 16500 2150 0    60   ~ 0
 3V3_TNY
 Text Label 15200 2150 2    60   ~ 0
-GND
+AGND
 Text Label 16650 2550 0    60   ~ 0
 SG1
 $Comp
@@ -3706,7 +3706,7 @@ $EndComp
 Text Label 16500 3250 0    60   ~ 0
 3V3_TNY
 Text Label 15200 3250 2    60   ~ 0
-GND
+AGND
 Text Label 16650 3650 0    60   ~ 0
 SG2
 $Comp
@@ -3756,7 +3756,7 @@ $EndComp
 Text Label 16500 4350 0    60   ~ 0
 3V3_TNY
 Text Label 15200 4350 2    60   ~ 0
-GND
+AGND
 Text Label 16650 4750 0    60   ~ 0
 SG3
 $Comp
@@ -3806,7 +3806,7 @@ $EndComp
 Text Label 16550 5400 0    60   ~ 0
 3V3_TNY
 Text Label 15250 5400 2    60   ~ 0
-GND
+AGND
 Text Label 16700 5800 0    60   ~ 0
 SG4
 $Comp
@@ -3856,7 +3856,7 @@ $EndComp
 Text Label 16550 6500 0    60   ~ 0
 3V3_TNY
 Text Label 15250 6500 2    60   ~ 0
-GND
+AGND
 Text Label 16700 6900 0    60   ~ 0
 SG5
 $Comp
@@ -3906,7 +3906,7 @@ $EndComp
 Text Label 16550 7600 0    60   ~ 0
 3V3_TNY
 Text Label 15250 7600 2    60   ~ 0
-GND
+AGND
 Text Label 16700 8000 0    60   ~ 0
 SG6
 $Comp
@@ -3956,7 +3956,7 @@ $EndComp
 Text Label 16550 8700 0    60   ~ 0
 3V3_TNY
 Text Label 15250 8700 2    60   ~ 0
-GND
+AGND
 Text Label 16700 9100 0    60   ~ 0
 SG7
 $Comp
@@ -4006,7 +4006,7 @@ $EndComp
 Text Label 16550 9800 0    60   ~ 0
 3V3_TNY
 Text Label 15250 9800 2    60   ~ 0
-GND
+AGND
 Text Label 16700 10200 0    60   ~ 0
 SG8
 $Comp
@@ -4056,7 +4056,7 @@ $EndComp
 Text Label 16550 10900 0    60   ~ 0
 3V3_TNY
 Text Label 15250 10900 2    60   ~ 0
-GND
+AGND
 Text Label 16700 11300 0    60   ~ 0
 SG9
 $Comp
@@ -4103,15 +4103,11 @@ Connection ~ 14900 3650
 Connection ~ 14900 2550
 Text Notes 15450 850  0    60   ~ 0
 BAS70-04-E3-08 
-Text Notes 750  -150 0    300  ~ 0
-Add SPI based SD card
-Text Notes 14250 450  0    200  ~ 0
-Change to AGND on diode
 $Comp
-L PJRC_SD_CARD U?
+L PJRC_SD_CARD U18
 U 1 1 57081353
 P 8600 1250
-F 0 "U?" H 8600 1600 60  0000 C CNN
+F 0 "U18" H 8600 1600 60  0000 C CNN
 F 1 "PJRC_SD_CARD" H 8600 900 60  0000 C CNN
 F 2 "~" H 8850 1150 60  0000 C CNN
 F 3 "~" H 8850 1150 60  0000 C CNN
@@ -4146,4 +4142,65 @@ Text Label 7800 1450 2    60   ~ 0
 D12,MISO
 Text Label 9400 1050 0    60   ~ 0
 5V_TNY
+$Comp
+L CONN_1 P30
+U 1 1 57085C98
+P 12800 13350
+F 0 "P30" H 12880 13350 40  0000 L CNN
+F 1 "CONN_1" H 12800 13405 30  0001 C CNN
+F 2 "" H 12800 13350 60  0000 C CNN
+F 3 "" H 12800 13350 60  0000 C CNN
+	1    12800 13350
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_1 P31
+U 1 1 57085CA7
+P 12800 13450
+F 0 "P31" H 12880 13450 40  0000 L CNN
+F 1 "CONN_1" H 12800 13505 30  0001 C CNN
+F 2 "" H 12800 13450 60  0000 C CNN
+F 3 "" H 12800 13450 60  0000 C CNN
+	1    12800 13450
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_1 P32
+U 1 1 57085CB6
+P 12800 13550
+F 0 "P32" H 12880 13550 40  0000 L CNN
+F 1 "CONN_1" H 12800 13605 30  0001 C CNN
+F 2 "" H 12800 13550 60  0000 C CNN
+F 3 "" H 12800 13550 60  0000 C CNN
+	1    12800 13550
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_1 P33
+U 1 1 57085CC5
+P 12800 13650
+F 0 "P33" H 12880 13650 40  0000 L CNN
+F 1 "CONN_1" H 12800 13705 30  0001 C CNN
+F 2 "" H 12800 13650 60  0000 C CNN
+F 3 "" H 12800 13650 60  0000 C CNN
+	1    12800 13650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	12650 13350 12550 13350
+Wire Wire Line
+	12550 13350 12550 13650
+Wire Wire Line
+	12350 13650 12650 13650
+Wire Wire Line
+	12650 13450 12550 13450
+Connection ~ 12550 13450
+Wire Wire Line
+	12650 13550 12550 13550
+Connection ~ 12550 13550
+Connection ~ 12550 13650
+Text Label 12350 13650 2    60   ~ 0
+GND
+Text Notes 12300 13800 0    60   ~ 0
+Mount Holes
 $EndSCHEMATC
