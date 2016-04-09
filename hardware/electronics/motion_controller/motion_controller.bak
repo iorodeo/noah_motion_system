@@ -719,7 +719,7 @@ $EndComp
 Text Label 3400 4950 2    60   ~ 0
 GND
 Text Label 3400 4850 2    60   ~ 0
-5V_SEL
+5V_EXT
 Text Label 3400 4750 2    60   ~ 0
 PWM0
 $Comp
@@ -736,7 +736,7 @@ $EndComp
 Text Label 3400 5350 2    60   ~ 0
 GND
 Text Label 3400 5250 2    60   ~ 0
-5V_SEL
+5V_EXT
 Text Label 3400 5150 2    60   ~ 0
 PWM1
 $Comp
@@ -753,7 +753,7 @@ $EndComp
 Text Label 3400 5750 2    60   ~ 0
 GND
 Text Label 3400 5650 2    60   ~ 0
-5V_SEL
+5V_EXT
 Text Label 3400 5550 2    60   ~ 0
 PWM2
 $Comp
@@ -770,7 +770,7 @@ $EndComp
 Text Label 3400 6150 2    60   ~ 0
 GND
 Text Label 3400 6050 2    60   ~ 0
-5V_SEL
+5V_EXT
 Text Label 3400 5950 2    60   ~ 0
 PWM3
 Text Notes 3300 6850 0    60   ~ 0
@@ -2322,7 +2322,7 @@ $EndComp
 Text Label 3400 6550 2    60   ~ 0
 GND
 Text Label 3400 6450 2    60   ~ 0
-5V_SEL
+5V_EXT
 Text Label 3400 6350 2    60   ~ 0
 PWM4,D10,CS
 Text Notes 1200 10300 0    60   ~ 0
