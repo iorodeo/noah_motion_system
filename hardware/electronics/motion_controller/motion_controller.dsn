@@ -26,7 +26,7 @@
     )
     (via "Via[0-1]_889:635_um" "Via[0-1]_889:0_um")
     (rule
-      (width 254)
+      (width 381)
       (clearance 254.1)
       (clearance 254.1 (type default_smd))
       (clearance 63.5 (type smd_smd))
@@ -74,7 +74,7 @@
       (place R30 229870 -66548 front 270 (PN 50k))
       (place R31 226314 -66548 front 270 (PN 50k))
       (place R29 235966 -87376 front 270 (PN 3k))
-      (place C25 120650 -95250 front 270 (PN 0.1uF))
+      (place C25 116840 -82550 front 270 (PN 0.1uF))
       (place R26 212344 -72898 front 90 (PN 50k))
       (place R28 215900 -72898 front 90 (PN 3k))
       (place R24 215900 -66548 front 270 (PN 50k))
@@ -100,9 +100,9 @@
       (place C4 170434 -79502 front 90 (PN 0.1uF))
       (place C1 161036 -96266 front 270 (PN 0.1uF))
       (place C2 156464 -79502 front 90 (PN 0.1uF))
-      (place C23 129540 -71120 front 0 (PN 0.1uF))
-      (place C22 105410 -71120 front 0 (PN 0.1uF))
-      (place C15 253238 -116586 front 90 (PN 0.1uF))
+      (place C23 132080 -69850 front 270 (PN 0.1uF))
+      (place C22 107950 -69850 front 270 (PN 0.1uF))
+      (place C15 261620 -119380 front 90 (PN 0.1uF))
       (place C24 134620 -93980 front 180 (PN 0.1uF))
       (place R50 291846 -87376 front 270 (PN 3k))
       (place R52 282194 -66548 front 270 (PN 50k))
@@ -164,15 +164,15 @@
       (place R4 156464 -72898 front 90 (PN 50k))
     )
     (component "sc-70-6"
-      (place U2 259588 -116586 front 180 (PN NC7WZ04))
-      (place U3 102870 -64770 front 180 (PN NC7WZ16))
-      (place U4 127000 -64770 front 180 (PN NC7WZ16))
+      (place U2 266700 -119380 front 180 (PN NC7WZ04))
+      (place U3 102870 -69850 front 0 (PN NC7WZ16))
+      (place U4 127000 -69850 front 0 (PN NC7WZ16))
     )
     (component PIN_ARRAY_2X2
       (place P20 297180 -127000 front 0 (PN CONN_2X2))
       (place P19 278130 -127000 front 0 (PN CONN_2X2))
-      (place P26 76200 -120650 front 0 (PN CONN_2X2))
-      (place P3 85090 -120650 front 0 (PN CONN_2X2))
+      (place P26 81280 -120650 front 0 (PN CONN_2X2))
+      (place P3 87630 -73660 front 0 (PN CONN_2X2))
     )
     (component PIN_ARRAY_2X1
       (place P4 297434 -110998 front 0 (PN CONN_2))
@@ -1145,26 +1145,26 @@
       /SG0 /SG0_OUT /SG0_REF /SG1 /SG1_OUT /SG1_REF /SG2 /SG2_OUT /SG2_REF
       /SG3 /SG3_OUT /SG3_REF /SG4 /SG4_OUT /SG4_REF /SG5 /SG5_OUT /SG5_REF
       /SG6 /SG6_OUT /SG6_REF /SG7 /SG7_OUT /SG7_REF /SG8 /SG8_OUT /SG8_REF
-      /SG9 /SG9_OUT /SG9_REF /SW_EN /TRIG0 /TRIG1 /VUEXT "N-000001" "N-0000010"
-      "N-00000100" "N-00000102" "N-00000103" "N-00000105" "N-00000108" "N-0000011"
-      "N-00000115" "N-0000012" "N-00000120" "N-00000121" "N-00000122" "N-00000124"
-      "N-00000125" "N-00000126" "N-0000013" "N-00000131" "N-00000132" "N-00000133"
-      "N-00000134" "N-00000135" "N-00000136" "N-00000137" "N-00000138" "N-00000139"
-      "N-0000014" "N-0000015" "N-0000016" "N-0000017" "N-0000018" "N-0000019"
-      "N-000002" "N-0000020" "N-0000021" "N-0000022" "N-0000023" "N-0000024"
-      "N-0000025" "N-0000027" "N-0000028" "N-0000029" "N-000003" "N-0000031"
-      "N-0000032" "N-0000033" "N-0000034" "N-0000035" "N-0000036" "N-0000037"
-      "N-000004" "N-0000044" "N-0000052" "N-0000053" "N-000006" "N-000007"
-      "N-000008" "N-000009" "N-0000095"
+      /SG9 /SG9_OUT /SG9_REF /SW_EN /TRIG0 /TRIG1 "N-000001" "N-0000010" "N-00000100"
+      "N-00000102" "N-00000103" "N-00000105" "N-00000108" "N-0000011" "N-00000115"
+      "N-0000012" "N-00000120" "N-00000121" "N-00000122" "N-00000124" "N-00000125"
+      "N-00000126" "N-0000013" "N-00000131" "N-00000132" "N-00000133" "N-00000134"
+      "N-00000135" "N-00000136" "N-00000137" "N-00000138" "N-00000139" "N-0000014"
+      "N-0000015" "N-0000016" "N-0000017" "N-0000018" "N-0000019" "N-000002"
+      "N-0000020" "N-0000021" "N-0000022" "N-0000023" "N-0000024" "N-0000025"
+      "N-0000027" "N-0000028" "N-0000029" "N-000003" "N-0000031" "N-0000032"
+      "N-0000033" "N-0000034" "N-0000035" "N-0000036" "N-0000037" "N-000004"
+      "N-0000044" "N-0000052" "N-0000053" "N-000006" "N-000007" "N-000008"
+      "N-000009" "N-0000095"
       (circuit
         (use_via Via[0-1]_889:635_um)
       )
       (rule
-        (width 254)
+        (width 381)
         (clearance 254.1)
       )
     )
-    (class Power /5V_EXT /5V_TNY /GND
+    (class Power /5V_EXT /5V_TNY /GND /VUEXT
       (circuit
         (use_via Via[0-1]_889:635_um)
       )
@@ -1175,20 +1175,19 @@
     )
   )
   (wiring
-    (wire (path B.Cu 1524  62788.8 -121920  62788.8 -134925)(net /5V_EXT)(type protect))
-    (wire (path B.Cu 1524  63246 -135382  63246 -141224)(net /5V_EXT)(type protect))
-    (wire (path B.Cu 1524  62788.8 -134925  63246 -135382)(net /5V_EXT)(type protect))
-    (wire (path B.Cu 1524  66040 -141224  63246 -141224  60960 -141224)(net /5V_EXT)(type protect))
-    (wire (path B.Cu 1524  71120 -141224  66040 -141224)(net /5V_EXT)(type protect))
-    (wire (path B.Cu 1524  76200 -141224  71120 -141224)(net /5V_EXT)(type protect))
-    (wire (path B.Cu 1524  81280 -141224  76200 -141224)(net /5V_EXT)(type protect))
-    (wire (path B.Cu 1524  54610 -142240  57658 -142240  59182 -143764)(net /GND)(type protect))
-    (wire (path B.Cu 1524  60960 -143764  59182 -143764)(net /GND)(type protect))
-    (wire (path B.Cu 1524  59944 -125070  56794.4 -121920)(net /GND)(type protect))
-    (wire (path B.Cu 1524  59944 -131572  59944 -125070)(net /GND)(type protect))
-    (wire (path B.Cu 1524  58166 -133350  59944 -131572)(net /GND)(type protect))
-    (wire (path B.Cu 1524  58166 -142748  58166 -133350)(net /GND)(type protect))
-    (wire (path B.Cu 1524  59182 -143764  58166 -142748)(net /GND)(type protect))
+    (wire (path B.Cu 1524  76200 -141224  81280 -141224)(net /5V_EXT)(type protect))
+    (wire (path B.Cu 1524  66040 -141224  71120 -141224  76200 -141224)(net /5V_EXT)(type protect))
+    (wire (path B.Cu 1524  63246 -141224  66040 -141224)(net /5V_EXT)(type protect))
+    (wire (path B.Cu 1524  62788.8 -121920  62788.8 -134163)(net /5V_EXT)(type protect))
+    (wire (path B.Cu 1524  63246 -141224  60960 -141224)(net /5V_EXT)(type protect))
+    (wire (path B.Cu 1524  63500 -140970  63246 -141224)(net /5V_EXT)(type protect))
+    (wire (path B.Cu 1524  63500 -134874  63500 -140970)(net /5V_EXT)(type protect))
+    (wire (path B.Cu 1524  62788.8 -134163  63500 -134874)(net /5V_EXT)(type protect))
+    (wire (path B.Cu 1524  58674 -143764  58674 -129286)(net /GND)(type protect))
+    (wire (path B.Cu 1524  59436 -124562  56794.4 -121920)(net /GND)(type protect))
+    (wire (path B.Cu 1524  59436 -128524  59436 -124562)(net /GND)(type protect))
+    (wire (path B.Cu 1524  58674 -129286  59436 -128524)(net /GND)(type protect))
+    (wire (path B.Cu 1524  60960 -143764  58674 -143764  56134 -143764  54610 -142240)(net /GND)(type protect))
     (wire (path B.Cu 1524  66040 -143764  60960 -143764)(net /GND)(type protect))
     (wire (path B.Cu 1524  71120 -143764  66040 -143764)(net /GND)(type protect))
     (wire (path B.Cu 1524  76200 -143764  71120 -143764)(net /GND)(type protect))
