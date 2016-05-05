@@ -25,8 +25,8 @@ def calcRg(Rin, Rf):
 
 if __name__ == '__main__':
 
-    #Rin = 49900.0
-    Rin = 50000.0
+    Rin = 49900.0
+    #Rin = 50000.0
     Rf  = 3000.0
     Rg = calcRg(Rin,Rf)
 
