@@ -12,12 +12,12 @@ safeZ = 0.5
 overlap = 0.5
 overlapFinish = 0.5
 maxCutDepth = 0.08
-toolDiam =  0.125 
+toolDiam =  3.0/16.0 
 direction = 'ccw'
 startDwell = 1.0
 
 layerList = [
-    '10-32_insert_hole', 
+    '10-32_thread_insert', 
     '15/16_through_hole',
     ]
 
