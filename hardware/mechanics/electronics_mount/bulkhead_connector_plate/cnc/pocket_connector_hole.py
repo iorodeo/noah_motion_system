@@ -5,7 +5,7 @@ from py2gcode import gcode_cmd
 from py2gcode import cnc_dxf
 
 fileName = 'layout.dxf'
-feedrate = 80.0
+feedrate = 100.0
 depth = 0.28 
 startZ = 0.0
 safeZ = 0.5
