@@ -1,0 +1,285 @@
+
+; Generic Start
+G40 (Cancel cutter radius compensation)
+G49 (Cancel tool length offset)
+G80 (Cancel canned cycle)
+G54 (Select coordinate system 1)
+G90 (Set absolute distance mode)
+G20 (Set units to inches)
+G61 (Exact path mode)
+
+F 50.0
+
+; Begin PeckDrill
+; ------------------------------------------------------------
+; layers: ['M4_through_hole']
+; startZ: 0.0
+; startCond: minX
+; stopZ: -0.375
+; startDwell: 0.5
+; fileName: power_supply_plate.dxf
+; safeZ: 0.3
+; dxfTypes: ['CIRCLE']
+; centerX: 11.6968503937
+; centerY: 11.5639763779
+; stepZ: 0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; PeckDrill: rapid move to drill x,y
+G0 X11.69685039 Y11.56397638
+
+; PeckDrill: dwell
+G4 P0.5
+
+; PeckDrill: move to start z
+G1 Z0.00000000
+G83 X11.6968503937 Y11.5639763779 Z-0.375 R0.0 Q0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; End PeckDrill
+; ------------------------------------------------------------
+
+
+; Begin PeckDrill
+; ------------------------------------------------------------
+; layers: ['M4_through_hole']
+; startZ: 0.0
+; startCond: minX
+; stopZ: -0.375
+; startDwell: 0.5
+; fileName: power_supply_plate.dxf
+; safeZ: 0.3
+; dxfTypes: ['CIRCLE']
+; centerX: 4.9448818898
+; centerY: 11.5639763779
+; stepZ: 0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; PeckDrill: rapid move to drill x,y
+G0 X4.94488189 Y11.56397638
+
+; PeckDrill: dwell
+G4 P0.5
+
+; PeckDrill: move to start z
+G1 Z0.00000000
+G83 X4.9448818898 Y11.5639763779 Z-0.375 R0.0 Q0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; End PeckDrill
+; ------------------------------------------------------------
+
+
+; Begin PeckDrill
+; ------------------------------------------------------------
+; layers: ['M4_through_hole']
+; startZ: 0.0
+; startCond: minX
+; stopZ: -0.375
+; startDwell: 0.5
+; fileName: power_supply_plate.dxf
+; safeZ: 0.3
+; dxfTypes: ['CIRCLE']
+; centerX: 4.9448818898
+; centerY: 7.56791637798
+; stepZ: 0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; PeckDrill: rapid move to drill x,y
+G0 X4.94488189 Y7.56791638
+
+; PeckDrill: dwell
+G4 P0.5
+
+; PeckDrill: move to start z
+G1 Z0.00000000
+G83 X4.9448818898 Y7.56791637798 Z-0.375 R0.0 Q0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; End PeckDrill
+; ------------------------------------------------------------
+
+
+; Begin PeckDrill
+; ------------------------------------------------------------
+; layers: ['M4_through_hole']
+; startZ: 0.0
+; startCond: minX
+; stopZ: -0.375
+; startDwell: 0.5
+; fileName: power_supply_plate.dxf
+; safeZ: 0.3
+; dxfTypes: ['CIRCLE']
+; centerX: 11.6968503937
+; centerY: 7.56791338578
+; stepZ: 0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; PeckDrill: rapid move to drill x,y
+G0 X11.69685039 Y7.56791339
+
+; PeckDrill: dwell
+G4 P0.5
+
+; PeckDrill: move to start z
+G1 Z0.00000000
+G83 X11.6968503937 Y7.56791338578 Z-0.375 R0.0 Q0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; End PeckDrill
+; ------------------------------------------------------------
+
+
+; Begin PeckDrill
+; ------------------------------------------------------------
+; layers: ['M4_through_hole']
+; startZ: 0.0
+; startCond: minX
+; stopZ: -0.375
+; startDwell: 0.5
+; fileName: power_supply_plate.dxf
+; safeZ: 0.3
+; dxfTypes: ['CIRCLE']
+; centerX: 11.6968503937
+; centerY: 6.47834645669
+; stepZ: 0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; PeckDrill: rapid move to drill x,y
+G0 X11.69685039 Y6.47834646
+
+; PeckDrill: dwell
+G4 P0.5
+
+; PeckDrill: move to start z
+G1 Z0.00000000
+G83 X11.6968503937 Y6.47834645669 Z-0.375 R0.0 Q0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; End PeckDrill
+; ------------------------------------------------------------
+
+
+; Begin PeckDrill
+; ------------------------------------------------------------
+; layers: ['M4_through_hole']
+; startZ: 0.0
+; startCond: minX
+; stopZ: -0.375
+; startDwell: 0.5
+; fileName: power_supply_plate.dxf
+; safeZ: 0.3
+; dxfTypes: ['CIRCLE']
+; centerX: 4.9448818898
+; centerY: 6.47834645669
+; stepZ: 0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; PeckDrill: rapid move to drill x,y
+G0 X4.94488189 Y6.47834646
+
+; PeckDrill: dwell
+G4 P0.5
+
+; PeckDrill: move to start z
+G1 Z0.00000000
+G83 X4.9448818898 Y6.47834645669 Z-0.375 R0.0 Q0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; End PeckDrill
+; ------------------------------------------------------------
+
+
+; Begin PeckDrill
+; ------------------------------------------------------------
+; layers: ['M4_through_hole']
+; startZ: 0.0
+; startCond: minX
+; stopZ: -0.375
+; startDwell: 0.5
+; fileName: power_supply_plate.dxf
+; safeZ: 0.3
+; dxfTypes: ['CIRCLE']
+; centerX: 4.9448818898
+; centerY: 2.48228645669
+; stepZ: 0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; PeckDrill: rapid move to drill x,y
+G0 X4.94488189 Y2.48228646
+
+; PeckDrill: dwell
+G4 P0.5
+
+; PeckDrill: move to start z
+G1 Z0.00000000
+G83 X4.9448818898 Y2.48228645669 Z-0.375 R0.0 Q0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; End PeckDrill
+; ------------------------------------------------------------
+
+
+; Begin PeckDrill
+; ------------------------------------------------------------
+; layers: ['M4_through_hole']
+; startZ: 0.0
+; startCond: minX
+; stopZ: -0.375
+; startDwell: 0.5
+; fileName: power_supply_plate.dxf
+; safeZ: 0.3
+; dxfTypes: ['CIRCLE']
+; centerX: 11.6968503937
+; centerY: 2.48228346457
+; stepZ: 0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; PeckDrill: rapid move to drill x,y
+G0 X11.69685039 Y2.48228346
+
+; PeckDrill: dwell
+G4 P0.5
+
+; PeckDrill: move to start z
+G1 Z0.00000000
+G83 X11.6968503937 Y2.48228346457 Z-0.375 R0.0 Q0.05
+
+; PeckDrill: rapid move to safe z
+G0 Z0.30000000
+
+; End PeckDrill
+; ------------------------------------------------------------
+
+
+M2 (End program)
