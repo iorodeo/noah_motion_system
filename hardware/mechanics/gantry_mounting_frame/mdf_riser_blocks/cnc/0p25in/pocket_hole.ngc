@@ -1,0 +1,2177 @@
+
+; Generic Start
+G40 (Cancel cutter radius compensation)
+G49 (Cancel tool length offset)
+G80 (Cancel canned cycle)
+G54 (Select coordinate system 1)
+G90 (Set absolute distance mode)
+G20 (Set units to inches)
+G61 (Exact path mode)
+
+F 150.0
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 8.312
+; centerY: 5.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X8.48375000 Y5.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X8.48375000 Y5.75000000
+G1 X8.48375000 Y5.75000000 Z0.00000000
+G3 X8.48375000 Y5.75000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X8.48375000 Y5.75000000
+G3 X8.48375000 Y5.75000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y5.75000000
+G3 X8.39000000 Y5.75000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y5.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X8.48375000 Y5.75000000
+G1 X8.48375000 Y5.75000000 Z-0.15000000
+G3 X8.48375000 Y5.75000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X8.48375000 Y5.75000000
+G3 X8.48375000 Y5.75000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y5.75000000
+G3 X8.39000000 Y5.75000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y5.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 8.312
+; centerY: 4.25
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X8.48375000 Y4.25000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X8.48375000 Y4.25000000
+G1 X8.48375000 Y4.25000000 Z0.00000000
+G3 X8.48375000 Y4.25000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X8.48375000 Y4.25000000
+G3 X8.48375000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y4.25000000
+G3 X8.39000000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y4.25000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X8.48375000 Y4.25000000
+G1 X8.48375000 Y4.25000000 Z-0.15000000
+G3 X8.48375000 Y4.25000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X8.48375000 Y4.25000000
+G3 X8.48375000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y4.25000000
+G3 X8.39000000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y4.25000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 8.312
+; centerY: 2.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X8.48375000 Y2.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X8.48375000 Y2.75000000
+G1 X8.48375000 Y2.75000000 Z0.00000000
+G3 X8.48375000 Y2.75000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X8.48375000 Y2.75000000
+G3 X8.48375000 Y2.75000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y2.75000000
+G3 X8.39000000 Y2.75000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y2.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X8.48375000 Y2.75000000
+G1 X8.48375000 Y2.75000000 Z-0.15000000
+G3 X8.48375000 Y2.75000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X8.48375000 Y2.75000000
+G3 X8.48375000 Y2.75000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y2.75000000
+G3 X8.39000000 Y2.75000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y2.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 4.188
+; centerY: 2.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X4.35975000 Y2.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X4.35975000 Y2.75000000
+G1 X4.35975000 Y2.75000000 Z0.00000000
+G3 X4.35975000 Y2.75000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X4.35975000 Y2.75000000
+G3 X4.35975000 Y2.75000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y2.75000000
+G3 X4.26600000 Y2.75000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y2.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X4.35975000 Y2.75000000
+G1 X4.35975000 Y2.75000000 Z-0.15000000
+G3 X4.35975000 Y2.75000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X4.35975000 Y2.75000000
+G3 X4.35975000 Y2.75000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y2.75000000
+G3 X4.26600000 Y2.75000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y2.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 4.188
+; centerY: 4.25
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X4.35975000 Y4.25000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X4.35975000 Y4.25000000
+G1 X4.35975000 Y4.25000000 Z0.00000000
+G3 X4.35975000 Y4.25000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X4.35975000 Y4.25000000
+G3 X4.35975000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y4.25000000
+G3 X4.26600000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y4.25000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X4.35975000 Y4.25000000
+G1 X4.35975000 Y4.25000000 Z-0.15000000
+G3 X4.35975000 Y4.25000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X4.35975000 Y4.25000000
+G3 X4.35975000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y4.25000000
+G3 X4.26600000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y4.25000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 4.188
+; centerY: 5.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X4.35975000 Y5.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X4.35975000 Y5.75000000
+G1 X4.35975000 Y5.75000000 Z0.00000000
+G3 X4.35975000 Y5.75000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X4.35975000 Y5.75000000
+G3 X4.35975000 Y5.75000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y5.75000000
+G3 X4.26600000 Y5.75000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y5.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X4.35975000 Y5.75000000
+G1 X4.35975000 Y5.75000000 Z-0.15000000
+G3 X4.35975000 Y5.75000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X4.35975000 Y5.75000000
+G3 X4.35975000 Y5.75000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y5.75000000
+G3 X4.26600000 Y5.75000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y5.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 10.312
+; centerY: 4.25
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X10.48375000 Y4.25000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X10.48375000 Y4.25000000
+G1 X10.48375000 Y4.25000000 Z0.00000000
+G3 X10.48375000 Y4.25000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X10.48375000 Y4.25000000
+G3 X10.48375000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X10.39000000 Y4.25000000
+G3 X10.39000000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X10.31200000 Y4.25000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X10.48375000 Y4.25000000
+G1 X10.48375000 Y4.25000000 Z-0.15000000
+G3 X10.48375000 Y4.25000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X10.48375000 Y4.25000000
+G3 X10.48375000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X10.39000000 Y4.25000000
+G3 X10.39000000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X10.31200000 Y4.25000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.1285
+; dxfTypes: ['CIRCLE']
+; centerX: 10.312
+; centerY: 5.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X10.34675000 Y5.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X10.34675000 Y5.75000000
+G1 X10.34675000 Y5.75000000 Z0.00000000
+G3 X10.34675000 Y5.75000000 Z-0.15000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X10.34675000 Y5.75000000
+G3 X10.34675000 Y5.75000000 I-0.03475000 J0.00000000
+G1 X10.31200000 Y5.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X10.34675000 Y5.75000000
+G1 X10.34675000 Y5.75000000 Z-0.15000000
+G3 X10.34675000 Y5.75000000 Z-0.27000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X10.34675000 Y5.75000000
+G3 X10.34675000 Y5.75000000 I-0.03475000 J0.00000000
+G1 X10.31200000 Y5.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.1285
+; dxfTypes: ['CIRCLE']
+; centerX: 10.312
+; centerY: 2.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X10.34675000 Y2.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X10.34675000 Y2.75000000
+G1 X10.34675000 Y2.75000000 Z0.00000000
+G3 X10.34675000 Y2.75000000 Z-0.15000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X10.34675000 Y2.75000000
+G3 X10.34675000 Y2.75000000 I-0.03475000 J0.00000000
+G1 X10.31200000 Y2.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X10.34675000 Y2.75000000
+G1 X10.34675000 Y2.75000000 Z-0.15000000
+G3 X10.34675000 Y2.75000000 Z-0.27000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X10.34675000 Y2.75000000
+G3 X10.34675000 Y2.75000000 I-0.03475000 J0.00000000
+G1 X10.31200000 Y2.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 8.312
+; centerY: 10.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X8.48375000 Y10.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X8.48375000 Y10.95000000
+G1 X8.48375000 Y10.95000000 Z0.00000000
+G3 X8.48375000 Y10.95000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X8.48375000 Y10.95000000
+G3 X8.48375000 Y10.95000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y10.95000000
+G3 X8.39000000 Y10.95000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y10.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X8.48375000 Y10.95000000
+G1 X8.48375000 Y10.95000000 Z-0.15000000
+G3 X8.48375000 Y10.95000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X8.48375000 Y10.95000000
+G3 X8.48375000 Y10.95000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y10.95000000
+G3 X8.39000000 Y10.95000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y10.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 8.312
+; centerY: 9.45
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X8.48375000 Y9.45000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X8.48375000 Y9.45000000
+G1 X8.48375000 Y9.45000000 Z0.00000000
+G3 X8.48375000 Y9.45000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X8.48375000 Y9.45000000
+G3 X8.48375000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y9.45000000
+G3 X8.39000000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y9.45000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X8.48375000 Y9.45000000
+G1 X8.48375000 Y9.45000000 Z-0.15000000
+G3 X8.48375000 Y9.45000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X8.48375000 Y9.45000000
+G3 X8.48375000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y9.45000000
+G3 X8.39000000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y9.45000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 8.312
+; centerY: 7.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X8.48375000 Y7.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X8.48375000 Y7.95000000
+G1 X8.48375000 Y7.95000000 Z0.00000000
+G3 X8.48375000 Y7.95000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X8.48375000 Y7.95000000
+G3 X8.48375000 Y7.95000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y7.95000000
+G3 X8.39000000 Y7.95000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y7.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X8.48375000 Y7.95000000
+G1 X8.48375000 Y7.95000000 Z-0.15000000
+G3 X8.48375000 Y7.95000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X8.48375000 Y7.95000000
+G3 X8.48375000 Y7.95000000 I-0.17175000 J0.00000000
+G1 X8.39000000 Y7.95000000
+G3 X8.39000000 Y7.95000000 I-0.07800000 J0.00000000
+G1 X8.31200000 Y7.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 4.188
+; centerY: 7.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X4.35975000 Y7.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X4.35975000 Y7.95000000
+G1 X4.35975000 Y7.95000000 Z0.00000000
+G3 X4.35975000 Y7.95000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X4.35975000 Y7.95000000
+G3 X4.35975000 Y7.95000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y7.95000000
+G3 X4.26600000 Y7.95000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y7.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X4.35975000 Y7.95000000
+G1 X4.35975000 Y7.95000000 Z-0.15000000
+G3 X4.35975000 Y7.95000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X4.35975000 Y7.95000000
+G3 X4.35975000 Y7.95000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y7.95000000
+G3 X4.26600000 Y7.95000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y7.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 4.188
+; centerY: 9.45
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X4.35975000 Y9.45000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X4.35975000 Y9.45000000
+G1 X4.35975000 Y9.45000000 Z0.00000000
+G3 X4.35975000 Y9.45000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X4.35975000 Y9.45000000
+G3 X4.35975000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y9.45000000
+G3 X4.26600000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y9.45000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X4.35975000 Y9.45000000
+G1 X4.35975000 Y9.45000000 Z-0.15000000
+G3 X4.35975000 Y9.45000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X4.35975000 Y9.45000000
+G3 X4.35975000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y9.45000000
+G3 X4.26600000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y9.45000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 4.188
+; centerY: 10.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X4.35975000 Y10.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X4.35975000 Y10.95000000
+G1 X4.35975000 Y10.95000000 Z0.00000000
+G3 X4.35975000 Y10.95000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X4.35975000 Y10.95000000
+G3 X4.35975000 Y10.95000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y10.95000000
+G3 X4.26600000 Y10.95000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y10.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X4.35975000 Y10.95000000
+G1 X4.35975000 Y10.95000000 Z-0.15000000
+G3 X4.35975000 Y10.95000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X4.35975000 Y10.95000000
+G3 X4.35975000 Y10.95000000 I-0.17175000 J0.00000000
+G1 X4.26600000 Y10.95000000
+G3 X4.26600000 Y10.95000000 I-0.07800000 J0.00000000
+G1 X4.18800000 Y10.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 10.312
+; centerY: 9.45
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X10.48375000 Y9.45000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X10.48375000 Y9.45000000
+G1 X10.48375000 Y9.45000000 Z0.00000000
+G3 X10.48375000 Y9.45000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X10.48375000 Y9.45000000
+G3 X10.48375000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X10.39000000 Y9.45000000
+G3 X10.39000000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X10.31200000 Y9.45000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X10.48375000 Y9.45000000
+G1 X10.48375000 Y9.45000000 Z-0.15000000
+G3 X10.48375000 Y9.45000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X10.48375000 Y9.45000000
+G3 X10.48375000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X10.39000000 Y9.45000000
+G3 X10.39000000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X10.31200000 Y9.45000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.1285
+; dxfTypes: ['CIRCLE']
+; centerX: 10.312
+; centerY: 10.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X10.34675000 Y10.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X10.34675000 Y10.95000000
+G1 X10.34675000 Y10.95000000 Z0.00000000
+G3 X10.34675000 Y10.95000000 Z-0.15000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X10.34675000 Y10.95000000
+G3 X10.34675000 Y10.95000000 I-0.03475000 J0.00000000
+G1 X10.31200000 Y10.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X10.34675000 Y10.95000000
+G1 X10.34675000 Y10.95000000 Z-0.15000000
+G3 X10.34675000 Y10.95000000 Z-0.27000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X10.34675000 Y10.95000000
+G3 X10.34675000 Y10.95000000 I-0.03475000 J0.00000000
+G1 X10.31200000 Y10.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.1285
+; dxfTypes: ['CIRCLE']
+; centerX: 10.312
+; centerY: 7.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X10.34675000 Y7.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X10.34675000 Y7.95000000
+G1 X10.34675000 Y7.95000000 Z0.00000000
+G3 X10.34675000 Y7.95000000 Z-0.15000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X10.34675000 Y7.95000000
+G3 X10.34675000 Y7.95000000 I-0.03475000 J0.00000000
+G1 X10.31200000 Y7.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X10.34675000 Y7.95000000
+G1 X10.34675000 Y7.95000000 Z-0.15000000
+G3 X10.34675000 Y7.95000000 Z-0.27000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X10.34675000 Y7.95000000
+G3 X10.34675000 Y7.95000000 I-0.03475000 J0.00000000
+G1 X10.31200000 Y7.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 16.612
+; centerY: 5.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X16.78375000 Y5.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X16.78375000 Y5.75000000
+G1 X16.78375000 Y5.75000000 Z0.00000000
+G3 X16.78375000 Y5.75000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X16.78375000 Y5.75000000
+G3 X16.78375000 Y5.75000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y5.75000000
+G3 X16.69000000 Y5.75000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y5.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X16.78375000 Y5.75000000
+G1 X16.78375000 Y5.75000000 Z-0.15000000
+G3 X16.78375000 Y5.75000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X16.78375000 Y5.75000000
+G3 X16.78375000 Y5.75000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y5.75000000
+G3 X16.69000000 Y5.75000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y5.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 16.612
+; centerY: 4.25
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X16.78375000 Y4.25000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X16.78375000 Y4.25000000
+G1 X16.78375000 Y4.25000000 Z0.00000000
+G3 X16.78375000 Y4.25000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X16.78375000 Y4.25000000
+G3 X16.78375000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y4.25000000
+G3 X16.69000000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y4.25000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X16.78375000 Y4.25000000
+G1 X16.78375000 Y4.25000000 Z-0.15000000
+G3 X16.78375000 Y4.25000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X16.78375000 Y4.25000000
+G3 X16.78375000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y4.25000000
+G3 X16.69000000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y4.25000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 16.612
+; centerY: 2.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X16.78375000 Y2.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X16.78375000 Y2.75000000
+G1 X16.78375000 Y2.75000000 Z0.00000000
+G3 X16.78375000 Y2.75000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X16.78375000 Y2.75000000
+G3 X16.78375000 Y2.75000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y2.75000000
+G3 X16.69000000 Y2.75000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y2.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X16.78375000 Y2.75000000
+G1 X16.78375000 Y2.75000000 Z-0.15000000
+G3 X16.78375000 Y2.75000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X16.78375000 Y2.75000000
+G3 X16.78375000 Y2.75000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y2.75000000
+G3 X16.69000000 Y2.75000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y2.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 12.488
+; centerY: 2.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X12.65975000 Y2.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X12.65975000 Y2.75000000
+G1 X12.65975000 Y2.75000000 Z0.00000000
+G3 X12.65975000 Y2.75000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X12.65975000 Y2.75000000
+G3 X12.65975000 Y2.75000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y2.75000000
+G3 X12.56600000 Y2.75000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y2.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X12.65975000 Y2.75000000
+G1 X12.65975000 Y2.75000000 Z-0.15000000
+G3 X12.65975000 Y2.75000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X12.65975000 Y2.75000000
+G3 X12.65975000 Y2.75000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y2.75000000
+G3 X12.56600000 Y2.75000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y2.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 12.488
+; centerY: 4.25
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X12.65975000 Y4.25000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X12.65975000 Y4.25000000
+G1 X12.65975000 Y4.25000000 Z0.00000000
+G3 X12.65975000 Y4.25000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X12.65975000 Y4.25000000
+G3 X12.65975000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y4.25000000
+G3 X12.56600000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y4.25000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X12.65975000 Y4.25000000
+G1 X12.65975000 Y4.25000000 Z-0.15000000
+G3 X12.65975000 Y4.25000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X12.65975000 Y4.25000000
+G3 X12.65975000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y4.25000000
+G3 X12.56600000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y4.25000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 12.488
+; centerY: 5.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X12.65975000 Y5.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X12.65975000 Y5.75000000
+G1 X12.65975000 Y5.75000000 Z0.00000000
+G3 X12.65975000 Y5.75000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X12.65975000 Y5.75000000
+G3 X12.65975000 Y5.75000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y5.75000000
+G3 X12.56600000 Y5.75000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y5.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X12.65975000 Y5.75000000
+G1 X12.65975000 Y5.75000000 Z-0.15000000
+G3 X12.65975000 Y5.75000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X12.65975000 Y5.75000000
+G3 X12.65975000 Y5.75000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y5.75000000
+G3 X12.56600000 Y5.75000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y5.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 18.612
+; centerY: 4.25
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X18.78375000 Y4.25000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X18.78375000 Y4.25000000
+G1 X18.78375000 Y4.25000000 Z0.00000000
+G3 X18.78375000 Y4.25000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X18.78375000 Y4.25000000
+G3 X18.78375000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X18.69000000 Y4.25000000
+G3 X18.69000000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X18.61200000 Y4.25000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X18.78375000 Y4.25000000
+G1 X18.78375000 Y4.25000000 Z-0.15000000
+G3 X18.78375000 Y4.25000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X18.78375000 Y4.25000000
+G3 X18.78375000 Y4.25000000 I-0.17175000 J0.00000000
+G1 X18.69000000 Y4.25000000
+G3 X18.69000000 Y4.25000000 I-0.07800000 J0.00000000
+G1 X18.61200000 Y4.25000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.1285
+; dxfTypes: ['CIRCLE']
+; centerX: 18.612
+; centerY: 5.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X18.64675000 Y5.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X18.64675000 Y5.75000000
+G1 X18.64675000 Y5.75000000 Z0.00000000
+G3 X18.64675000 Y5.75000000 Z-0.15000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X18.64675000 Y5.75000000
+G3 X18.64675000 Y5.75000000 I-0.03475000 J0.00000000
+G1 X18.61200000 Y5.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X18.64675000 Y5.75000000
+G1 X18.64675000 Y5.75000000 Z-0.15000000
+G3 X18.64675000 Y5.75000000 Z-0.27000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X18.64675000 Y5.75000000
+G3 X18.64675000 Y5.75000000 I-0.03475000 J0.00000000
+G1 X18.61200000 Y5.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.1285
+; dxfTypes: ['CIRCLE']
+; centerX: 18.612
+; centerY: 2.75
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X18.64675000 Y2.75000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X18.64675000 Y2.75000000
+G1 X18.64675000 Y2.75000000 Z0.00000000
+G3 X18.64675000 Y2.75000000 Z-0.15000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X18.64675000 Y2.75000000
+G3 X18.64675000 Y2.75000000 I-0.03475000 J0.00000000
+G1 X18.61200000 Y2.75000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X18.64675000 Y2.75000000
+G1 X18.64675000 Y2.75000000 Z-0.15000000
+G3 X18.64675000 Y2.75000000 Z-0.27000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X18.64675000 Y2.75000000
+G3 X18.64675000 Y2.75000000 I-0.03475000 J0.00000000
+G1 X18.61200000 Y2.75000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 16.612
+; centerY: 10.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X16.78375000 Y10.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X16.78375000 Y10.95000000
+G1 X16.78375000 Y10.95000000 Z0.00000000
+G3 X16.78375000 Y10.95000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X16.78375000 Y10.95000000
+G3 X16.78375000 Y10.95000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y10.95000000
+G3 X16.69000000 Y10.95000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y10.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X16.78375000 Y10.95000000
+G1 X16.78375000 Y10.95000000 Z-0.15000000
+G3 X16.78375000 Y10.95000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X16.78375000 Y10.95000000
+G3 X16.78375000 Y10.95000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y10.95000000
+G3 X16.69000000 Y10.95000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y10.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 16.612
+; centerY: 9.45
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X16.78375000 Y9.45000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X16.78375000 Y9.45000000
+G1 X16.78375000 Y9.45000000 Z0.00000000
+G3 X16.78375000 Y9.45000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X16.78375000 Y9.45000000
+G3 X16.78375000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y9.45000000
+G3 X16.69000000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y9.45000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X16.78375000 Y9.45000000
+G1 X16.78375000 Y9.45000000 Z-0.15000000
+G3 X16.78375000 Y9.45000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X16.78375000 Y9.45000000
+G3 X16.78375000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y9.45000000
+G3 X16.69000000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y9.45000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 16.612
+; centerY: 7.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X16.78375000 Y7.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X16.78375000 Y7.95000000
+G1 X16.78375000 Y7.95000000 Z0.00000000
+G3 X16.78375000 Y7.95000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X16.78375000 Y7.95000000
+G3 X16.78375000 Y7.95000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y7.95000000
+G3 X16.69000000 Y7.95000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y7.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X16.78375000 Y7.95000000
+G1 X16.78375000 Y7.95000000 Z-0.15000000
+G3 X16.78375000 Y7.95000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X16.78375000 Y7.95000000
+G3 X16.78375000 Y7.95000000 I-0.17175000 J0.00000000
+G1 X16.69000000 Y7.95000000
+G3 X16.69000000 Y7.95000000 I-0.07800000 J0.00000000
+G1 X16.61200000 Y7.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 12.488
+; centerY: 7.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X12.65975000 Y7.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X12.65975000 Y7.95000000
+G1 X12.65975000 Y7.95000000 Z0.00000000
+G3 X12.65975000 Y7.95000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X12.65975000 Y7.95000000
+G3 X12.65975000 Y7.95000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y7.95000000
+G3 X12.56600000 Y7.95000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y7.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X12.65975000 Y7.95000000
+G1 X12.65975000 Y7.95000000 Z-0.15000000
+G3 X12.65975000 Y7.95000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X12.65975000 Y7.95000000
+G3 X12.65975000 Y7.95000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y7.95000000
+G3 X12.56600000 Y7.95000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y7.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 12.488
+; centerY: 9.45
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X12.65975000 Y9.45000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X12.65975000 Y9.45000000
+G1 X12.65975000 Y9.45000000 Z0.00000000
+G3 X12.65975000 Y9.45000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X12.65975000 Y9.45000000
+G3 X12.65975000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y9.45000000
+G3 X12.56600000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y9.45000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X12.65975000 Y9.45000000
+G1 X12.65975000 Y9.45000000 Z-0.15000000
+G3 X12.65975000 Y9.45000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X12.65975000 Y9.45000000
+G3 X12.65975000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y9.45000000
+G3 X12.56600000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y9.45000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 12.488
+; centerY: 10.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X12.65975000 Y10.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X12.65975000 Y10.95000000
+G1 X12.65975000 Y10.95000000 Z0.00000000
+G3 X12.65975000 Y10.95000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X12.65975000 Y10.95000000
+G3 X12.65975000 Y10.95000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y10.95000000
+G3 X12.56600000 Y10.95000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y10.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X12.65975000 Y10.95000000
+G1 X12.65975000 Y10.95000000 Z-0.15000000
+G3 X12.65975000 Y10.95000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X12.65975000 Y10.95000000
+G3 X12.65975000 Y10.95000000 I-0.17175000 J0.00000000
+G1 X12.56600000 Y10.95000000
+G3 X12.56600000 Y10.95000000 I-0.07800000 J0.00000000
+G1 X12.48800000 Y10.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.2655
+; dxfTypes: ['CIRCLE']
+; centerX: 18.612
+; centerY: 9.45
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X18.78375000 Y9.45000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X18.78375000 Y9.45000000
+G1 X18.78375000 Y9.45000000 Z0.00000000
+G3 X18.78375000 Y9.45000000 Z-0.15000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X18.78375000 Y9.45000000
+G3 X18.78375000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X18.69000000 Y9.45000000
+G3 X18.69000000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X18.61200000 Y9.45000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X18.78375000 Y9.45000000
+G1 X18.78375000 Y9.45000000 Z-0.15000000
+G3 X18.78375000 Y9.45000000 Z-0.27000000 I-0.17175000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X18.78375000 Y9.45000000
+G3 X18.78375000 Y9.45000000 I-0.17175000 J0.00000000
+G1 X18.69000000 Y9.45000000
+G3 X18.69000000 Y9.45000000 I-0.07800000 J0.00000000
+G1 X18.61200000 Y9.45000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.1285
+; dxfTypes: ['CIRCLE']
+; centerX: 18.612
+; centerY: 10.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X18.64675000 Y10.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X18.64675000 Y10.95000000
+G1 X18.64675000 Y10.95000000 Z0.00000000
+G3 X18.64675000 Y10.95000000 Z-0.15000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X18.64675000 Y10.95000000
+G3 X18.64675000 Y10.95000000 I-0.03475000 J0.00000000
+G1 X18.61200000 Y10.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X18.64675000 Y10.95000000
+G1 X18.64675000 Y10.95000000 Z-0.15000000
+G3 X18.64675000 Y10.95000000 Z-0.27000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X18.64675000 Y10.95000000
+G3 X18.64675000 Y10.95000000 I-0.03475000 J0.00000000
+G1 X18.61200000 Y10.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+; Begin CircPocketXY
+; ------------------------------------------------------------
+; startZ: 0.0
+; layers: too big
+; direction: ccw
+; overlapFinish: 0.5
+; startDwell: 1.0
+; depth: 0.27
+; maxCutDepth: 0.15
+; fileName: layout.dxf
+; safeZ: 0.5
+; radius: 0.1285
+; dxfTypes: ['CIRCLE']
+; centerX: 18.612
+; centerY: 7.95
+; toolDiam: 0.1875
+; overlap: 0.5
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; CircPocketXY: rapid move to start x,y
+G0 X18.64675000 Y7.95000000
+
+; CircPocketXY: dwell
+G4 P1.0
+
+; CircPocketXY: move to start z
+G1 Z0.00000000
+
+; CircPocketXY: pass 1 lead-in
+G1 X18.64675000 Y7.95000000
+G1 X18.64675000 Y7.95000000 Z0.00000000
+G3 X18.64675000 Y7.95000000 Z-0.15000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 1 filled circle
+G1 X18.64675000 Y7.95000000
+G3 X18.64675000 Y7.95000000 I-0.03475000 J0.00000000
+G1 X18.61200000 Y7.95000000
+
+; CircPocketXY: pass 2 lead-in
+G1 X18.64675000 Y7.95000000
+G1 X18.64675000 Y7.95000000 Z-0.15000000
+G3 X18.64675000 Y7.95000000 Z-0.27000000 I-0.03475000 J0.00000000
+
+; CircPocketXY: pass 2 filled circle
+G1 X18.64675000 Y7.95000000
+G3 X18.64675000 Y7.95000000 I-0.03475000 J0.00000000
+G1 X18.61200000 Y7.95000000
+
+; CircPocketXY: rapid move to safe z
+G0 Z0.50000000
+
+; End CircPocketXY
+; ------------------------------------------------------------
+
+
+M2 (End program)
