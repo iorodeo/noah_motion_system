@@ -30,11 +30,14 @@ namespace constants
     const int NumStepper = 5;
     const int NumAnalogInput = 10;
     const int NumPwm = 5;
-
+    const int NumTrigger = 2;
+    const int NumDigitalOutput = 2;
 
     // Pin mappings
     extern const StepperPin StepperPinArray[NumStepper];
     extern const int PwmPinArray[NumPwm];
     extern const int AnalogInputPinArray[NumAnalogInput]; 
+    extern const int TriggerPinArray[NumTrigger];
+    extern const int DigitalOutputPin[NumDigitalOutput];
 }
 #endif

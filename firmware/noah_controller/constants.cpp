@@ -29,4 +29,6 @@ namespace constants
     const StepperPin StepperPinArray[NumStepper] = {{2,3},{4,5},{6,7},{8,9},{24,25}};
     const int PwmPinArray[NumPwm] = {20,21,22,23,10};
     const int AnalogInputPinArray[NumAnalogInput] = {A0,A1,A2,A3,A4,A5,A10,A11,A12,A13};
+    const int TriggerPinArray[NumTrigger] = {26,27};
+    const int DigitalOutputPin[NumDigitalOutput] = {0,1};
 }

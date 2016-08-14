@@ -12,9 +12,12 @@ class MotionController
         volatile bool new_msg_flag_;
 
     private:
+
+        uint16_t mode_;
+
         IntervalTimer timer_;
-        uint32_t micros_last_ = 0;
         uint64_t time_us_ = 0;
+        uint32_t micros_last_ = 0;
 
 };
 

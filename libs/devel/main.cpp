@@ -8,6 +8,8 @@ const int Pid = 0x0486;
 const int NumStepper = 5;
 const int NumAnalogInput = 10;
 const int NumPwm = 5;
+const int NumTrigger = 2;
+const int NumDigitalOutput = 2;
 
 struct __attribute__((packed)) DevToHostMsg 
 {
@@ -17,9 +19,7 @@ struct __attribute__((packed)) DevToHostMsg
     uint16_t stepper_velocity[NumStepper];
     uint16_t pwm_position[NumPwm];
     uint16_t analog_input[NumAnalogInput];
-    uint16_t trigger_prescalar;
-    uint8_t trigger_enable;
-    uint8_t digital_output;
+    uint16_t trigger_cnt[NumTrigger];
 };
 
 struct __attribute__((packed)) HostToDevMsg 
@@ -29,12 +29,11 @@ struct __attribute__((packed)) HostToDevMsg
     uint16_t stepper_position[NumStepper];
     uint16_t stepper_velocity[NumStepper];
     uint16_t pwm_position[NumPwm];
-    uint16_t trigger_prescalar;
-    uint8_t trigger_enable;
-    uint8_t digital_output;
-    uint8_t padding[20];
+    uint16_t trigger_cnt[NumTrigger];
+    uint8_t trigger_enable[NumTrigger]; 
+    uint8_t digital_output[NumDigitalOutput];
+    uint8_t padding[16];
 };
-
 
 bool quit_flag = false;
 void sig_int_handler(int param);
