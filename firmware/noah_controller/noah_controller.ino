@@ -1,13 +1,13 @@
-#include "motion_controller.h"
+#include "system_state.h"
 
 void setup()
 {
-    motion_controller.initialize();
+    system_state.initialize();
 }
 
 
 void loop()
 {
-    motion_controller.update();
+    system_state.update();
 }
 

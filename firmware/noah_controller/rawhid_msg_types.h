@@ -7,8 +7,8 @@ struct __attribute__((packed)) DevToHostMsg
 {
     uint16_t status;
     uint64_t time_us;
-    uint16_t stepper_position[constants::NumStepper];
-    uint16_t stepper_velocity[constants::NumStepper];
+    int16_t stepper_position[constants::NumStepper];
+    int16_t stepper_velocity[constants::NumStepper];
     uint16_t pwm_position[constants::NumPwm];
     uint16_t analog_input[constants::NumAnalogInput];
     uint16_t trigger_cnt[constants::NumTrigger];
@@ -18,8 +18,8 @@ struct __attribute__((packed)) HostToDevMsg
 {
     uint16_t command;
     uint64_t time_us;
-    uint16_t stepper_position[constants::NumStepper];
-    uint16_t stepper_velocity[constants::NumStepper];
+    int16_t stepper_position[constants::NumStepper];
+    int16_t stepper_velocity[constants::NumStepper];
     uint16_t pwm_position[constants::NumPwm];
     uint16_t trigger_cnt[constants::NumTrigger];
     uint8_t trigger_enable[constants::NumTrigger]; 
