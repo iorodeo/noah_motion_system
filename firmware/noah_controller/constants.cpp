@@ -27,16 +27,29 @@ namespace constants
     const uint16_t  PwmDefaultValue = (PwmMinValue + PwmMaxValue)/2;
     const uint8_t PwmPinArray[NumPwm] = {20,21,22,23,10};
 
-    // Stepper parameters
+    // Stepper parameters - all units in steps, steps/sec and steps/sec**2
     const int16_t StepperMaximumSpeed[NumStepper]    = {  8000,   8000,   8000,   8000,   8000    };
+    const int16_t StepperMaximumAccel[NumStepper]    = {  10000,  10000,  10000,  10000,  10000   }; 
     const int16_t StepperMinimumPosition[NumStepper] = { -10000, -10000, -10000, -10000, -10000   };
-    const int16_t StepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  10000,  10000   };
+    const int16_t StepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  10000,  10000   };  
     const int16_t StepperHomePosition[NumStepper]    = { -10000, -10000, -10000, -10000, -10000   };
     const StepperPin StepperPinArray[NumStepper]     = {  {2,3},  {4,5},  {6,7},  {8,9},  {24,25} };
+    const uint8_t StepperClockHighDelay = 1;  // us
+
+    // Homing parameters
+
+    // Move to position parameters
+
+    // Velocity control parameters
     
     // Trigger parameters 
+    const bool DefaultTriggerEnabled[NumTrigger] = {false,false};
+    const uint16_t DefaultTriggerCount[NumTrigger] = {10000/TimerPeriod, 10000/TimerPeriod};
     const uint8_t TriggerPinArray[NumTrigger] = {26,27};
+    const uint8_t  TriggerHighDelay = 1; // us
+
 
     // Digital output parameters
     const uint8_t DigitalOutputPinArray[NumDigitalOutput] = {0,1};
+    const uint8_t DefaultDigitalOutputValue[NumDigitalOutput] = {LOW, LOW};
 }

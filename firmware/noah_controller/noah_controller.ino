@@ -8,6 +8,6 @@ void setup()
 
 void loop()
 {
-    system_state.update();
+    system_state.send_and_recv();
 }
 

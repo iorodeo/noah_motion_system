@@ -40,23 +40,27 @@ namespace constants
     extern const uint16_t PwmDefaultValue;
     extern const uint8_t PwmPinArray[NumPwm];
 
-    // Stepper parameters
+    // Stepper parameters - all units in steps, steps/sec and steps/sec**2
     const uint8_t NumStepper = 5;
     extern const int16_t StepperMaximumSpeed[NumStepper];
+    extern const int16_t StepperMaximumAccel[NumStepper];
     extern const int16_t StepperMinimumPosition[NumStepper];
     extern const int16_t StepperMaximumPosition[NumStepper];
     extern const int16_t StepperHomePosition[NumStepper];
     extern const StepperPin StepperPinArray[NumStepper];
+    extern const uint8_t StepperClockHighDelay;
 
     // Trigger parameters
     const uint8_t  NumTrigger = 2;
+    extern const bool DefaultTriggerEnabled[NumTrigger];
+    extern const uint16_t DefaultTriggerCount[NumTrigger];
     extern const uint8_t TriggerPinArray[NumTrigger];
+    extern const uint8_t TriggerHighDelay;
 
     // Digital output parameters
     const uint8_t NumDigitalOutput = 2;
-    extern const uint8_t  DigitalOutputPinArray[NumDigitalOutput];
-
-    // Default boundary parameters
+    extern const uint8_t DigitalOutputPinArray[NumDigitalOutput];
+    extern const uint8_t DefaultDigitalOutputValue[NumDigitalOutput];
 
     // Homing parameters
 
