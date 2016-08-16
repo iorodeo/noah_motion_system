@@ -45,7 +45,7 @@ namespace constants
     // Velocity control parameters
     
     // Trigger parameters 
-    const bool DefaultTriggerEnabled[NumTrigger] = {false,false};
+    const bool DefaultTriggerEnabled[NumTrigger] = {true,false};
     const uint16_t DefaultTriggerCount[NumTrigger] = {10000/TimerPeriod, 10000/TimerPeriod};
     const uint8_t TriggerPinArray[NumTrigger] = {26,27};
     const uint8_t  TriggerHighDelay = 1; // us

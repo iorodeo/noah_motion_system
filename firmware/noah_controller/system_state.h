@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "rawhid_msg_types.h"
 #include "stepper.h"
+#include "trigger.h"
 
 class SystemState
 {
@@ -31,11 +32,8 @@ class SystemState
         bool recv_msg_error_flag_ = false;
         constants::UsbCommand command_ = constants::EmptyCmd;
 
-
         Stepper stepper_[constants::NumStepper];  
-
-        bool trigger_enabled_[constants::NumTrigger]; 
-        uint16_t trigger_count_[constants::NumTrigger]; 
+        Trigger trigger_[constants::NumTrigger];
 
         // Time variables
         uint32_t micros_last_ = 0;   // Value from last call to micros
@@ -55,7 +53,6 @@ class SystemState
         void setup_digital_output();
         void setup_pwm_output();
         void setup_timer();
-
 };
 
 
@@ -80,18 +77,12 @@ inline void SystemState::update_trigger()
 { 
     for (int i=0; i<constants::NumTrigger; i++)
     {
-        if (trigger_enabled_[i] && (timer_count_%trigger_count_[i] == 0))
-        {
-            digitalWriteFast(constants::TriggerPinArray[i],HIGH);
-        }
+        trigger_[i].set_pin_high_on_count(timer_count_);
     }
     delayMicroseconds(constants::TriggerHighDelay);
     for (int i=0; i<constants::NumTrigger; i++)
     {
-        if (trigger_enabled_[i])
-        {
-            digitalWriteFast(constants::TriggerPinArray[i],LOW);
-        }
+        trigger_[i].set_pin_low_on_count(timer_count_);
     }
 }
 

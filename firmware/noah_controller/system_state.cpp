@@ -63,7 +63,7 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     // Set status information
     dev_to_host_msg.status = 0;
     dev_to_host_msg.status = 0xf & mode_;  
-    dev_to_host_msg.status |= (send_msg_error_flag_ << constants::NumModeBits);
+    dev_to_host_msg.status |= (send_msg_error_flag_ <<  constants::NumModeBits);
     dev_to_host_msg.status |= (recv_msg_error_flag_ << (constants::NumModeBits+1));
 
     // Reset msg error flags
@@ -148,10 +148,12 @@ void SystemState::setup_trigger_output()
 {
     for (int i=0; i<constants::NumTrigger; i++)
     {
-        pinMode(constants::TriggerPinArray[i],OUTPUT);
-        digitalWrite(constants::TriggerPinArray[i],LOW);
-        trigger_enabled_[i] = constants::DefaultTriggerEnabled[i];
-        trigger_count_[i] = constants::DefaultTriggerCount[i];
+        trigger_[i] = Trigger(
+                constants::TriggerPinArray[i],
+                constants::DefaultTriggerCount[i],
+                constants::DefaultTriggerEnabled[i]
+                );
+        trigger_[i].initialize();
     }
 }
 
