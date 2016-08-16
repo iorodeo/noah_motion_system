@@ -13,6 +13,26 @@ namespace constants
         MoveToPosition = 3,
         VelocityControl = 4
     };
+    extern uint8_t NumModeBits; 
+
+    // Commands
+    enum UsbCommand
+    {
+        EmptyCmd   = 0,
+
+        SetModeToDisabled,
+        SetModeToEnabled,
+        SetModeToIdle,
+        SetModeToMoveToPosition,
+        SetModetoHomeAxis,
+        SetModeToVelocityControl,
+
+        GetTriggerCount,
+        SetTriggerCount,
+        GetTriggerEnabled,
+        GetDigitalOutput
+
+    };
 
     // Communications timeouts
     extern const uint16_t DevToHostTimeout;
@@ -35,8 +55,8 @@ namespace constants
     const uint8_t NumPwm = 5;
     extern const float PwmFrequency;
     extern const uint8_t PwmResolution;
-    extern const uint16_t PwmMinValue;
-    extern const uint16_t PwmMaxValue;
+    extern const uint16_t PwmMinimumValue;
+    extern const uint16_t PwmMaximumValue;
     extern const uint16_t PwmDefaultValue;
     extern const uint8_t PwmPinArray[NumPwm];
 
@@ -67,6 +87,8 @@ namespace constants
     // Positioning parameters
 
     // Velocity control parameters
+    
+    // Status information bits
 
 }
 #endif

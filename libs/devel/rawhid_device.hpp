@@ -26,12 +26,16 @@ class RawHIDDevice
 {
     public:
         static const int DataBufSize = 64;
+        static const int ClearRecvBufCnt = 10;
 
         RawHIDDevice(int vid=0, int pid=0, int usage_page=0xFFAB, int usage=0x0200);
         bool open();
         void close();
-        int timeout();
-        void setTimeout(int timout);
+        int sendTimeout();
+        int recvTimeout();
+        void setSendTimeout(int timeout);
+        void setRecvTimeout(int timeout);
+        void clearRecvBuffer();
         bool sendData(void *buf);
         bool sendData(std::vector<char> buf);
         bool recvData(void *buf);
@@ -44,7 +48,8 @@ class RawHIDDevice
         int usage_page_ = 0;
         int usage_ = 0;
         int device_num_ = 0; 
-        int timeout_ = 100;
+        int recv_timeout_ = 100;
+        int send_timeout_ = 100;
 
 };
 

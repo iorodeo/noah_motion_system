@@ -27,14 +27,14 @@ void SystemState::send_and_recv()
         ok = send_msg_to_host();
         if (!ok)
         {
-            on_msg_error();
+            on_send_msg_error();
         }
         else
         {
             ok = recv_msg_from_host();
             if (!ok)
             {
-                on_msg_error();
+                on_recv_msg_error();
             }
         }
     } 
@@ -60,7 +60,15 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
 {
     DevToHostMsg dev_to_host_msg;
 
-    // Set status
+    // Set status information
+    dev_to_host_msg.status = 0;
+    dev_to_host_msg.status = 0xf & mode_;  
+    dev_to_host_msg.status |= (send_msg_error_flag_ << constants::NumModeBits);
+    dev_to_host_msg.status |= (recv_msg_error_flag_ << (constants::NumModeBits+1));
+
+    // Reset msg error flags
+    send_msg_error_flag_ = false;
+    recv_msg_error_flag_ = false;
 
     // Get current time in us
     uint32_t micros_curr = micros();
@@ -68,6 +76,9 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     micros_last_ = micros_curr;
     time_us_ += uint64_t(micros_dt);
     dev_to_host_msg.time_us = time_us_;
+
+    // Set command
+    dev_to_host_msg.count = uint8_t(msg_count_);
 
     // Read Analog inputs 
     for (int i=0; i<constants::NumAnalogInput; i++)
@@ -89,15 +100,25 @@ bool SystemState::recv_msg_from_host()
     }
     else
     {
+        msg_count_ = host_to_dev_msg.count;
+        command_ = constants::UsbCommand(host_to_dev_msg.command);
         // Extract information from message and take action
     }
     return rtn_val;
 }
 
-void SystemState::on_msg_error()
+void SystemState::on_send_msg_error()
 {
     // Take correct actions of message error/timeout ... need to flush this out.
-    time_us_ = 0;
+    //time_us_ = 0;
+    send_msg_error_flag_ = true;
+}
+
+void SystemState::on_recv_msg_error()
+{
+    // Take correct actions of message error/timeout ... need to flush this out.
+    //time_us_ = 0;
+    recv_msg_error_flag_ = true;
 }
 
 

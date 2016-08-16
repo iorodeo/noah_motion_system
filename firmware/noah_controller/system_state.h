@@ -23,9 +23,14 @@ class SystemState
         IntervalTimer timer_;                     
         volatile uint32_t timer_count_ = 0;
 
-        constants::OperatingMode mode_ = constants::Disabled;           
         bool enabled_flag_ = false;
-        bool msg_error_flag_ = false;
+        constants::OperatingMode mode_ = constants::Disabled;           
+
+        uint8_t msg_count_ = 0;
+        bool send_msg_error_flag_ = false;
+        bool recv_msg_error_flag_ = false;
+        constants::UsbCommand command_ = constants::EmptyCmd;
+
 
         Stepper stepper_[constants::NumStepper];  
 
@@ -39,7 +44,8 @@ class SystemState
         // Messaging methods
         bool send_msg_to_host();     // Send (raw hid) message to host
         bool recv_msg_from_host();   // Receive (raw hid) message from host
-        void on_msg_error();         // Response to messaging error 
+        void on_send_msg_error();    // Response to send messaging error 
+        void on_recv_msg_error();    // Response to recv messaging error 
         DevToHostMsg create_dev_to_host_msg(); // Create message to send to host
 
         // Initialization methods

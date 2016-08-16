@@ -53,28 +53,57 @@ void RawHIDDevice::close()
 }
 
 
-int RawHIDDevice::timeout()
+int RawHIDDevice::sendTimeout()
 {
-    return timeout_;
+    return send_timeout_;
+}
+
+int RawHIDDevice::recvTimeout()
+{
+    return recv_timeout_;
 }
 
 
-void RawHIDDevice::setTimeout(int timeout)
+void RawHIDDevice::setSendTimeout(int timeout)
 {
     if (timeout > 0)
     {
-        timeout_ = timeout;
+        send_timeout_ = timeout;
     }
     else
     {
-        timeout_ = 0;
+        send_timeout_ = 0;
     }
+}
+
+void RawHIDDevice::setRecvTimeout(int timeout)
+{
+    if (timeout > 0)
+    {
+        recv_timeout_ = timeout;
+    }
+    else
+    {
+        recv_timeout_ = 0;
+    }
+}
+
+void RawHIDDevice::clearRecvBuffer()
+{
+    char tmp_buf[DataBufSize];
+    int recv_timeout_tmp = recv_timeout_;
+    recv_timeout_ = 1;
+    for (int i=0; i<ClearRecvBufCnt; i++)
+    {
+        recvData(&tmp_buf);
+    };
+    recv_timeout_ = recv_timeout_tmp;
 }
 
 bool RawHIDDevice::sendData(void *buf)
 {
     bool rval = true;
-    int num_bytes = rawhid_send(device_num_, buf, DataBufSize, timeout_);
+    int num_bytes = rawhid_send(device_num_, buf, DataBufSize, send_timeout_);
     if (num_bytes != DataBufSize)
     {
         rval = false;
@@ -92,7 +121,7 @@ bool RawHIDDevice::sendData(std::vector<char> buf)
     }
     else
     {
-        int num_bytes = rawhid_send(device_num_, &buf[0], DataBufSize, timeout_);
+        int num_bytes = rawhid_send(device_num_, &buf[0], DataBufSize, send_timeout_);
         if (num_bytes != DataBufSize)
         {
             rval = false;
@@ -105,7 +134,7 @@ bool RawHIDDevice::sendData(std::vector<char> buf)
 bool RawHIDDevice::recvData(void *buf)
 {
     bool rval = true;
-    int num_bytes = rawhid_recv(device_num_, buf, DataBufSize, timeout_);
+    int num_bytes = rawhid_recv(device_num_, buf, DataBufSize, recv_timeout_);
     if (num_bytes != DataBufSize)
     {
         rval = false;
@@ -121,7 +150,7 @@ bool RawHIDDevice::recvData(std::vector<char> &buf)
     {
         buf.resize(DataBufSize);
     }
-    int num_bytes = rawhid_recv(device_num_, &buf[0], DataBufSize, timeout_);
+    int num_bytes = rawhid_recv(device_num_, &buf[0], DataBufSize, recv_timeout_);
     if (num_bytes != DataBufSize)
     {
         rval = false;

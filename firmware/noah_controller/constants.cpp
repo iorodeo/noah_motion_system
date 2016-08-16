@@ -3,6 +3,8 @@
 
 namespace constants
 {
+    uint8_t NumModeBits = 4; 
+
     // Communications timeouts
     const uint16_t DevToHostTimeout = 50;
     const uint16_t HostToDevTimeout = 50;
@@ -14,17 +16,17 @@ namespace constants
     const uint32_t NewMessageCount = MessagePeriod/TimerPeriod;
 
     // Analog input parameters
-    extern const uint8_t AnalogReadNumBits = 16;
-    extern const uint8_t AnalogReadNumAvg = 32;
-    extern const uint8_t AnalogRefType = INTERNAL;
+    const uint8_t AnalogReadNumBits = 16;
+    const uint8_t AnalogReadNumAvg = 32;
+    const uint8_t AnalogRefType = INTERNAL;
     const uint8_t AnalogInputPinArray[NumAnalogInput] = {A0,A1,A2,A3,A4,A5,A10,A11,A12,A13};
 
     // PWM parameters
     const float PwmFrequency = 50.0;
     const uint8_t PwmResolution = 16;
-    const uint16_t PwmMinValue = 3276;
-    const uint16_t PwmMaxValue = 6553;
-    const uint16_t  PwmDefaultValue = (PwmMinValue + PwmMaxValue)/2;
+    const uint16_t PwmMinimumValue = 3276;
+    const uint16_t PwmMaximumValue = 6553;
+    const uint16_t  PwmDefaultValue = (PwmMinimumValue + PwmMaximumValue)/2;
     const uint8_t PwmPinArray[NumPwm] = {20,21,22,23,10};
 
     // Stepper parameters - all units in steps, steps/sec and steps/sec**2

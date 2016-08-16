@@ -5,6 +5,7 @@ add_executable(
     devel
     main.cpp 
     rawhid_device.cpp 
+    motion_controller.cpp
     hid_LINUX.c
     )
 target_link_libraries(devel usb)
