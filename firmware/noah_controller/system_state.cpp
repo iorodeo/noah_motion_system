@@ -9,17 +9,26 @@ SystemState::SystemState() { }
 
 void SystemState::initialize()
 { 
+    Serial.begin(115200);
     setup_stepper();
     setup_analog_input();
     setup_trigger_output();
     setup_digital_output();
     setup_pwm_output();
-    setup_timer();
+    setup_timer(); // Last
 }
 
 void SystemState::loop_update()
 {
-    send_and_recv();
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        Serial.print(stepper_[i].position()); 
+        Serial.print(" ");
+    }
+    Serial.println();
+    delay(5);
+
+    //send_and_recv();
 }
 
 
@@ -28,19 +37,16 @@ void SystemState::loop_update()
 
 void SystemState::send_and_recv()
 {
-    bool ok;
     if (new_msg_flag_)
     {
         new_msg_flag_ = false;
-        ok = send_msg_to_host();
-        if (!ok)
+        if (!send_msg_to_host())
         {
             on_send_msg_error();
         }
         else
         {
-            ok = recv_msg_from_host();
-            if (!ok)
+            if (!recv_msg_from_host())
             {
                 on_recv_msg_error();
             }
@@ -216,7 +222,10 @@ void SystemState::setup_stepper()
         StepperPin pin = constants::StepperPinArray[i];
         stepper_[i] = Stepper(pin.clk,pin.dir); 
         stepper_[i].initialize();
-        stepper_[i].set_velocity(0.0);
+        stepper_[i].set_velocity(-100);
+        stepper_[i].set_min_position(constants::StepperMinimumPosition[i]);
+        stepper_[i].set_max_position(constants::StepperMaximumPosition[i]);
+        stepper_[i].disable_bounds_check();
     }
 }
 

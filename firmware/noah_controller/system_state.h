@@ -5,6 +5,7 @@
 #include "rawhid_msg_types.h"
 #include "stepper.h"
 #include "trigger.h"
+#include "velocity_controller.h"
 
 class SystemState
 {
@@ -35,6 +36,9 @@ class SystemState
 
         Stepper stepper_[constants::NumStepper];  
         Trigger trigger_[constants::NumTrigger];
+
+        // Controllers
+        VelocityController velocityController_[constants::NumStepper]; 
 
         // Time variables
         uint32_t micros_last_ = 0;   // Value from last call to micros

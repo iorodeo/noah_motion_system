@@ -1,4 +1,5 @@
 #include "trigger.h"
+#include <util/atomic.h>
 
 Trigger::Trigger(uint8_t pin, uint16_t count, bool enabled)
 {
@@ -15,7 +16,10 @@ void Trigger::initialize()
 
 void Trigger::setCount(uint16_t count)
 {
-    count_ = count;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {    
+        count_ = count;
+    }
 }
 
 uint16_t Trigger::getCount()
@@ -25,7 +29,10 @@ uint16_t Trigger::getCount()
 
 void Trigger::setEnabled(bool enabled)
 {
-    enabled_ = enabled;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) 
+    {
+        enabled_ = enabled;
+    }
 }
 
 bool Trigger::getEnabled()

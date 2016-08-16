@@ -1,7 +1,6 @@
 #include "stepper.h"
 #include "constants.h"
 #include <util/atomic.h>
-#include <cmath>
 
 
 Stepper::Stepper(uint8_t clk_pin, uint8_t dir_pin)
@@ -18,38 +17,95 @@ void Stepper::initialize()
     digitalWrite(clk_pin_,LOW);
     digitalWrite(dir_pin_,LOW);
     last_us_ = micros();
-    velocity_ = 0.0;
-    step_cnt_ = 0;
-    position_ = 0;
 }
 
 
 int32_t Stepper::position()
 {
-    return position_;
+    int32_t position_local = 0;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+        position_local = position_;
+    }
+    return position_local;
 }
 
 
 void Stepper::set_position(int32_t position)
 {
-    position_ = position;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    { 
+        position_ = position;
+    }
 }
 
 
-float Stepper::velocity()
+int32_t Stepper::velocity()
 {
     return velocity_;
 }
 
-
-void Stepper::set_velocity(float velocity)
+void Stepper::set_velocity(int32_t velocity)
 {
-    velocity_ = velocity;
-    step_cnt_ = uint32_t(1.0e6/fabs(velocity));
-    //step_cnt_ = (1.0e6/velocity)/float(constants::TimerPeriod);
-    //ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
-    //{
-    //    step_cnt_ = (1.0e6/velocity)/float(constants::TimerPeriod);
-    //}
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+        velocity_ = velocity;
+        step_us_ = uint32_t(1000000l/abs(velocity));
+    }
 }
+
+
+int32_t Stepper::max_position()
+{
+    return max_position_;
+}
+
+
+void Stepper::set_max_position(int32_t position)
+{
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+        max_position_ = position;
+    }
+}
+
+
+int32_t Stepper::min_position()
+{
+    return min_position_;
+}
+
+
+void Stepper::set_min_position(int32_t position)
+{
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+        min_position_ = position;
+    }
+}
+
+
+bool Stepper::is_bounds_check_enabled()
+{
+    return bounds_check_enabled_;
+}
+
+
+void Stepper::enable_bounds_check()
+{
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+        bounds_check_enabled_ = true;
+    }
+}
+
+
+void Stepper::disable_bounds_check()
+{
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+        bounds_check_enabled_ = false;
+    }
+}
+
 

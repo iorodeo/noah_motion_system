@@ -12,8 +12,18 @@ class Stepper
         int32_t position();
         void set_position(int32_t position);
 
-        float velocity();
-        void set_velocity(float velocity);
+        int32_t velocity();
+        void set_velocity(int32_t velocity);
+
+        int32_t max_position();
+        void set_max_position(int32_t position);
+
+        int32_t min_position();
+        void set_min_position(int32_t position);
+
+        bool is_bounds_check_enabled();
+        void enable_bounds_check();
+        void disable_bounds_check();
 
         inline void update_dir_and_set_clk_high();
         inline void set_clk_low();
@@ -23,12 +33,14 @@ class Stepper
         uint8_t clk_pin_;
         uint8_t dir_pin_;
 
-        volatile uint32_t last_us_;
-        volatile uint32_t step_cnt_;
-        volatile int32_t position_;
+        int32_t max_position_ =  1000;
+        int32_t min_position_ = -1000;
 
-        float velocity_;
-
+        volatile bool bounds_check_enabled_ = false;
+        volatile int32_t velocity_ = 0;
+        volatile uint32_t last_us_ = 0;
+        volatile uint32_t step_us_ = 0;
+        volatile int32_t position_ = 0;
 };
 
 inline void Stepper::update_dir_and_set_clk_high()
@@ -39,20 +51,26 @@ inline void Stepper::update_dir_and_set_clk_high()
         return;
     } 
 
-    if ((curr_us - last_us_) >= step_cnt_)
+    if ((curr_us - last_us_) >= step_us_)
     {
         last_us_= curr_us;
         if (velocity_ > 0)
         {
-            digitalWriteFast(dir_pin_,HIGH);
-            position_++;
-            digitalWriteFast(clk_pin_,HIGH);
+            if (!bounds_check_enabled_ || (position_ < max_position_))
+            {
+                digitalWriteFast(dir_pin_,HIGH);
+                position_++;
+                digitalWriteFast(clk_pin_,HIGH);
+            }
         }
         else
         {
-            digitalWriteFast(dir_pin_,LOW);
-            position_--;
-            digitalWriteFast(clk_pin_,HIGH);
+            if (!bounds_check_enabled_ || (position_ > min_position_))
+            {
+                digitalWriteFast(dir_pin_,LOW);
+                position_--;
+                digitalWriteFast(clk_pin_,HIGH);
+            }
         }
     }
 }
