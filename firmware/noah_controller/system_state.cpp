@@ -17,6 +17,14 @@ void SystemState::initialize()
     setup_timer();
 }
 
+void SystemState::loop_update()
+{
+    send_and_recv();
+}
+
+
+// SystemState private methods
+// ------------------------------------------------------------------------------------------------
 
 void SystemState::send_and_recv()
 {
@@ -40,10 +48,6 @@ void SystemState::send_and_recv()
     } 
 }
 
-
-// SystemState private methods
-// ------------------------------------------------------------------------------------------------
-
 bool SystemState::send_msg_to_host()
 { 
     bool rtn_val = true;
@@ -55,6 +59,24 @@ bool SystemState::send_msg_to_host()
     }
     return rtn_val;
 }
+
+
+bool SystemState::recv_msg_from_host()
+{
+    bool rtn_val = true;
+    HostToDevMsg host_to_dev_msg;
+    int num_bytes = RawHID.recv(&host_to_dev_msg,constants::HostToDevTimeout);
+    if (num_bytes != sizeof(HostToDevMsg))
+    {
+        rtn_val = false;
+    }
+    else
+    {
+        command_switchyard(host_to_dev_msg);
+    }
+    return rtn_val;
+}
+
 
 DevToHostMsg SystemState::create_dev_to_host_msg()
 {
@@ -77,7 +99,7 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     time_us_ += uint64_t(micros_dt);
     dev_to_host_msg.time_us = time_us_;
 
-    // Set command
+    // Echo back message count for lag checking 
     dev_to_host_msg.count = uint8_t(msg_count_);
 
     // Read Analog inputs 
@@ -89,23 +111,81 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
 }
 
 
-bool SystemState::recv_msg_from_host()
+void SystemState::command_switchyard(HostToDevMsg host_to_dev_msg)
 {
-    bool rtn_val = true;
-    HostToDevMsg host_to_dev_msg;
-    int num_bytes = RawHID.recv(&host_to_dev_msg,constants::HostToDevTimeout);
-    if (num_bytes != sizeof(HostToDevMsg))
+    msg_count_ = host_to_dev_msg.count;
+    command_ = constants::UsbCommand(host_to_dev_msg.command);
+
+    switch (command_)
     {
-        rtn_val = false;
+        case constants::Cmd_Empty: 
+            // Take no action 
+            break;
+
+        case constants::Cmd_SetMode_Disabled:
+            set_mode_disabled();
+            break;
+
+        case constants::Cmd_SetMode_Enabled:
+            set_mode_enabled();
+            break;
+
+        case constants::Cmd_SetMode_MoveToPosition:
+            set_mode_move_to_position(host_to_dev_msg);
+            break;
+
+        case constants::Cmd_SetMode_HomeAxis:
+            set_mode_home_axis(host_to_dev_msg);
+            break;
+
+        case constants::Cmd_SetMode_VelocityControl:
+            break;
+
+        case constants::Cmd_Get_TriggerCount:
+            break;
+
+        case constants::Cmd_Set_TriggerCount:
+            break;
+
+        case constants::Cmd_Get_TriggerEnabled:
+            break;
+
+        case constants::Cmd_Get_DigitalOutput:
+            break;
+
+        default:
+            break;
+
     }
-    else
-    {
-        msg_count_ = host_to_dev_msg.count;
-        command_ = constants::UsbCommand(host_to_dev_msg.command);
-        // Extract information from message and take action
-    }
-    return rtn_val;
 }
+
+
+void SystemState::set_mode_disabled()
+{
+    digitalWrite(constants::StepperDriveEnablePin,LOW);
+    enabled_flag_= false;
+    mode_ = constants::Mode_Disabled;
+}
+
+
+void SystemState::set_mode_enabled()
+{
+    digitalWrite(constants::StepperDriveEnablePin,HIGH);
+    enabled_flag_ = true;
+    mode_ = constants::Mode_Enabled;
+}
+
+
+void SystemState::set_mode_move_to_position(HostToDevMsg host_to_dev_msg)
+{
+
+}
+
+
+void SystemState::set_mode_home_axis(HostToDevMsg host_to_dev_msg)
+{
+}
+
 
 void SystemState::on_send_msg_error()
 {
@@ -127,6 +207,10 @@ void SystemState::on_recv_msg_error()
 
 void SystemState::setup_stepper()
 {
+    pinMode(constants::StepperDriveEnablePin, OUTPUT);
+    digitalWrite(constants::StepperDriveEnablePin,LOW);
+    enabled_flag_ = false;
+
     for (int i =0; i<constants::NumStepper; i++)
     {
         StepperPin pin = constants::StepperPinArray[i];

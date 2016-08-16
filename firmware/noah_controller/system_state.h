@@ -13,24 +13,25 @@ class SystemState
 
         SystemState();
         void initialize();           
-        void send_and_recv();               
+        void loop_update();
 
+        // Update on timer methods
         inline void update_stepper();
         inline void update_trigger();
         inline void update_new_msg_flag();
         inline void update_timer_count();
 
-    private:
+    protected:
         IntervalTimer timer_;                     
         volatile uint32_t timer_count_ = 0;
 
         bool enabled_flag_ = false;
-        constants::OperatingMode mode_ = constants::Disabled;           
+        constants::OperatingMode mode_ = constants::Mode_Disabled;           
 
         uint8_t msg_count_ = 0;
         bool send_msg_error_flag_ = false;
         bool recv_msg_error_flag_ = false;
-        constants::UsbCommand command_ = constants::EmptyCmd;
+        constants::UsbCommand command_ = constants::Cmd_Empty;
 
         Stepper stepper_[constants::NumStepper];  
         Trigger trigger_[constants::NumTrigger];
@@ -40,13 +41,24 @@ class SystemState
         uint64_t time_us_ = 0;       // Elapsed time in us
 
         // Messaging methods
+        void send_and_recv();               
         bool send_msg_to_host();     // Send (raw hid) message to host
         bool recv_msg_from_host();   // Receive (raw hid) message from host
+
         void on_send_msg_error();    // Response to send messaging error 
         void on_recv_msg_error();    // Response to recv messaging error 
-        DevToHostMsg create_dev_to_host_msg(); // Create message to send to host
 
-        // Initialization methods
+        DevToHostMsg create_dev_to_host_msg();                 // Create new message to send to host
+        void command_switchyard(HostToDevMsg host_to_dev_msg); // Take action in response to new message
+
+        // Actions in reponse to usb commands
+        void set_mode_enabled();
+        void set_mode_disabled();
+        void set_mode_move_to_position(HostToDevMsg host_to_dev_msg);
+        void set_mode_home_axis(HostToDevMsg host_to_dev_msg);
+        void set_mode_velocity_control(HostToDevMsg host_to_dev_msg);
+
+        // Setup/Initialization methods
         void setup_stepper();
         void setup_analog_input();
         void setup_trigger_output();

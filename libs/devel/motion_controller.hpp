@@ -7,7 +7,6 @@
 #include <functional>
 #include <iostream>
 
-
 enum Axis 
 {
     Axis_X=0,

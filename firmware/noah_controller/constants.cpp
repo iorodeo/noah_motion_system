@@ -37,6 +37,7 @@ namespace constants
     const int16_t StepperHomePosition[NumStepper]    = { -10000, -10000, -10000, -10000, -10000   };
     const StepperPin StepperPinArray[NumStepper]     = {  {2,3},  {4,5},  {6,7},  {8,9},  {24,25} };
     const uint8_t StepperClockHighDelay = 1;  // us
+    const uint8_t StepperDriveEnablePin = 32;
 
     // Homing parameters
 

@@ -7,31 +7,27 @@ namespace constants
     // Operating modes
     enum OperatingMode
     {
-        Disabled = 0,
-        Idle = 1,
-        HomeAxis = 2,
-        MoveToPosition = 3,
-        VelocityControl = 4
+        Mode_Disabled = 0,
+        Mode_Enabled,
+        Mode_HomeAxis,
+        Mode_MoveToPosition,
+        Mode_VelocityControl
     };
     extern uint8_t NumModeBits; 
 
     // Commands
     enum UsbCommand
     {
-        EmptyCmd   = 0,
-
-        SetModeToDisabled,
-        SetModeToEnabled,
-        SetModeToIdle,
-        SetModeToMoveToPosition,
-        SetModetoHomeAxis,
-        SetModeToVelocityControl,
-
-        GetTriggerCount,
-        SetTriggerCount,
-        GetTriggerEnabled,
-        GetDigitalOutput
-
+        Cmd_Empty   = 0,
+        Cmd_SetMode_Disabled,
+        Cmd_SetMode_Enabled,
+        Cmd_SetMode_MoveToPosition,
+        Cmd_SetMode_HomeAxis,
+        Cmd_SetMode_VelocityControl,
+        Cmd_Get_TriggerCount,
+        Cmd_Set_TriggerCount,
+        Cmd_Get_TriggerEnabled,
+        Cmd_Get_DigitalOutput
     };
 
     // Communications timeouts
@@ -69,6 +65,7 @@ namespace constants
     extern const int16_t StepperHomePosition[NumStepper];
     extern const StepperPin StepperPinArray[NumStepper];
     extern const uint8_t StepperClockHighDelay;
+    extern const uint8_t StepperDriveEnablePin;
 
     // Trigger parameters
     const uint8_t  NumTrigger = 2;
@@ -81,6 +78,7 @@ namespace constants
     const uint8_t NumDigitalOutput = 2;
     extern const uint8_t DigitalOutputPinArray[NumDigitalOutput];
     extern const uint8_t DefaultDigitalOutputValue[NumDigitalOutput];
+
 
     // Homing parameters
 
