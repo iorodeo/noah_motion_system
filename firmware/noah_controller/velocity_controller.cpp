@@ -8,26 +8,27 @@ void VelocityController::initialize()
     micros_last_ = micros();
 }
 
+
+int32_t VelocityController::velocity()
+{
+    return velocity_curr_;
+}
+
+void VelocityController::set_velocity(int32_t vel)
+{
+    velocity_curr_ = vel;
+}
+
+
 int32_t VelocityController::velocity_setp()
 {
     return velocity_setp_;
 }
 
+
 void VelocityController::set_velocity_setp(int32_t vel)
 {
     velocity_setp_ = vel;
-}
-
-
-int32_t VelocityController::velocity_curr()
-{
-    return velocity_curr_;
-}
-
-
-void VelocityController::set_velocity_curr(int32_t vel)
-{
-    velocity_curr_ = vel;
 }
 
 
@@ -74,7 +75,7 @@ uint32_t VelocityController::max_accel()
 }
 
 
-void VelocityController::set_max_aceel(uint32_t accel)
+void VelocityController::set_max_accel(uint32_t accel)
 {
     max_accel_ = accel;
 }
@@ -82,33 +83,65 @@ void VelocityController::set_max_aceel(uint32_t accel)
 
 void VelocityController::update(int32_t position)
 {
-    //uint32_t micros_curr = micros();
-    //uint32_t dt = micros_curr - micros_last_;
+    uint32_t micros_curr = micros();
+    uint32_t dt = micros_curr - micros_last_;
 
-    //if (velocity_setp_ > 0)
-    //{
-    //    int32_t dist = abs(max_position_ - position);
-    //}
-    //if (velocity_setp_ < 0)
-    //{
-    //    int32_t dist = abs(min_position_ - position); 
+    // Adjust set point velocity so as to not to exceed maximum acceleration and boundaries
+    int32_t velocity_setp_adj = velocity_setp_; 
+    if (velocity_setp_  > 0)
+    {
+        int32_t dist = max_position_ - position;
+        if (dist > 0) 
+        {
+            int32_t stopping_dist = abs(velocity_setp_*velocity_setp_)/int32_t(max_accel_);
+            if (dist < stopping_dist);
+            {
+                velocity_setp_adj = min(velocity_setp_, int32_t(sqrt(2.0*max_accel_*dist)));
+            }
+        }
+        else
+        {
+            velocity_setp_adj = 0;
+        }
+    }
+    if (velocity_setp_ < 0)
+    {
+        int32_t dist = position - min_position_;
+        if (dist > 0)
+        {
+            int32_t stopping_dist = abs(velocity_setp_*velocity_setp_)/int32_t(max_accel_);
+            if (dist < stopping_dist)
+            {
+                velocity_setp_adj = max(velocity_setp_, -int32_t(sqrt(2.0*max_accel_*dist)));
+            }
+        }
+        else
+        {
+            velocity_setp_adj = 0;
+        }
+    }
 
-    //}
+    // If not at the set point velocity accelerate towards it by maximum accelerate, but don't step past.
+    int32_t velocity_diff = velocity_setp_adj - velocity_curr_;
+    if (velocity_diff < 0)
+    {
+        velocity_curr_ -=  int32_t((dt*max_accel_)/1000000l);
+        if (velocity_curr_ < velocity_setp_adj)
+        { 
+            velocity_curr_ = velocity_setp_adj;
+        }
+    }
+    else
+    {
+        velocity_curr_ += int32_t((dt*max_accel_)/1000000l);
+        if (velocity_curr_ > velocity_setp_adj)
+        {
+            velocity_curr_ = velocity_setp_adj;
+        }
+    }
 
-    //int32_t velocity_diff = velocity_setp_ - velocity_curr_;
-    //int32_t mag_velocity_diff = abs(velocity_diff);
-
-    //if (velocity_diff < 0)
-    //{
-    //    velocity_curr_= min(velocity_setp_, velocity_curr_ - dt*max_accel_);
-    //}
-
-    //if (velocity_diff > 0)
-    //{
-    //    velocity_curr_ = max(velocity_setp_, velocity_curr_ + dt*max_accel_);
-
-    //}
-    //micros_last_ = micros_curr;
+    micros_last_ = micros_curr;
 }
+
 
 

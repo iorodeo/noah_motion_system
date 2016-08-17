@@ -21,6 +21,9 @@ class Stepper
         int32_t min_position();
         void set_min_position(int32_t position);
 
+        uint32_t max_speed();
+        void set_max_speed(uint32_t speed);
+
         bool is_bounds_check_enabled();
         void enable_bounds_check();
         void disable_bounds_check();
@@ -33,8 +36,9 @@ class Stepper
         uint8_t clk_pin_;
         uint8_t dir_pin_;
 
-        int32_t max_position_ =  1000;
-        int32_t min_position_ = -1000;
+        int32_t min_position_ = -10000;
+        int32_t max_position_ =  10000;
+        uint32_t max_speed_ = 10000;
 
         volatile bool bounds_check_enabled_ = false;
         volatile int32_t velocity_ = 0;
@@ -81,3 +85,4 @@ inline void Stepper::set_clk_low()
 }
 
 #endif
+

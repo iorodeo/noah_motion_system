@@ -39,3 +39,4 @@ bool Trigger::getEnabled()
 {
     return enabled_;
 }
+

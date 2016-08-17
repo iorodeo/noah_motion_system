@@ -8,11 +8,11 @@ class VelocityController
         VelocityController(); 
         void initialize();
 
+        int32_t velocity();
+        void set_velocity(int32_t vel);
+
         int32_t velocity_setp();
         void set_velocity_setp(int32_t vel);
-
-        int32_t velocity_curr();
-        void set_velocity_curr(int32_t vel);
 
         int32_t min_position();
         void set_min_position(int32_t pos);
@@ -24,7 +24,7 @@ class VelocityController
         void set_max_speed(uint32_t speed);
 
         uint32_t max_accel();
-        void set_max_aceel(uint32_t accel);
+        void set_max_accel(uint32_t accel);
 
         void update(int32_t position);
 
@@ -38,7 +38,8 @@ class VelocityController
         int32_t min_position_ = 0;
         int32_t max_position_ = 0;
         uint32_t max_speed_ = 0;
-        uint32_t max_accel_;
+        uint32_t max_accel_ = 0;
 };
 
 #endif
+

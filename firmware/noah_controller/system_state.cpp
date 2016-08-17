@@ -16,17 +16,63 @@ void SystemState::initialize()
     setup_digital_output();
     setup_pwm_output();
     setup_timer(); // Last
+
 }
 
 void SystemState::loop_update()
 {
-    for (int i=0; i<constants::NumStepper; i++)
+    // DEBUG
+    // --------------------------------------------------
+    static int cnt = 0;
+    static bool on = false;
+    while (Serial.available() > 0)
     {
-        Serial.print(stepper_[i].position()); 
-        Serial.print(" ");
+        char cmd = Serial.read();
+        if (cmd == 'r')
+        {
+            on = true;
+            velocity_controller_[0].initialize();
+        }
+        if (cmd == 's')
+        {
+            on = false;
+        }
     }
-    Serial.println();
-    delay(5);
+
+    if (on)
+    {
+        for (int i=0; i<1; i++)
+        {
+            int32_t position = stepper_[i].position();
+            velocity_controller_[i].update(position);
+            int32_t velocity = velocity_controller_[i].velocity();
+            stepper_[i].set_velocity(velocity);
+
+            Serial.print(velocity_controller_[i].velocity()); 
+            Serial.print(" ");
+            Serial.print(velocity_controller_[i].velocity_setp()); 
+            Serial.print(" ");
+            Serial.print(stepper_[i].position());
+            Serial.print(" ");
+
+            if (stepper_[i].position() >= 5000)
+            {
+                velocity_controller_[i].set_velocity_setp(-2000);
+            }
+            if (stepper_[i].position() <= -5000)
+            {
+                velocity_controller_[i].set_velocity_setp(2000);
+            }
+
+        }
+
+        Serial.print(" ");
+        Serial.print(cnt);
+        Serial.println();
+        delay(5);
+        cnt++;
+    }
+    // ------------------------------------------------------
 
     //send_and_recv();
 }
@@ -214,7 +260,8 @@ void SystemState::on_recv_msg_error()
 void SystemState::setup_stepper()
 {
     pinMode(constants::StepperDriveEnablePin, OUTPUT);
-    digitalWrite(constants::StepperDriveEnablePin,LOW);
+    //digitalWrite(constants::StepperDriveEnablePin,LOW);
+    digitalWrite(constants::StepperDriveEnablePin,HIGH);
     enabled_flag_ = false;
 
     for (int i =0; i<constants::NumStepper; i++)
@@ -222,10 +269,22 @@ void SystemState::setup_stepper()
         StepperPin pin = constants::StepperPinArray[i];
         stepper_[i] = Stepper(pin.clk,pin.dir); 
         stepper_[i].initialize();
-        stepper_[i].set_velocity(-100);
         stepper_[i].set_min_position(constants::StepperMinimumPosition[i]);
         stepper_[i].set_max_position(constants::StepperMaximumPosition[i]);
+        stepper_[i].set_max_speed(constants::StepperMaximumSpeed[i]);
         stepper_[i].disable_bounds_check();
+        stepper_[i].set_velocity(0);
+
+        // DEBUG
+        // --------------------------------------------------
+        velocity_controller_[i].set_min_position(-5000);
+        velocity_controller_[i].set_max_position( 5000);
+        velocity_controller_[i].set_max_speed(8000);
+        velocity_controller_[i].set_max_accel(10000);
+        velocity_controller_[i].set_velocity(0);
+        velocity_controller_[i].set_velocity_setp(2000);
+        velocity_controller_[i].initialize();
+        // --------------------------------------------------
     }
 }
 
@@ -282,3 +341,4 @@ void SystemState::setup_timer()
 // SystemState Instance
 // ------------------------------------------------------------------------------------------------
 SystemState system_state = SystemState();
+

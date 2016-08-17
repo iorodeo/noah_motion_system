@@ -47,10 +47,11 @@ int32_t Stepper::velocity()
 
 void Stepper::set_velocity(int32_t velocity)
 {
+    int32_t velocity_adj = constrain(velocity,-int32_t(max_speed_), int32_t(max_speed_));
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
-        velocity_ = velocity;
-        step_us_ = uint32_t(1000000l/abs(velocity));
+        velocity_ = velocity_adj;
+        step_us_ = uint32_t(1000000l/abs(velocity_adj));
     }
 }
 
@@ -85,6 +86,18 @@ void Stepper::set_min_position(int32_t position)
 }
 
 
+uint32_t Stepper::max_speed()
+{
+    return max_speed_;
+}
+
+
+void Stepper::set_max_speed(uint32_t speed)
+{
+    max_speed_ = speed;
+}
+
+
 bool Stepper::is_bounds_check_enabled()
 {
     return bounds_check_enabled_;
@@ -107,5 +120,6 @@ void Stepper::disable_bounds_check()
         bounds_check_enabled_ = false;
     }
 }
+
 
 

@@ -56,3 +56,4 @@ namespace constants
     const uint8_t DigitalOutputPinArray[NumDigitalOutput] = {0,1};
     const uint8_t DefaultDigitalOutputValue[NumDigitalOutput] = {LOW, LOW};
 }
+

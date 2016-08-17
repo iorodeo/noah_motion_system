@@ -32,5 +32,5 @@ struct __attribute__((packed)) HostToDevMsg
     uint8_t  padding[14];
 };
 
-
 #endif
+

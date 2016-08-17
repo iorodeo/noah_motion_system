@@ -40,3 +40,4 @@ inline void Trigger::set_pin_low_on_count(uint32_t timer_count)
 }
 
 #endif
+

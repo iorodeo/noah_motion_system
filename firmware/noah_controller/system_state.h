@@ -38,7 +38,7 @@ class SystemState
         Trigger trigger_[constants::NumTrigger];
 
         // Controllers
-        VelocityController velocityController_[constants::NumStepper]; 
+        VelocityController velocity_controller_[constants::NumStepper]; 
 
         // Time variables
         uint32_t micros_last_ = 0;   // Value from last call to micros
@@ -129,3 +129,4 @@ inline void timer_callback()
 
 
 #endif 
+
