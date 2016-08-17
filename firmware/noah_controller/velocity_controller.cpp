@@ -87,6 +87,7 @@ void VelocityController::update(int32_t position)
     uint32_t dt = micros_curr - micros_last_;
 
     // Adjust set point velocity so as to not to exceed maximum acceleration and boundaries
+    // e.g. break at minimum and maximum allowed positions.
     int32_t velocity_setp_adj = velocity_setp_; 
     if (velocity_setp_  > 0)
     {
@@ -101,6 +102,7 @@ void VelocityController::update(int32_t position)
         }
         else
         {
+            // NOTE: might want to add correction for overshoot?
             velocity_setp_adj = 0;
         }
     }
@@ -117,6 +119,7 @@ void VelocityController::update(int32_t position)
         }
         else
         {
+            // NOTE: might want to add correction for overshoot?
             velocity_setp_adj = 0;
         }
     }
