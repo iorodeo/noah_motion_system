@@ -6,10 +6,13 @@
 #include "stepper.h"
 #include "trigger.h"
 #include "velocity_controller.h"
+#include "position_controller.h"
+#include "homing_controller.h"
 
 class SystemState
 {
     public:
+
         volatile bool new_msg_flag_ = false; 
 
         SystemState();
@@ -23,6 +26,7 @@ class SystemState
         inline void update_timer_count();
 
     protected:
+
         IntervalTimer timer_;                     
         volatile uint32_t timer_count_ = 0;
 
@@ -39,6 +43,8 @@ class SystemState
 
         // Controllers
         VelocityController velocity_controller_[constants::NumStepper]; 
+        PositionController position_controller_[constants::NumStepper];
+        HomingController homing_controller_[constants::NumStepper];
 
         // Time variables
         uint32_t micros_last_ = 0;   // Value from last call to micros
@@ -64,16 +70,22 @@ class SystemState
 
         // Setup/Initialization methods
         void setup_stepper();
+        void setup_velocity_controller();
+        void setup_position_controller();
         void setup_analog_input();
         void setup_trigger_output();
         void setup_digital_output();
         void setup_pwm_output();
+        void setup_homing();
         void setup_timer();
 };
 
 
 extern SystemState system_state;
 
+
+// Timer update functions
+// --------------------------------------------------------------------------------------
 
 inline void SystemState::update_stepper()
 {
@@ -125,6 +137,7 @@ inline void timer_callback()
     system_state.update_new_msg_flag();
     system_state.update_timer_count();
 }
+
 
 
 

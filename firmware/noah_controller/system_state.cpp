@@ -1,7 +1,5 @@
 #include "system_state.h"
 
-// System timer callback funtion
-// ----------------------------------------------------------------------------------------------
 // SystemState public methods
 // ------------------------------------------------------------------------------------------------
 
@@ -9,74 +7,83 @@ SystemState::SystemState() { }
 
 void SystemState::initialize()
 { 
-    Serial.begin(115200);
     setup_stepper();
+    setup_velocity_controller();
+    setup_position_controller();
     setup_analog_input();
     setup_trigger_output();
     setup_digital_output();
     setup_pwm_output();
+    setup_homing();
     setup_timer(); // Last
+
+
+    // DEBUG
+    // ------------------------------------------------
+    Serial.begin(115200);
+    set_mode_enabled();
+    
+    
+    // ------------------------------------------------
 
 }
 
 void SystemState::loop_update()
 {
-    // DEBUG
-    // --------------------------------------------------
-    static int cnt = 0;
     static bool on = false;
+
     while (Serial.available() > 0)
     {
         char cmd = Serial.read();
         if (cmd == 'r')
         {
             on = true;
-            velocity_controller_[0].initialize();
+            homing_controller_[0].reset();
+            HomingController::enable();
         }
         if (cmd == 's')
         {
             on = false;
+            stepper_[0].set_velocity(0);
         }
     }
 
     if (on)
     {
-        for (int i=0; i<1; i++)
+        int32_t position = stepper_[0].position();
+        homing_controller_[0].update(position);
+        int32_t velocity = homing_controller_[0].velocity();
+        stepper_[0].set_velocity(velocity);
+        bool home_found = HomingController::home_found();
+        
+
+        Serial.print("pos: ");
+        Serial.print(position);
+        Serial.print(", vel: ");
+        Serial.print(velocity);
+        Serial.print(", fnd: ");
+        Serial.print(home_found);
+        Serial.println();
+
+        //HomingController::set_home_found(false);
+        home_found = HomingController::home_found();
+        if (home_found)
         {
-            int32_t position = stepper_[i].position();
-            velocity_controller_[i].update(position);
-            int32_t velocity = velocity_controller_[i].velocity();
-            stepper_[i].set_velocity(velocity);
-
-            Serial.print(velocity_controller_[i].velocity()); 
-            Serial.print(" ");
-            Serial.print(velocity_controller_[i].velocity_setp()); 
-            Serial.print(" ");
-            Serial.print(stepper_[i].position());
-            Serial.print(" ");
-
-            if (stepper_[i].position() >= 5000)
-            {
-                velocity_controller_[i].set_velocity_setp(-2000);
-            }
-            if (stepper_[i].position() <= -5000)
-            {
-                velocity_controller_[i].set_velocity_setp(2000);
-            }
-
+            Serial.print("fnd: ");
+            Serial.print(home_found);
+            Serial.println();
+            on = false;
+            stepper_[0].set_velocity(0);
         }
 
-        Serial.print(" ");
-        Serial.print(cnt);
-        Serial.println();
-        delay(5);
-        cnt++;
     }
-    // ------------------------------------------------------
+
+    //Serial.print(digitalReadFast(constants::HomingInterruptPin));
+    //Serial.println();
+    delay(5);
 
     //send_and_recv();
 }
-
 
 // SystemState private methods
 // ------------------------------------------------------------------------------------------------
@@ -260,8 +267,7 @@ void SystemState::on_recv_msg_error()
 void SystemState::setup_stepper()
 {
     pinMode(constants::StepperDriveEnablePin, OUTPUT);
-    //digitalWrite(constants::StepperDriveEnablePin,LOW);
-    digitalWrite(constants::StepperDriveEnablePin,HIGH);
+    digitalWrite(constants::StepperDriveEnablePin,LOW);
     enabled_flag_ = false;
 
     for (int i =0; i<constants::NumStepper; i++)
@@ -274,17 +280,32 @@ void SystemState::setup_stepper()
         stepper_[i].set_max_speed(constants::StepperMaximumSpeed[i]);
         stepper_[i].disable_bounds_check();
         stepper_[i].set_velocity(0);
+    }
+}
 
-        // DEBUG
-        // --------------------------------------------------
-        velocity_controller_[i].set_min_position(-5000);
-        velocity_controller_[i].set_max_position( 5000);
-        velocity_controller_[i].set_max_speed(8000);
-        velocity_controller_[i].set_max_accel(10000);
+
+void SystemState::setup_velocity_controller()
+{
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        velocity_controller_[i].set_min_position(constants::StepperMinimumPosition[i]);
+        velocity_controller_[i].set_max_position(constants::StepperMaximumPosition[i]);
+        velocity_controller_[i].set_max_speed(constants::StepperMaximumSpeed[i]);
+        velocity_controller_[i].set_max_accel(constants::StepperMaximumAccel[i]);
         velocity_controller_[i].set_velocity(0);
-        velocity_controller_[i].set_velocity_setp(2000);
-        velocity_controller_[i].initialize();
-        // --------------------------------------------------
+        velocity_controller_[i].set_velocity_setp(0);
+        velocity_controller_[i].enable_bounds_check();
+        velocity_controller_[i].reset();
+    }
+}
+
+
+void SystemState::setup_position_controller()
+{
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        position_controller_[i].set_max_speed(constants::PositionControllerMaximumSpeed[i]);
+        position_controller_[i].set_gain(constants::PositionControllerGain[i]);
     }
 }
 
@@ -295,6 +316,7 @@ void SystemState::setup_analog_input()
     analogReadAveraging(constants::AnalogReadNumAvg);
     analogReference(constants::AnalogRefType);
 }
+
 
 void SystemState::setup_trigger_output()
 {
@@ -338,7 +360,84 @@ void SystemState::setup_timer()
 }
 
 
+void SystemState::setup_homing()
+{
+    HomingController::initialize(constants::HomingInterruptPin);
+
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        homing_controller_[i] = HomingController(constants::HomingDirection[i], constants::HomingSpeed[i]);
+        homing_controller_[i].set_max_speed(constants::StepperMaximumSpeed[i]);
+        homing_controller_[i].set_accel(constants::StepperMaximumAccel[i]);
+    }
+}
+
+
 // SystemState Instance
 // ------------------------------------------------------------------------------------------------
 SystemState system_state = SystemState();
 
+//// Position controller usage example -- setup
+//// ------------------------------------------------------------------------------------------------
+//
+//    position_controller_[0].set_position_setp(1000);
+//    position_controller_[0].set_max_speed(500);
+//
+
+
+//// Position controller usage example -- loop 
+//// ------------------------------------------------------------------------------------------------
+//    static int cnt = 0;
+//    static bool on = false;
+//
+//    while (Serial.available() > 0)
+//    {
+//        char cmd = Serial.read();
+//        if (cmd == 'r')
+//        {
+//            on = true;
+//            int32_t position_setp = position_controller_[0].position_setp();
+//            position_controller_[0].set_position_setp(-position_setp);
+//            velocity_controller_[0].reset();
+//            
+//        }
+//        if (cmd == 's')
+//        {
+//            on = false;
+//        }
+//    }
+//    
+//    if (on)
+//    {
+//        // Get current stepper position 
+//        int32_t position = stepper_[0].position();
+//    
+//        // Update position controller and get new setpoint velocity
+//        position_controller_[0].update(position);
+//        int32_t velocity_setp = position_controller_[0].velocity();
+//    
+//        // Update velocity controller to get new velocity for steppers
+//        velocity_controller_[0].set_velocity_setp(velocity_setp);
+//        velocity_controller_[0].update(position);
+//        int32_t velocity = velocity_controller_[0].velocity();
+//        stepper_[0].set_velocity(velocity);
+//    
+//        if (position == position_controller_[0].position_setp())
+//        {
+//            // Done
+//            on = false;
+//        }
+//    
+//        Serial.print("cnt: ");
+//        Serial.print(cnt);
+//        Serial.print(" vsp: ");
+//        Serial.print(velocity_setp);
+//        Serial.print(" pos: ");
+//        Serial.print(position);
+//        Serial.print(" vel: ");
+//        Serial.print(velocity);
+//        Serial.println();
+//    
+//        delay(5);
+//        cnt++;
+//    }

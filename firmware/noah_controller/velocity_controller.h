@@ -5,8 +5,10 @@
 class VelocityController
 {
     public: 
+
         VelocityController(); 
-        void initialize();
+
+        void reset();
 
         int32_t velocity();
         void set_velocity(int32_t vel);
@@ -28,9 +30,13 @@ class VelocityController
 
         void update(int32_t position);
 
+        void enable_bounds_check();
+        void disable_bounds_check();
 
-    private:
+    protected:
 
+        bool is_first_ = true;
+        bool bounds_check_enabled_ = true;
         uint32_t micros_last_ = 0;
         int32_t velocity_setp_ = 0;
         int32_t velocity_curr_ = 0;

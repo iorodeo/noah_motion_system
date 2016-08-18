@@ -13,7 +13,7 @@ namespace constants
         Mode_MoveToPosition,
         Mode_VelocityControl
     };
-    extern uint8_t NumModeBits; 
+    extern const uint8_t NumModeBits; 
 
     // Commands
     enum UsbCommand
@@ -58,14 +58,23 @@ namespace constants
 
     // Stepper parameters - all units in steps, steps/sec and steps/sec**2
     const uint8_t NumStepper = 5;
-    extern const int16_t StepperMaximumSpeed[NumStepper];
-    extern const int16_t StepperMaximumAccel[NumStepper];
-    extern const int16_t StepperMinimumPosition[NumStepper];
-    extern const int16_t StepperMaximumPosition[NumStepper];
-    extern const int16_t StepperHomePosition[NumStepper];
+    extern const int32_t StepperMaximumSpeed[NumStepper];
+    extern const int32_t StepperMaximumAccel[NumStepper];
+    extern const int32_t StepperMinimumPosition[NumStepper];
+    extern const int32_t StepperMaximumPosition[NumStepper];
+    extern const int32_t StepperHomePosition[NumStepper];
     extern const StepperPin StepperPinArray[NumStepper];
     extern const uint8_t StepperClockHighDelay;
     extern const uint8_t StepperDriveEnablePin;
+
+    // PositionController  parameters
+    extern const uint32_t PositionControllerMaximumSpeed[NumStepper];
+    extern const uint32_t PositionControllerGain[NumStepper];
+
+    // Homing parameters
+    extern const uint8_t HomingInterruptPin;
+    extern const int8_t HomingDirection[NumStepper];
+    extern const uint32_t HomingSpeed[NumStepper]; 
 
     // Trigger parameters
     const uint8_t  NumTrigger = 2;
@@ -78,15 +87,7 @@ namespace constants
     const uint8_t NumDigitalOutput = 2;
     extern const uint8_t DigitalOutputPinArray[NumDigitalOutput];
     extern const uint8_t DefaultDigitalOutputValue[NumDigitalOutput];
-
-
-    // Homing parameters
-
-    // Positioning parameters
-
-    // Velocity control parameters
     
-    // Status information bits
 
 }
 #endif

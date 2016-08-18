@@ -14,7 +14,7 @@ void Trigger::initialize()
     digitalWrite(pin_,LOW);
 }
 
-void Trigger::setCount(uint16_t count)
+void Trigger::set_count(uint16_t count)
 {
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {    
@@ -22,12 +22,12 @@ void Trigger::setCount(uint16_t count)
     }
 }
 
-uint16_t Trigger::getCount()
+uint16_t Trigger::count()
 {
     return count_;
 }
 
-void Trigger::setEnabled(bool enabled)
+void Trigger::set_enabled(bool enabled)
 {
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) 
     {
@@ -35,7 +35,7 @@ void Trigger::setEnabled(bool enabled)
     }
 }
 
-bool Trigger::getEnabled()
+bool Trigger::enabled()
 {
     return enabled_;
 }

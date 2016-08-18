@@ -8,16 +8,16 @@ class Trigger
         Trigger(uint8_t pin=0, uint16_t count=5000, bool enabled=false);
         void initialize();
 
-        void setCount(uint16_t count);
-        uint16_t getCount();
+        void set_count(uint16_t count);
+        uint16_t count();
 
-        void setEnabled(bool enabled);
-        bool getEnabled();
+        void set_enabled(bool enabled);
+        bool enabled();
 
         inline void set_pin_high_on_count(uint32_t timer_count);
         inline void set_pin_low_on_count(uint32_t time_count);
 
-    private:
+    protected:
         uint8_t pin_ = 0;
         bool enabled_ = false;
         uint16_t count_ = 5000;
