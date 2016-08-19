@@ -8,6 +8,7 @@
 #include "velocity_controller.h"
 #include "position_controller.h"
 #include "homing_controller.h"
+#include "estop_monitor.h"
 
 class SystemState
 {
@@ -41,10 +42,11 @@ class SystemState
         Stepper stepper_[constants::NumStepper];  
         Trigger trigger_[constants::NumTrigger];
 
-        // Controllers
+        // Controllers/Monitors
         VelocityController velocity_controller_[constants::NumStepper]; 
         PositionController position_controller_[constants::NumStepper];
         HomingController homing_controller_[constants::NumStepper];
+        EStopMonitor estop_monitor_;
 
         // Time variables
         uint32_t micros_last_ = 0;   // Value from last call to micros
@@ -73,6 +75,7 @@ class SystemState
         void setup_velocity_controller();
         void setup_position_controller();
         void setup_analog_input();
+        void setup_estop_monitor();
         void setup_trigger_output();
         void setup_digital_output();
         void setup_pwm_output();

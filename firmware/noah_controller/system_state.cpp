@@ -11,75 +11,26 @@ void SystemState::initialize()
     setup_velocity_controller();
     setup_position_controller();
     setup_analog_input();
+    setup_estop_monitor();
     setup_trigger_output();
     setup_digital_output();
     setup_pwm_output();
     setup_homing();
-    setup_timer(); // Last
-
+    setup_timer(); // Always last in setup
 
     // DEBUG
     // ------------------------------------------------
     Serial.begin(115200);
     set_mode_enabled();
-    
-    
     // ------------------------------------------------
 
 }
 
 void SystemState::loop_update()
 {
-    static bool on = false;
-
-    while (Serial.available() > 0)
-    {
-        char cmd = Serial.read();
-        if (cmd == 'r')
-        {
-            on = true;
-            homing_controller_[0].reset();
-            HomingController::enable();
-        }
-        if (cmd == 's')
-        {
-            on = false;
-            stepper_[0].set_velocity(0);
-        }
-    }
-
-    if (on)
-    {
-        int32_t position = stepper_[0].position();
-        homing_controller_[0].update(position);
-        int32_t velocity = homing_controller_[0].velocity();
-        stepper_[0].set_velocity(velocity);
-        bool home_found = HomingController::home_found();
-        
-
-        Serial.print("pos: ");
-        Serial.print(position);
-        Serial.print(", vel: ");
-        Serial.print(velocity);
-        Serial.print(", fnd: ");
-        Serial.print(home_found);
-        Serial.println();
-
-        //HomingController::set_home_found(false);
-        home_found = HomingController::home_found();
-        if (home_found)
-        {
-            Serial.print("fnd: ");
-            Serial.print(home_found);
-            Serial.println();
-            on = false;
-            stepper_[0].set_velocity(0);
-        }
-
-    }
-
-    //Serial.print(digitalReadFast(constants::HomingInterruptPin));
-    //Serial.println();
+    bool is_stopped = estop_monitor_.is_stopped();
+    Serial.print(is_stopped);
+    Serial.println();
     delay(5);
 
     //send_and_recv();
@@ -318,6 +269,13 @@ void SystemState::setup_analog_input()
 }
 
 
+void SystemState::setup_estop_monitor()
+{
+    estop_monitor_.set_analog_pin(constants::EStopMonitorPin); 
+    estop_monitor_.set_threshold(constants::EStopMonitorThreshold);
+}
+
+
 void SystemState::setup_trigger_output()
 {
     for (int i=0; i<constants::NumTrigger; i++)
@@ -440,4 +398,66 @@ SystemState system_state = SystemState();
 //    
 //        delay(5);
 //        cnt++;
+//    }
+//
+//
+//
+
+
+
+
+// Homing Example
+// ----------------------------------------------------------------------------
+//
+//    static bool on = false;
+//    uint8_t axis = 0;
+//
+//    while (Serial.available() > 0)
+//    {
+//        char cmd = Serial.read();
+//        if (cmd == 'r')
+//        {
+//            on = true;
+//            // Enable Homing controller
+//            homing_controller_[axis].reset();
+//            HomingController::enable();
+//        }
+//        if (cmd == 's')
+//        {
+//            on = false;
+//            stepper_[axis].set_velocity(0);
+//        }
+//    }
+//
+//    if (on)
+//    {
+//        // Get current stepper position and update homing contoller
+//        int32_t position = stepper_[axis].position();
+//        homing_controller_[axis].update(position);
+//
+//        // Get new velocity from update controller and use to set stepper velocity
+//        int32_t velocity = homing_controller_[axis].velocity();
+//        stepper_[axis].set_velocity(velocity);
+//
+//        // Check to see if home has been found
+//        bool home_found = HomingController::home_found();
+//
+//        Serial.print("pos: ");
+//        Serial.print(position);
+//        Serial.print(", vel: ");
+//        Serial.print(velocity);
+//        Serial.print(", fnd: ");
+//        Serial.print(home_found);
+//        Serial.println();
+//
+//        // Quit on home found
+//        if (home_found)
+//        {
+//            on = false;
+//            Serial.print("fnd: ");
+//            Serial.print(home_found);
+//            Serial.println();
+//            stepper_[axis].set_velocity(0);
+//        }
+//
 //    }

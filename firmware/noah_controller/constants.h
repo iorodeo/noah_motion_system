@@ -87,6 +87,10 @@ namespace constants
     const uint8_t NumDigitalOutput = 2;
     extern const uint8_t DigitalOutputPinArray[NumDigitalOutput];
     extern const uint8_t DefaultDigitalOutputValue[NumDigitalOutput];
+
+    // E-Stop Monitor parameters 
+    extern const uint8_t EStopMonitorPin;
+    extern const uint16_t EStopMonitorThreshold;
     
 
 }

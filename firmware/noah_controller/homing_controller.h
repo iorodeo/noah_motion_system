@@ -20,16 +20,25 @@ class HomingController
 
         int32_t velocity();
 
+        uint32_t speed();
+        void set_speed(uint32_t speed);
+
+        int8_t direction();
+        void set_direction(int8_t direction);
+
         uint32_t max_speed();
-        void set_max_speed(uint32_t value);
+        void set_max_speed(uint32_t max_speed);
 
         uint32_t accel();
-        void set_accel(uint32_t value);
+        void set_accel(uint32_t accel);
 
     protected:
 
         static bool home_found_;
         static uint8_t pin_;
+
+        uint32_t speed_;
+        int8_t direction_;
 
         VelocityController velocity_controller_;
 

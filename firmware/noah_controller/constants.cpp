@@ -45,8 +45,8 @@ namespace constants
 
     // Homing parameters
     const uint8_t HomingInterruptPin = 28;
-    const int8_t HomingDirection[NumStepper] = {1,1,1,1,1}; // 1 or -1.
-    const uint32_t HomingSpeed[NumStepper] = {200,200,200,200,200};
+    const int8_t HomingDirection[NumStepper] = {-1,1,1,1,1}; // 1 or -1.
+    const uint32_t HomingSpeed[NumStepper] = {200,200,200,2000,200};
 
     // Trigger parameters 
     const bool DefaultTriggerEnabled[NumTrigger] = {true,false};
@@ -57,5 +57,10 @@ namespace constants
     // Digital output parameters
     const uint8_t DigitalOutputPinArray[NumDigitalOutput] = {0,1};
     const uint8_t DefaultDigitalOutputValue[NumDigitalOutput] = {LOW, LOW};
+
+    // E-Stop Monitor parameters 
+    const uint8_t EStopMonitorPin = A20;
+    const uint16_t EStopMonitorThreshold = 40000;
+
 }
 

@@ -15,6 +15,7 @@ int32_t VelocityController::velocity()
     return velocity_curr_;
 }
 
+
 void VelocityController::set_velocity(int32_t vel)
 {
     velocity_curr_ = vel;
