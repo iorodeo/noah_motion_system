@@ -95,7 +95,7 @@ void VelocityController::disable_bounds_check()
 }
 
 
-void VelocityController::update(int32_t position)
+int32_t VelocityController::update(int32_t position)
 {
     uint32_t micros_curr = micros();
 
@@ -171,6 +171,8 @@ void VelocityController::update(int32_t position)
     }
 
     micros_last_ = micros_curr;
+
+    return velocity_curr_;
 }
 
 

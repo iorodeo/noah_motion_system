@@ -15,7 +15,7 @@ class HomingController
         static bool home_found();
 
         HomingController(int8_t direction=1, uint32_t speed=100);
-        void update(int32_t position);
+        int32_t update(int32_t position);
         void reset();
 
         int32_t velocity();

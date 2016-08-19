@@ -19,7 +19,7 @@ class PositionController
 
         int32_t velocity();
 
-        void update(int32_t position);
+        int32_t update(int32_t position);
 
     protected:
 

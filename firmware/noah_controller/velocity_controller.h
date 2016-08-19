@@ -28,7 +28,7 @@ class VelocityController
         uint32_t max_accel();
         void set_max_accel(uint32_t accel);
 
-        void update(int32_t position);
+        int32_t update(int32_t position);
 
         void enable_bounds_check();
         void disable_bounds_check();

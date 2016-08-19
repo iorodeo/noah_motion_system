@@ -69,13 +69,14 @@ HomingController::HomingController(int8_t direction, uint32_t speed)
 } 
 
 
-void HomingController::update(int32_t position)
+int32_t HomingController::update(int32_t position)
 {
     if (home_found_)
     {
         velocity_controller_.set_velocity_setp(0);
     }
     velocity_controller_.update(position);
+    return velocity();
 }
 
 

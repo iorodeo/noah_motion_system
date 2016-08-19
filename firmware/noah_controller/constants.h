@@ -8,9 +8,9 @@ namespace constants
     enum OperatingMode
     {
         Mode_Disabled = 0,
-        Mode_Enabled,
-        Mode_HomeAxis,
-        Mode_MoveToPosition,
+        Mode_Ready,
+        Mode_Homing,
+        Mode_Positioning,
         Mode_VelocityControl
     };
     extern const uint8_t NumModeBits; 
@@ -20,10 +20,11 @@ namespace constants
     {
         Cmd_Empty   = 0,
         Cmd_SetMode_Disabled,
-        Cmd_SetMode_Enabled,
-        Cmd_SetMode_MoveToPosition,
-        Cmd_SetMode_HomeAxis,
+        Cmd_SetMode_Ready,
+        Cmd_SetMode_Homing,
+        Cmd_SetMode_Positioning,
         Cmd_SetMode_VelocityControl,
+        Cmd_StopMotion,
         Cmd_Get_TriggerCount,
         Cmd_Set_TriggerCount,
         Cmd_Get_TriggerEnabled,

@@ -5,6 +5,7 @@
 class EStopMonitor
 {
     public:
+
         EStopMonitor(uint8_t pin=A0, uint16_t threshold=20000);
 
         uint8_t analog_pin();
@@ -16,6 +17,7 @@ class EStopMonitor
         bool is_stopped();
 
     protected:
+
         uint8_t  pin_;
         uint16_t pin_volt_;
         uint16_t threshold_;

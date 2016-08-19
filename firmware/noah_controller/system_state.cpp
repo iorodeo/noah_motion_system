@@ -20,20 +20,40 @@ void SystemState::initialize()
 
     // DEBUG
     // ------------------------------------------------
-    Serial.begin(115200);
-    set_mode_enabled();
+    //Serial.begin(115200);
+    //set_mode_ready();
     // ------------------------------------------------
 
 }
 
 void SystemState::loop_update()
 {
-    bool is_stopped = estop_monitor_.is_stopped();
-    Serial.print(is_stopped);
-    Serial.println();
-    delay(5);
+    if (estop_monitor_.is_stopped())
+    {
+        set_mode_disabled();
+    }
+    send_and_recv();
 
-    //send_and_recv();
+    switch (mode_)
+    {
+        case constants::Mode_Disabled:
+            break;
+
+        case constants::Mode_Ready:
+            break;
+
+        case constants::Mode_Homing:
+            break;
+            
+        case constants::Mode_Positioning:
+            break;
+            
+        case constants::Mode_VelocityControl:
+            break;
+            
+        default:
+            break;
+    }
 }
 
 // SystemState private methods
@@ -136,19 +156,24 @@ void SystemState::command_switchyard(HostToDevMsg host_to_dev_msg)
             set_mode_disabled();
             break;
 
-        case constants::Cmd_SetMode_Enabled:
-            set_mode_enabled();
+        case constants::Cmd_SetMode_Ready:
+            set_mode_ready();
             break;
 
-        case constants::Cmd_SetMode_MoveToPosition:
-            set_mode_move_to_position(host_to_dev_msg);
+        case constants::Cmd_SetMode_Homing:
+            set_mode_homing(host_to_dev_msg);
             break;
 
-        case constants::Cmd_SetMode_HomeAxis:
-            set_mode_home_axis(host_to_dev_msg);
+        case constants::Cmd_SetMode_Positioning:
+            set_mode_positioning(host_to_dev_msg);
             break;
 
         case constants::Cmd_SetMode_VelocityControl:
+            set_mode_velocity_control(host_to_dev_msg);
+            break;
+
+        case constants::Cmd_StopMotion:
+            stop_motion();
             break;
 
         case constants::Cmd_Get_TriggerCount:
@@ -173,26 +198,67 @@ void SystemState::command_switchyard(HostToDevMsg host_to_dev_msg)
 void SystemState::set_mode_disabled()
 {
     digitalWrite(constants::StepperDriveEnablePin,LOW);
-    enabled_flag_= false;
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        stepper_[i].set_velocity(0);
+    }
     mode_ = constants::Mode_Disabled;
 }
 
 
-void SystemState::set_mode_enabled()
+void SystemState::set_mode_ready()
 {
-    digitalWrite(constants::StepperDriveEnablePin,HIGH);
-    enabled_flag_ = true;
-    mode_ = constants::Mode_Enabled;
+    if (mode_ == constants::Mode_Disabled)
+    {
+    }
+    else
+    {
+        // Error: you can only issue command to go from Mode_Disabled to Mode_Ready
+        // To manually return to Mode_Ready from within a motion mode you need to 
+        // issue a stop motion command and wait for motion to stop. The system will
+        // then automatically return to ModeReady.  
+    }
+    mode_ = constants::Mode_Ready;
+}
+
+void SystemState::set_mode_homing(HostToDevMsg host_to_dev_msg)
+{
+   if (mode_ == constants::Mode_Ready)
+   {
+   }
+   else
+   {
+       // Error: you must be in Mode_Ready before you can enter a motion mode
+   }
 }
 
 
-void SystemState::set_mode_move_to_position(HostToDevMsg host_to_dev_msg)
+void SystemState::set_mode_positioning(HostToDevMsg host_to_dev_msg)
 {
+    if (mode_ == constants::Mode_Ready)
+    {
+    }
+    else
+    {
+       // Error: you must be in Mode_Ready before you can enter a motion mode.
+    }
 
 }
 
 
-void SystemState::set_mode_home_axis(HostToDevMsg host_to_dev_msg)
+void SystemState::set_mode_velocity_control(HostToDevMsg host_to_dev_msg)
+{
+    if (mode_ == constants::Mode_Ready)
+    {
+    }
+    else
+    {
+       // Error: you must be in Mode_Ready before you can enter a motion mode.
+    }
+}
+
+
+void SystemState::stop_motion()
 {
 }
 
@@ -219,7 +285,6 @@ void SystemState::setup_stepper()
 {
     pinMode(constants::StepperDriveEnablePin, OUTPUT);
     digitalWrite(constants::StepperDriveEnablePin,LOW);
-    enabled_flag_ = false;
 
     for (int i =0; i<constants::NumStepper; i++)
     {

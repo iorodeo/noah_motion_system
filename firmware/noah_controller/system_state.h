@@ -28,11 +28,11 @@ class SystemState
 
     protected:
 
+        constants::OperatingMode mode_ = constants::Mode_Disabled;           
+
         IntervalTimer timer_;                     
         volatile uint32_t timer_count_ = 0;
-
-        bool enabled_flag_ = false;
-        constants::OperatingMode mode_ = constants::Mode_Disabled;           
+        bool stopping_ = false;
 
         uint8_t msg_count_ = 0;
         bool send_msg_error_flag_ = false;
@@ -64,11 +64,12 @@ class SystemState
         void command_switchyard(HostToDevMsg host_to_dev_msg); // Take action in response to new message
 
         // Actions in reponse to usb commands
-        void set_mode_enabled();
         void set_mode_disabled();
-        void set_mode_move_to_position(HostToDevMsg host_to_dev_msg);
-        void set_mode_home_axis(HostToDevMsg host_to_dev_msg);
+        void set_mode_ready();
+        void set_mode_homing(HostToDevMsg host_to_dev_msg);
+        void set_mode_positioning(HostToDevMsg host_to_dev_msg);
         void set_mode_velocity_control(HostToDevMsg host_to_dev_msg);
+        void stop_motion();
 
         // Setup/Initialization methods
         void setup_stepper();

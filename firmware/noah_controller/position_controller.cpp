@@ -45,11 +45,12 @@ int32_t PositionController::velocity()
 }
 
 
-void PositionController::update(int32_t position)
+int32_t PositionController::update(int32_t position)
 {
     int32_t error = position_setp_ - position;
     int32_t control = gain_*error;
     velocity_ = constrain(control,-int32_t(max_speed_), int32_t(max_speed_)); 
+    return velocity_;
 }
 
 
