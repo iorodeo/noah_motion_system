@@ -61,6 +61,7 @@ namespace constants
     // E-Stop Monitor parameters 
     const uint8_t EStopMonitorPin = A20;
     const uint16_t EStopMonitorThreshold = 40000;
+    const uint32_t EStopMonitorStartupDelay = 200;
 
 }
 

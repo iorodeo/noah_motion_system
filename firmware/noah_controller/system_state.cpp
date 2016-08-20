@@ -26,29 +26,49 @@ void SystemState::initialize()
 
 }
 
-void SystemState::loop_update()
+
+void SystemState::update_on_loop()
 {
-    if (estop_monitor_.is_stopped())
+    //digitalWrite(constants::StepperDriveEnablePin, HIGH);
+    //Serial.println(mode_);
+    //Serial.println(analogRead(constants::EStopMonitorPin));
+    //Serial.println();
+
+    if (estop_monitor_.is_stopped() && (mode_ != constants::Mode_Disabled))
     {
         set_mode_disabled();
     }
-    send_and_recv();
+    
+    send_and_recv();        
+    update_modes_on_loop();  
+}
 
+
+// SystemState private methods
+// ------------------------------------------------------------------------------------------------
+
+void SystemState::update_modes_on_loop()
+{
     switch (mode_)
     {
         case constants::Mode_Disabled:
+            update_disabled_on_loop();
             break;
 
         case constants::Mode_Ready:
+            update_ready_on_loop();
             break;
 
         case constants::Mode_Homing:
+            update_homing_on_loop();
             break;
             
         case constants::Mode_Positioning:
+            update_positioning_on_loop();
             break;
             
         case constants::Mode_VelocityControl:
+            update_velocity_control_on_loop();
             break;
             
         default:
@@ -56,8 +76,85 @@ void SystemState::loop_update()
     }
 }
 
-// SystemState private methods
-// ------------------------------------------------------------------------------------------------
+
+void SystemState::update_disabled_on_loop()
+{
+}
+
+
+void SystemState::update_ready_on_loop()
+{
+}
+
+
+void SystemState::update_homing_on_loop()
+{ 
+    // Update homing controller using current stepper position to get 
+    // next stepper velocity. 
+    int32_t position = stepper_[homing_axis_].position();
+    int32_t velocity = homing_controller_[homing_axis_].update(position);
+    stepper_[homing_axis_].set_velocity(velocity);
+
+    // Check to see if home has been found
+    bool home_found = HomingController::home_found();
+    if (home_found)
+    {
+        stepper_[homing_axis_].set_velocity(0);
+
+        int32_t home_position;
+        if (homing_controller_[homing_axis_].direction() > 0)
+        {
+            home_position = constants::StepperMaximumPosition[homing_axis_];
+        }
+        else
+        {
+            home_position = constants::StepperMinimumPosition[homing_axis_];
+        }
+        stepper_[homing_axis_].set_position(home_position);
+        stepper_[homing_axis_].enable_bounds_check();
+        set_mode_ready(true);
+    }
+}
+
+
+void SystemState::update_positioning_on_loop()
+{ 
+    bool done = true;
+
+    for (int i=0; i<constants::NumStepper; i++)
+    { 
+        // Get current stepper position and update postion controller to get next
+        // velocity set point.
+        int32_t position = stepper_[i].position();
+        int32_t velocity_setp = position_controller_[i].update(position);
+
+        // Set velocity controller set point and update velocity controller
+        // to get next stepper velocity.
+        velocity_controller_[i].set_velocity_setp(velocity_setp);
+        int32_t velocity = velocity_controller_[i].update(position);
+        stepper_[i].set_velocity(velocity);
+
+        // Check for done
+        int32_t position_setp = position_controller_[i].position_setp();
+        if ((position != position_setp) || (velocity != 0))
+        {
+            done = false;
+        }
+    }
+
+    if (done)
+    {
+        set_mode_ready(true);
+    }
+
+}
+
+
+void SystemState::update_velocity_control_on_loop()
+{
+
+}
+
 
 void SystemState::send_and_recv()
 {
@@ -102,7 +199,8 @@ bool SystemState::recv_msg_from_host()
     }
     else
     {
-        command_switchyard(host_to_dev_msg);
+        host_to_dev_msg_last_ = host_to_dev_msg;
+        command_switchyard();
     }
     return rtn_val;
 }
@@ -115,8 +213,14 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     // Set status information
     dev_to_host_msg.status = 0;
     dev_to_host_msg.status = 0xf & mode_;  
-    dev_to_host_msg.status |= (send_msg_error_flag_ <<  constants::NumModeBits);
-    dev_to_host_msg.status |= (recv_msg_error_flag_ << (constants::NumModeBits+1));
+    //dev_to_host_msg.status |= (send_msg_error_flag_ <<  constants::NumModeBits);
+    //dev_to_host_msg.status |= (recv_msg_error_flag_ << (constants::NumModeBits+1));
+
+    //Serial.print("sts: ");
+    //Serial.println(int(dev_to_host_msg.status));
+
+    //Serial.print("mde: ");
+    //Serial.println(mode_);
 
     // Reset msg error flags
     send_msg_error_flag_ = false;
@@ -130,7 +234,13 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     dev_to_host_msg.time_us = time_us_;
 
     // Echo back message count for lag checking 
-    dev_to_host_msg.count = uint8_t(msg_count_);
+    dev_to_host_msg.count = host_to_dev_msg_last_.count;
+
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        dev_to_host_msg.stepper_position[i] = stepper_[i].position();
+        dev_to_host_msg.stepper_velocity[i] = stepper_[i].velocity();
+    }
 
     // Read Analog inputs 
     for (int i=0; i<constants::NumAnalogInput; i++)
@@ -141,51 +251,58 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
 }
 
 
-void SystemState::command_switchyard(HostToDevMsg host_to_dev_msg)
+void SystemState::command_switchyard()
 {
-    msg_count_ = host_to_dev_msg.count;
-    command_ = constants::UsbCommand(host_to_dev_msg.command);
+    constants::UsbCommand command = constants::UsbCommand(host_to_dev_msg_last_.command);
 
-    switch (command_)
+    //Serial.print("cmd: ");
+    //Serial.println(command);
+
+
+    switch (command)
     {
         case constants::Cmd_Empty: 
             // Take no action 
             break;
 
-        case constants::Cmd_SetMode_Disabled:
+        case constants::Cmd_SetModeDisabled:
             set_mode_disabled();
             break;
 
-        case constants::Cmd_SetMode_Ready:
+        case constants::Cmd_SetModeReady:
             set_mode_ready();
             break;
 
-        case constants::Cmd_SetMode_Homing:
-            set_mode_homing(host_to_dev_msg);
+        case constants::Cmd_SetModeHoming:
+            set_mode_homing();
             break;
 
-        case constants::Cmd_SetMode_Positioning:
-            set_mode_positioning(host_to_dev_msg);
+        case constants::Cmd_SetModePositioning:
+            set_mode_positioning();
             break;
 
-        case constants::Cmd_SetMode_VelocityControl:
-            set_mode_velocity_control(host_to_dev_msg);
+        case constants::Cmd_SetModeVelocityControl:
+            set_mode_velocity_control();
             break;
 
         case constants::Cmd_StopMotion:
-            stop_motion();
+            stop_motion_cmd();
             break;
 
-        case constants::Cmd_Get_TriggerCount:
+        case constants::Cmd_SetHomePosition:
+            set_home_position_cmd();
             break;
 
-        case constants::Cmd_Set_TriggerCount:
+        case constants::Cmd_GetTriggerCount:
             break;
 
-        case constants::Cmd_Get_TriggerEnabled:
+        case constants::Cmd_SetTriggerCount:
             break;
 
-        case constants::Cmd_Get_DigitalOutput:
+        case constants::Cmd_GetTriggerEnabled:
+            break;
+
+        case constants::Cmd_GetDigitalOutput:
             break;
 
         default:
@@ -206,10 +323,17 @@ void SystemState::set_mode_disabled()
 }
 
 
-void SystemState::set_mode_ready()
+void SystemState::set_mode_ready(bool ignore_mode)
 {
-    if (mode_ == constants::Mode_Disabled)
+    if ((mode_ == constants::Mode_Disabled) || ignore_mode)
     {
+        for (int i=0; i<constants::NumStepper; i++)
+        {
+            stepper_[i].set_velocity(0);
+        }
+        estop_monitor_.zero_startup_count();
+        digitalWrite(constants::StepperDriveEnablePin,HIGH);
+        mode_ = constants::Mode_Ready;
     }
     else
     {
@@ -218,25 +342,70 @@ void SystemState::set_mode_ready()
         // issue a stop motion command and wait for motion to stop. The system will
         // then automatically return to ModeReady.  
     }
-    mode_ = constants::Mode_Ready;
 }
 
-void SystemState::set_mode_homing(HostToDevMsg host_to_dev_msg)
+void SystemState::set_mode_homing()
 {
    if (mode_ == constants::Mode_Ready)
    {
+       uint8_t homing_axis_tmp = uint8_t(host_to_dev_msg_last_.command_data[0]);
+
+       if (homing_axis_tmp < constants::NumStepper)
+       {
+           homing_axis_ = homing_axis_tmp;
+           stepper_[homing_axis_].disable_bounds_check();
+           homing_controller_[homing_axis_].reset();
+           HomingController::enable();
+           mode_ = constants::Mode_Homing;
+       }
+       else
+       {
+           // Handle axis out of range error
+
+       }
+       
    }
    else
    {
-       // Error: you must be in Mode_Ready before you can enter a motion mode
+       // Handle incorrect mode error
+       // Note: you must be in Mode_Ready before you can enter a motion mode
    }
+
+
 }
 
 
-void SystemState::set_mode_positioning(HostToDevMsg host_to_dev_msg)
+void SystemState::set_mode_positioning()
 {
     if (mode_ == constants::Mode_Ready)
-    {
+    { 
+        // Check to make sure positions are within bounds
+        bool bounds_error = false;
+
+        for (int i=0; i<constants::NumStepper; i++)
+        {
+            if (host_to_dev_msg_last_.stepper_position[i] < constants::StepperMinimumPosition[i])
+            {
+                bounds_error = true;
+            }
+            if (host_to_dev_msg_last_.stepper_position[i] > constants::StepperMaximumPosition[i])
+            {
+                bounds_error = true;
+            }
+        }
+
+        // If OK set position controller set points, reset velocity controllers and enter position mode.
+        if (!bounds_error)
+        {
+            for (int i=0; i<constants::NumStepper; i++)
+            {
+                position_controller_[i].set_position_setp(host_to_dev_msg_last_.stepper_position[i]);
+                stepper_[i].enable_bounds_check();
+                velocity_controller_[i].reset();
+                mode_ = constants::Mode_Positioning;
+            }
+        }
+
     }
     else
     {
@@ -246,7 +415,7 @@ void SystemState::set_mode_positioning(HostToDevMsg host_to_dev_msg)
 }
 
 
-void SystemState::set_mode_velocity_control(HostToDevMsg host_to_dev_msg)
+void SystemState::set_mode_velocity_control()
 {
     if (mode_ == constants::Mode_Ready)
     {
@@ -258,7 +427,12 @@ void SystemState::set_mode_velocity_control(HostToDevMsg host_to_dev_msg)
 }
 
 
-void SystemState::stop_motion()
+void SystemState::stop_motion_cmd()
+{
+}
+
+
+void SystemState::set_home_position_cmd()
 {
 }
 
@@ -338,6 +512,7 @@ void SystemState::setup_estop_monitor()
 {
     estop_monitor_.set_analog_pin(constants::EStopMonitorPin); 
     estop_monitor_.set_threshold(constants::EStopMonitorThreshold);
+    estop_monitor_.set_startup_delay(constants::EStopMonitorStartupDelay);
 }
 
 
@@ -399,6 +574,7 @@ void SystemState::setup_homing()
 // SystemState Instance
 // ------------------------------------------------------------------------------------------------
 SystemState system_state = SystemState();
+
 
 //// Position controller usage example -- setup
 //// ------------------------------------------------------------------------------------------------

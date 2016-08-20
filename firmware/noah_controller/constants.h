@@ -19,16 +19,17 @@ namespace constants
     enum UsbCommand
     {
         Cmd_Empty   = 0,
-        Cmd_SetMode_Disabled,
-        Cmd_SetMode_Ready,
-        Cmd_SetMode_Homing,
-        Cmd_SetMode_Positioning,
-        Cmd_SetMode_VelocityControl,
+        Cmd_SetModeDisabled,
+        Cmd_SetModeReady,
+        Cmd_SetModeHoming,
+        Cmd_SetModePositioning,
+        Cmd_SetModeVelocityControl,
         Cmd_StopMotion,
-        Cmd_Get_TriggerCount,
-        Cmd_Set_TriggerCount,
-        Cmd_Get_TriggerEnabled,
-        Cmd_Get_DigitalOutput
+        Cmd_SetHomePosition,
+        Cmd_GetTriggerCount,
+        Cmd_SetTriggerCount,
+        Cmd_GetTriggerEnabled,
+        Cmd_GetDigitalOutput
     };
 
     // Communications timeouts
@@ -92,6 +93,7 @@ namespace constants
     // E-Stop Monitor parameters 
     extern const uint8_t EStopMonitorPin;
     extern const uint16_t EStopMonitorThreshold;
+    extern const uint32_t EStopMonitorStartupDelay;
     
 
 }

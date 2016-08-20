@@ -1,9 +1,11 @@
 #include "estop_monitor.h"
 
-EStopMonitor::EStopMonitor(uint8_t pin, uint16_t threshold)
+EStopMonitor::EStopMonitor(uint8_t pin, uint16_t threshold, uint32_t startup_delay)
 {
     set_analog_pin(pin);
     set_threshold(threshold);
+    set_startup_delay(startup_delay);
+    zero_startup_count();
 }
 
 uint8_t EStopMonitor::analog_pin()
@@ -30,14 +32,34 @@ void EStopMonitor::set_threshold(uint16_t threshold)
 
 bool EStopMonitor::is_stopped()
 {
-    if (analogRead(pin_) > threshold_)
+    bool rval = false;
+    if (startup_count_ >= startup_delay_)
     {
-        return true;
+        if (analogRead(pin_) > threshold_)
+        {
+            return true;
+        }
     }
     else
     {
-        return false;
+        startup_count_++;
     }
+    return rval;
 }
 
+
+uint32_t EStopMonitor::startup_delay()
+{
+    return startup_delay_;
+}
+
+void EStopMonitor::set_startup_delay(uint32_t startup_delay)
+{
+    startup_delay_ = startup_delay;
+}
+
+void EStopMonitor::zero_startup_count()
+{
+    startup_count_ = 0;
+}
 

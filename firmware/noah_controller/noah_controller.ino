@@ -8,7 +8,7 @@ void setup()
 
 void loop()
 {
-    system_state.loop_update();
+    system_state.update_on_loop();
 }
 
 

@@ -19,8 +19,6 @@ int main(int argc, char *argv[])
     controller.enable_homing(Axis_Z);
     controller.enable_homing(Axis_A);
 
-
-
     controller.test();
 
     controller.close();

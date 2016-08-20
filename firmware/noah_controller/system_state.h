@@ -17,14 +17,14 @@ class SystemState
         volatile bool new_msg_flag_ = false; 
 
         SystemState();
-        void initialize();           
-        void loop_update();
 
-        // Update on timer methods
-        inline void update_stepper();
-        inline void update_trigger();
-        inline void update_new_msg_flag();
-        inline void update_timer_count();
+        void initialize();           
+        void update_on_loop(); 
+
+        inline void update_stepper_on_timer();
+        inline void update_trigger_on_timer();
+        inline void update_new_msg_flag_on_timer();
+        inline void update_count_on_timer();
 
     protected:
 
@@ -32,15 +32,17 @@ class SystemState
 
         IntervalTimer timer_;                     
         volatile uint32_t timer_count_ = 0;
-        bool stopping_ = false;
 
-        uint8_t msg_count_ = 0;
         bool send_msg_error_flag_ = false;
         bool recv_msg_error_flag_ = false;
-        constants::UsbCommand command_ = constants::Cmd_Empty;
+        HostToDevMsg host_to_dev_msg_last_;
 
         Stepper stepper_[constants::NumStepper];  
         Trigger trigger_[constants::NumTrigger];
+
+        bool stop_motion_flag_= false;
+        uint8_t homing_axis_ = 0;
+
 
         // Controllers/Monitors
         VelocityController velocity_controller_[constants::NumStepper]; 
@@ -60,16 +62,25 @@ class SystemState
         void on_send_msg_error();    // Response to send messaging error 
         void on_recv_msg_error();    // Response to recv messaging error 
 
-        DevToHostMsg create_dev_to_host_msg();                 // Create new message to send to host
-        void command_switchyard(HostToDevMsg host_to_dev_msg); // Take action in response to new message
+        DevToHostMsg create_dev_to_host_msg();  // Create new message to send to host
+        void command_switchyard();              // Take action in response to new message
+
+        // Loop update methods for operating modes
+        void update_modes_on_loop();  
+        void update_disabled_on_loop();
+        void update_ready_on_loop();
+        void update_homing_on_loop();
+        void update_positioning_on_loop();
+        void update_velocity_control_on_loop();
 
         // Actions in reponse to usb commands
         void set_mode_disabled();
-        void set_mode_ready();
-        void set_mode_homing(HostToDevMsg host_to_dev_msg);
-        void set_mode_positioning(HostToDevMsg host_to_dev_msg);
-        void set_mode_velocity_control(HostToDevMsg host_to_dev_msg);
-        void stop_motion();
+        void set_mode_ready(bool ignore_mode=false);
+        void set_mode_homing();
+        void set_mode_positioning();
+        void set_mode_velocity_control();
+        void stop_motion_cmd();
+        void set_home_position_cmd();
 
         // Setup/Initialization methods
         void setup_stepper();
@@ -84,14 +95,13 @@ class SystemState
         void setup_timer();
 };
 
-
-extern SystemState system_state;
+extern SystemState system_state; 
 
 
 // Timer update functions
 // --------------------------------------------------------------------------------------
 
-inline void SystemState::update_stepper()
+inline void SystemState::update_stepper_on_timer()
 {
     for (int i=0; i<constants::NumStepper; i++)
     {
@@ -105,7 +115,7 @@ inline void SystemState::update_stepper()
 }
 
 
-inline void SystemState::update_trigger() 
+inline void SystemState::update_trigger_on_timer() 
 { 
     for (int i=0; i<constants::NumTrigger; i++)
     {
@@ -119,7 +129,7 @@ inline void SystemState::update_trigger()
 }
 
 
-inline void SystemState::update_new_msg_flag()
+inline void SystemState::update_new_msg_flag_on_timer()
 {
     if (system_state.timer_count_%constants::NewMessageCount == 0)
     {
@@ -128,7 +138,7 @@ inline void SystemState::update_new_msg_flag()
 }
 
 
-inline void SystemState::update_timer_count()
+inline void SystemState::update_count_on_timer()
 {
     system_state.timer_count_++;
 }
@@ -136,10 +146,10 @@ inline void SystemState::update_timer_count()
 
 inline void timer_callback()
 {
-    system_state.update_stepper();
-    system_state.update_trigger();
-    system_state.update_new_msg_flag();
-    system_state.update_timer_count();
+    system_state.update_stepper_on_timer();
+    system_state.update_trigger_on_timer();
+    system_state.update_new_msg_flag_on_timer();
+    system_state.update_count_on_timer();
 }
 
 

@@ -33,8 +33,7 @@ struct __attribute__((packed)) HostToDevMsg
     uint8_t  digital_output[NumDigitalOutput];
     uint8_t  count;
     uint8_t  command;
-    uint16_t command_data;
-    uint8_t  padding[14];
+    uint16_t command_data[8];
 };
 
 #endif

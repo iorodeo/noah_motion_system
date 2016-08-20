@@ -22,6 +22,34 @@ enum Axis
     NumAxes
 };
 
+// Operating modes
+enum OperatingMode
+{
+    Mode_Disabled = 0,
+    Mode_Ready,
+    Mode_Homing,
+    Mode_Positioning,
+    Mode_VelocityControl
+};
+extern const uint8_t NumModeBits; 
+
+// Commands
+enum UsbCommand
+{
+    Cmd_Empty   = 0,
+    Cmd_SetModeDisabled,
+    Cmd_SetModeReady,
+    Cmd_SetModeHoming,
+    Cmd_SetModePositioning,
+    Cmd_SetModeVelocityControl,
+    Cmd_StopMotion,
+    Cmd_SetHomePosition,
+    Cmd_GetTriggerCount,
+    Cmd_SetTriggerCount,
+    Cmd_GetTriggerEnabled,
+    Cmd_GetDigitalOutput
+};
+
 
 class MotionController
 {
@@ -60,7 +88,6 @@ class MotionController
         void set_mode_to_home(int axis);
 
 };
-
 
 // Using class method as callback
 // --------------------------------------------------------------------------------------

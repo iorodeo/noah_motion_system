@@ -90,6 +90,7 @@ bool MotionController::is_homing_enabled(Axis axis)
 }
 
 
+
 void MotionController::test()
 {
     int cnt = 0;
@@ -100,6 +101,7 @@ void MotionController::test()
     std::cout << "1" << std::endl;
     hid_dev_.clearRecvBuffer();
     std::cout << "2" << std::endl;
+
 
     while (!quit_flag)
     {
@@ -129,8 +131,33 @@ void MotionController::test()
             }
             std::cout << "count out: " << int(host_to_dev_msg.count) << std::endl;
             std::cout << "count lag: " << count_lag  << std::endl;
+
+            for (int i=0; i<NumStepper; i++)
+            {
+                std::cout << dev_to_host_msg.stepper_position[i] << " ";
+            }
             std::cout << std::endl;
             std::cout << std::endl;
+
+
+            host_to_dev_msg.command = Cmd_Empty;
+            
+            if (cnt == 5)
+            {
+                host_to_dev_msg.command = Cmd_SetModeReady;
+            }
+
+            if (cnt == 10)
+            {
+                //host_to_dev_msg.command = Cmd_SetModeHoming;
+                //host_to_dev_msg.command_data[0] = Axis_X; 
+
+                host_to_dev_msg.command = Cmd_SetModePositioning;
+                for (int i=0; i<NumStepper; i++)
+                {
+                    host_to_dev_msg.stepper_position[i] = -1000;
+                }
+            }
 
             rtn_val = hid_dev_.sendData(&host_to_dev_msg);
             if (!rtn_val)
