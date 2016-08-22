@@ -2,6 +2,8 @@
 #include <csignal>
 #include <iostream>
 #include <bitset>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "rawhid_msg_types.h"
 
 bool quit_flag = false;
@@ -12,38 +14,15 @@ void sig_int_handler(int param)
 
 // MotionController
 // --------------------------------------------------------------------------------------
-
 const std::list<Axis> MotionController::AxisList = 
-{
-    Axis_X, 
-    Axis_Y, 
-    Axis_Z, 
-    Axis_A,
-    Axis_B, 
-    Pwm_0, 
-    Pwm_1, 
-    Pwm_2, 
-    Pwm_3, 
-    Pwm_4
-};
+{Axis_X, Axis_Y, Axis_Z, Axis_A, Axis_B, Pwm_0, Pwm_1, Pwm_2, Pwm_3, Pwm_4};
 
 const std::list<Axis> MotionController::StepperList = 
-{
-    Axis_X, 
-    Axis_Y, 
-    Axis_Z, 
-    Axis_A, 
-    Axis_B
-};
+{Axis_X, Axis_Y, Axis_Z, Axis_A, Axis_B }; 
 
 const std::list<Axis> MotionController::PwmList = 
-{
-    Pwm_0, 
-    Pwm_1, 
-    Pwm_2, 
-    Pwm_3, 
-    Pwm_4
-};
+{Pwm_0, Pwm_1, Pwm_2, Pwm_3, Pwm_4 };
+
 
 MotionController::MotionController(int vid, int pid) 
 {
@@ -103,6 +82,9 @@ void MotionController::test()
     std::cout << "2" << std::endl;
 
 
+    uint64_t time_start_us = 0;
+    int32_t position_start[NumStepper];
+
     while (!quit_flag)
     {
         DevToHostMsg dev_to_host_msg;
@@ -137,7 +119,6 @@ void MotionController::test()
                 std::cout << dev_to_host_msg.stepper_position[i] << " ";
             }
             std::cout << std::endl;
-            std::cout << std::endl;
 
 
             host_to_dev_msg.command = Cmd_Empty;
@@ -152,18 +133,58 @@ void MotionController::test()
                 //host_to_dev_msg.command = Cmd_SetModeHoming;
                 //host_to_dev_msg.command_data[0] = Axis_X; 
 
-                host_to_dev_msg.command = Cmd_SetModePositioning;
-                for (int i=0; i<NumStepper; i++)
+                //host_to_dev_msg.command = Cmd_SetModePositioning;
+                //for (int i=0; i<NumStepper; i++)
+                //{
+                //    host_to_dev_msg.stepper_position[i] =  2000;
+                //}
+
+                host_to_dev_msg.command = Cmd_SetModeVelocityControl;
+                for (int i = 0; i<NumStepper; i++)
                 {
-                    host_to_dev_msg.stepper_position[i] = -1000;
+                    host_to_dev_msg.stepper_velocity[i] = 0;
+                    position_start[i] = dev_to_host_msg.stepper_position[i];
                 }
+
+                time_start_us = dev_to_host_msg.time_us;
+
             }
+            if (cnt > 10)
+            {
+                for (int i =0; i<NumStepper; i++)
+                {
+                    host_to_dev_msg.stepper_velocity[i] = 0;
+                }
+                float amp = 1000;
+                float period = 5.0;
+                float t = 1.0e-6*(dev_to_host_msg.time_us - time_start_us);
+
+                float position_setp = position_start[0] +  amp*(1.0 - std::cos(2.0*M_PI*t/period));
+                float velocity_setp = (2.0*M_PI*amp/period)*std::sin(2.0*M_PI*t/period);
+                float position_curr = float(dev_to_host_msg.stepper_position[0]);
+                float error = (position_setp - position_curr);
+
+                float velocity_next = 40.0*error + 0.8*velocity_setp;
+
+                host_to_dev_msg.stepper_velocity[0] = int32_t(velocity_next);
+
+                std::cout << "t: " << t << " pset: " << position_setp << " vset: " << velocity_setp << " vctl: " << velocity_next << std::endl;
+                std::cout << "error: " << error << std::endl;
+
+            }
+
+            if (cnt == 5000)
+            {
+                host_to_dev_msg.command = Cmd_StopMotion; 
+            }
+
 
             rtn_val = hid_dev_.sendData(&host_to_dev_msg);
             if (!rtn_val)
             {
                 std::cerr << "Error: sendData" << std::endl;
             }
+            std::cout << std::endl;
             std::cout << std::endl;
 
         }

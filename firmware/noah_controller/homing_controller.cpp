@@ -146,3 +146,15 @@ void HomingController::set_accel(uint32_t accel)
     velocity_controller_.set_max_accel(accel);
 }
 
+
+void HomingController::set_velocity_setp(int32_t velocity)
+{
+    velocity_controller_.set_velocity_setp(velocity);
+}
+
+
+int32_t HomingController::velocity_setp()
+{
+    return velocity_controller_.velocity_setp();
+}
+

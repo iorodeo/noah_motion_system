@@ -40,7 +40,7 @@ namespace constants
     const uint8_t StepperDriveEnablePin = 32;
 
     // PositionController  parameters
-    const uint32_t PositionControllerMaximumSpeed[NumStepper] = {1000, 1000, 1000, 1000, 1000};
+    const uint32_t PositionControllerMaximumSpeed[NumStepper] = {1000, 1000, 3000, 1000, 1000};
     const uint32_t PositionControllerGain[NumStepper] = {3, 3, 3, 3, 3};
 
     // Homing parameters

@@ -35,6 +35,8 @@ class SystemState
 
         bool send_msg_error_flag_ = false;
         bool recv_msg_error_flag_ = false;
+        bool error_flag_ = false;
+
         HostToDevMsg host_to_dev_msg_last_;
 
         Stepper stepper_[constants::NumStepper];  
@@ -72,6 +74,7 @@ class SystemState
         void update_homing_on_loop();
         void update_positioning_on_loop();
         void update_velocity_control_on_loop();
+        void update_stop_motion_on_loop();
 
         // Actions in reponse to usb commands
         void set_mode_disabled();

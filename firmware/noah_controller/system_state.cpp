@@ -41,6 +41,11 @@ void SystemState::update_on_loop()
     
     send_and_recv();        
     update_modes_on_loop();  
+
+    if (stop_motion_flag_)
+    {
+        update_stop_motion_on_loop();
+    }
 }
 
 
@@ -73,6 +78,22 @@ void SystemState::update_modes_on_loop()
             
         default:
             break;
+    }
+}
+
+
+void SystemState::update_stop_motion_on_loop()
+{
+    bool all_stopped = true;
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        int32_t velocity = stepper_[i].velocity();
+        all_stopped &= (velocity == 0);
+    }
+    if (all_stopped)
+    {
+        set_mode_ready(true);
+        stop_motion_flag_ = false;
     }
 }
 
@@ -130,7 +151,10 @@ void SystemState::update_positioning_on_loop()
 
         // Set velocity controller set point and update velocity controller
         // to get next stepper velocity.
-        velocity_controller_[i].set_velocity_setp(velocity_setp);
+        if (!stop_motion_flag_)
+        {
+            velocity_controller_[i].set_velocity_setp(velocity_setp);
+        }
         int32_t velocity = velocity_controller_[i].update(position);
         stepper_[i].set_velocity(velocity);
 
@@ -152,7 +176,16 @@ void SystemState::update_positioning_on_loop()
 
 void SystemState::update_velocity_control_on_loop()
 {
-
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        if (!stop_motion_flag_)
+        {
+            velocity_controller_[i].set_velocity_setp(host_to_dev_msg_last_.stepper_velocity[i]);
+        }
+        int32_t position = stepper_[i].position();
+        int32_t velocity = velocity_controller_[i].update(position);
+        stepper_[i].set_velocity(velocity);
+    }
 }
 
 
@@ -213,18 +246,21 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     // Set status information
     dev_to_host_msg.status = 0;
     dev_to_host_msg.status = 0xf & mode_;  
-    //dev_to_host_msg.status |= (send_msg_error_flag_ <<  constants::NumModeBits);
-    //dev_to_host_msg.status |= (recv_msg_error_flag_ << (constants::NumModeBits+1));
 
-    //Serial.print("sts: ");
-    //Serial.println(int(dev_to_host_msg.status));
+    dev_to_host_msg.status |= (stop_motion_flag_ << 4);
+    if (send_msg_error_flag_ || recv_msg_error_flag_)
+    {
+        dev_to_host_msg.status  |= (1 << 5);
+    }
+    if (error_flag_)
+    {
+        dev_to_host_msg.status |= (1 << 6);
+    }
 
-    //Serial.print("mde: ");
-    //Serial.println(mode_);
-
-    // Reset msg error flags
+    // Reset error flags
     send_msg_error_flag_ = false;
     recv_msg_error_flag_ = false;
+    error_flag_ = false;
 
     // Get current time in us
     uint32_t micros_curr = micros();
@@ -402,8 +438,8 @@ void SystemState::set_mode_positioning()
                 position_controller_[i].set_position_setp(host_to_dev_msg_last_.stepper_position[i]);
                 stepper_[i].enable_bounds_check();
                 velocity_controller_[i].reset();
-                mode_ = constants::Mode_Positioning;
             }
+            mode_ = constants::Mode_Positioning;
         }
 
     }
@@ -419,6 +455,12 @@ void SystemState::set_mode_velocity_control()
 {
     if (mode_ == constants::Mode_Ready)
     {
+        for (int i=0; i<constants::NumStepper; i++)
+        {
+        stepper_[i].enable_bounds_check();
+        velocity_controller_[i].reset();
+        }
+        mode_ = constants::Mode_VelocityControl;
     }
     else
     {
@@ -429,6 +471,20 @@ void SystemState::set_mode_velocity_control()
 
 void SystemState::stop_motion_cmd()
 {
+    if ((mode_ == constants::Mode_Positioning) || (mode_ == constants::Mode_VelocityControl))
+    {
+        for (int i=0; i<constants::NumStepper; i++)
+        {
+            velocity_controller_[i].set_velocity_setp(0);
+        }
+    }
+    if (mode_ == constants::Mode_Homing)
+    {
+        HomingController::disable();
+        homing_controller_[homing_axis_].set_velocity_setp(0);
+        stepper_[homing_axis_].enable_bounds_check();
+    }
+    stop_motion_flag_ = true;
 }
 
 

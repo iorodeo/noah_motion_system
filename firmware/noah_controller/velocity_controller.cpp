@@ -18,7 +18,7 @@ int32_t VelocityController::velocity()
 
 void VelocityController::set_velocity(int32_t vel)
 {
-    velocity_curr_ = vel;
+    velocity_curr_ = constrain(vel,-int32_t(max_speed_), int32_t(max_speed_));;
 }
 
 
@@ -30,7 +30,7 @@ int32_t VelocityController::velocity_setp()
 
 void VelocityController::set_velocity_setp(int32_t vel)
 {
-    velocity_setp_ = vel;
+    velocity_setp_ = constrain(vel,-int32_t(max_speed_), int32_t(max_speed_));
 }
 
 

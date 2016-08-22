@@ -32,6 +32,10 @@ class HomingController
         uint32_t accel();
         void set_accel(uint32_t accel);
 
+        void set_velocity_setp(int32_t velocity);
+        int32_t velocity_setp();
+
+
     protected:
 
         static bool home_found_;
