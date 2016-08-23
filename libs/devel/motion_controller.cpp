@@ -65,9 +65,9 @@ namespace motion
         if (rtn_status.success())
         {
             position.resize(NumStepper);
-            for (Axis n : StepperList)
+            for (auto num : StepperList)
             {
-                position[n] = dev_to_host_msg.stepper_position[n];
+                position[num] = dev_to_host_msg.stepper_position[num];
             }
         }
         return rtn_status;
