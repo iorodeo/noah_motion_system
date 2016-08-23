@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     }
 
     // Note, stepper axes need to be homed before move
-    for (motion::Axis num : motion::StepperList)
+    for (auto num : motion::StepperList)
     {
         rtn_status = controller.set_homed_true(num);
     }
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     // Homing example
     // ----------------------------------------------------------------------
     //std::cout << std::endl;
-    //for (motion::Axis num : motion::StepperList)
+    //for (auto num : motion::StepperList)
     //{
     //    std::string axis_name = motion::axis_to_string(num);
     //    std::cout << "* homing " << axis_name << " ... " << std::flush;

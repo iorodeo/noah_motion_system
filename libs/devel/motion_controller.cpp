@@ -28,7 +28,7 @@ namespace motion
         std::signal(SIGINT,sig_int_handler);
 
         hid_dev_ = RawHIDDevice(vid,pid);
-        for (Axis axis : AxisList)
+        for (auto axis : AxisList)
         {
             disable_homing(axis);
         }
@@ -77,7 +77,7 @@ namespace motion
     {
         std::vector<int32_t> pos_vec;
         RtnStatus rtn_status = position(pos_vec);
-        for (int32_t val : pos_vec)
+        for (auto val : pos_vec)
         {
             std::cout << " " << val;
         }
