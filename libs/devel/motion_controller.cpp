@@ -26,13 +26,11 @@ namespace motion
     Controller::Controller(int vid, int pid) 
     {
         std::signal(SIGINT,sig_int_handler);
-
         hid_dev_ = RawHIDDevice(vid,pid);
         for (auto axis : AxisList)
         {
             disable_homing(axis);
         }
-
     }
 
 
@@ -98,19 +96,19 @@ namespace motion
 
     void Controller::enable_homing(Axis axis)
     {
-        homing_enabled_map_[axis] = true;
+        config_.set_homing_enabled(axis,true);
     }
 
 
     void Controller::disable_homing(Axis axis)
     {
-        homing_enabled_map_[axis] = false;
+        config_.set_homing_enabled(axis,false);
     }
 
 
     bool Controller::is_homing_enabled(Axis axis)
     {
-        return homing_enabled_map_[axis];
+        return config_.homing_enabled(axis);
     }
 
 
@@ -455,30 +453,6 @@ namespace motion
     }
 
 
-    std::string operating_mode_to_string(OperatingMode mode)
-    {
-        if (OperatingModeToStringMap.count(mode) > 0)
-        {
-            return OperatingModeToStringMap[mode];
-        }
-        else
-        {
-            return std::string("mode not found");
-        }
-    }
-
-
-    std::string axis_to_string(Axis axis)
-    {
-        if (AxisToStringMap.count(axis) > 0)
-        {
-            return AxisToStringMap[axis];
-        }
-        else
-        {
-            return std::string("axis not found");
-        }
-    }
 
 } // namespace motion
 

@@ -13,7 +13,23 @@ namespace motion
 
     // Motion Axes
     enum Axis 
-    {Axis_X=0, Axis_Y, Axis_Z, Axis_A, Axis_B, Pwm_0, Pwm_1, Pwm_2, Pwm_3, Pwm_4, NumAxes};
+    { 
+        Axis_X=0, 
+        Axis_Y, 
+        Axis_Z, 
+        Axis_A, 
+        Axis_B, 
+        Pwm_0, 
+        Pwm_1, 
+        Pwm_2, 
+        Pwm_3, 
+        Pwm_4, 
+        NumAxis
+    };
+
+    enum Unit {Meter=0, Degree, NoUnit, NumUnit};
+
+    extern const int HomingDebounceSleep_ms;
 
     // Device USB vendor and product IDs
     extern const int USB_VendorId;
@@ -24,11 +40,16 @@ namespace motion
     extern const std::list<Axis> StepperList;
     extern const std::list<Axis> PwmList;
 
-    // Operating mode to string conversion
+    // String conversions
     extern std::map<OperatingMode,std::string> OperatingModeToStringMap;
+    extern std::map<Unit,std::string> UnitToStringMap;
     extern std::map<Axis,std::string> AxisToStringMap;
 
-    extern const int HomingDebounceSleep_ms;
+    // Unit default assignments and conversions
+    extern std::map<Axis,Unit> DefaultAxisToUnitMap;
+    extern std::map<Axis,double> DefaultAxisToUnitConversionMap;
+    extern std::map<Axis, bool> DefaultHomingEnabledMap;
+
 }
 
 #endif
