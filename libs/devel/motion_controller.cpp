@@ -53,7 +53,33 @@ namespace motion
     }
 
 
-    RtnStatus Controller::position(std::vector<int32_t> &position)
+    RtnStatus Controller::position(Axis axis, int32_t &ind)
+    {
+        RtnStatus rtn_status;
+        std::vector<int32_t> ind_vec;
+        rtn_status = position(ind_vec);
+        if (rtn_status.success())
+        {
+            ind = ind_vec[axis];
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::position(Axis axis, double  &pos)
+    {
+        RtnStatus rtn_status;
+        std::vector<double> pos_vec;
+        rtn_status = position(pos_vec);
+        if (rtn_status.success())
+        {
+            pos = pos_vec[axis];
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::position(std::vector<int32_t> &ind_vec)
     {
         RtnStatus rtn_status;
         HostToDevMsg host_to_dev_msg;
@@ -62,24 +88,96 @@ namespace motion
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
         if (rtn_status.success())
         {
-            position.resize(NumStepper);
+            ind_vec.resize(NumStepper);
             for (auto num : StepperList)
             {
-                position[num] = dev_to_host_msg.stepper_position[num];
+                ind_vec[num] = dev_to_host_msg.stepper_position[num];
             }
         }
         return rtn_status;
     }
 
-    RtnStatus Controller::print_position()
+    RtnStatus Controller::position(std::vector<double>  &pos_vec)
     {
-        std::vector<int32_t> pos_vec;
-        RtnStatus rtn_status = position(pos_vec);
-        for (auto val : pos_vec)
+        RtnStatus rtn_status;
+        std::vector<int32_t> ind_vec;
+        rtn_status = position(ind_vec);
+        if (rtn_status.success())
         {
-            std::cout << " " << val;
+            pos_vec.resize(ind_vec.size());
+            pos_vec = config_.index_to_unit(ind_vec);
         }
-        std::cout << std::endl;
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::position(std::map<Axis,int32_t> &ind_map)
+    {
+        RtnStatus rtn_status;
+        std::vector<int32_t> ind_vec;
+        rtn_status = position(ind_vec);
+        if (rtn_status.success())
+        {
+            ind_map.clear();
+            for (int i=0; i<ind_vec.size(); i++)
+            {
+                std::pair<Axis,int32_t> kv(Axis(i),ind_vec[i]);
+                ind_map.insert(kv);
+            }
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::position(std::map<Axis,double> &pos_map)
+    {
+        RtnStatus rtn_status;
+        std::vector<double> pos_vec;
+        rtn_status = position(pos_vec);
+        if (rtn_status.success())
+        {
+            pos_map.clear();
+            for (int i=0; i<pos_vec.size(); i++)
+            {
+                std::pair<Axis,double> kv(Axis(i),pos_vec[i]);
+                pos_map.insert(kv);
+            }
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::print_position(bool unit)
+    {
+        // NOT DONE - need to handle unit argument
+        RtnStatus rtn_status;
+
+        if (unit)
+        {
+            std::vector<double> pos_vec;
+            rtn_status = position(pos_vec);
+            if (rtn_status.success())
+            {
+                for (auto val : pos_vec)
+                {
+                    std::cout << " " << val;
+                }
+                std::cout << std::endl;
+            }
+        }
+        else
+        {
+            std::vector<int32_t> ind_vec;
+            rtn_status = position(ind_vec);
+            if (rtn_status.success())
+            {
+                for (auto val : ind_vec)
+                {
+                    std::cout << " " << val;
+                }
+                std::cout << std::endl;
+            }
+        }
         return rtn_status;
     }
 
@@ -141,7 +239,57 @@ namespace motion
     }
 
 
-    RtnStatus Controller::move_to_position(Axis axis, int32_t pos, bool wait)
+    RtnStatus Controller::wait_for_ready()
+    {
+        bool done = false;
+        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg;
+        RtnStatus rtn_status;
+
+        while (!done && !quit_flag)
+        {
+            // Wait - receiving and sending messages - until mode changes back to ready
+            if (!hid_dev_.recvData(&dev_to_host_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("did not receive message from device while in wait loop");
+                break;
+            }
+
+            host_to_dev_msg.count =  msg_count_;
+            host_to_dev_msg.command = Cmd_Empty;
+            if (!hid_dev_.sendData(&host_to_dev_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable send data to device while in wait loop");
+                break;
+            }
+            msg_count_++;
+
+            // Check to see if done
+            OperatingMode mode = get_operating_mode(dev_to_host_msg);
+            if (mode  == Mode_Ready)
+            {
+                done = true;
+            }
+            if (mode == Mode_Disabled)
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("system disabled while in wait loop");
+                break;
+            }
+        }
+        return rtn_status;
+    }
+
+
+    Unit Controller::axis_unit(Axis axis)
+    {
+        return config_.axis_unit(axis);
+    }
+
+
+    RtnStatus Controller::move_to_position(Axis axis, int32_t ind, bool wait)
     {
         RtnStatus rtn_status;
         std::vector<int32_t> cur_pos_vec;
@@ -152,7 +300,7 @@ namespace motion
             DevToHostMsg dev_to_host_msg;
             host_to_dev_msg.command = Cmd_SetModePositioning;
             std::copy(cur_pos_vec.begin(), cur_pos_vec.end(), host_to_dev_msg.stepper_position);
-            host_to_dev_msg.stepper_position[axis] = pos;
+            host_to_dev_msg.stepper_position[axis] = ind;
             rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
             if (rtn_status.success() && wait)
             {
@@ -225,7 +373,95 @@ namespace motion
     }
 
 
-    // Private Methods
+    RtnStatus Controller::move_to_position(Axis axis, double pos, bool wait)
+    {
+        RtnStatus rtn_status;
+        int32_t ind = config_.unit_to_index(axis,pos);
+        rtn_status = move_to_position(axis,ind,wait);
+        return rtn_status; 
+    }
+
+
+    RtnStatus Controller::move_to_position(std::vector<double> pos_vec, bool wait)
+    {
+        RtnStatus rtn_status;
+        std::vector<int32_t> ind_vec = config_.unit_to_index(pos_vec);
+        rtn_status = move_to_position(ind_vec,wait);
+        return rtn_status; 
+    }
+
+
+    RtnStatus Controller::move_to_position(std::map<Axis,double> pos_map, bool wait)
+    {
+        RtnStatus rtn_status;
+        std::map<Axis,int32_t> ind_map = config_.unit_to_index(pos_map);
+        rtn_status = move_to_position(ind_map,wait);
+        return rtn_status; 
+    }
+
+    RtnStatus Controller::jog_position(Axis axis, int32_t ind, bool wait)
+    {
+        RtnStatus rtn_status;
+        std::vector<int32_t> jog_vec;
+        rtn_status = position(jog_vec);
+        if (rtn_status.success())
+        {
+            jog_vec[axis] = jog_vec[axis] + ind;
+            rtn_status = move_to_position(jog_vec);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::jog_position(std::vector<int32_t> ind_vec, bool wait)
+    {
+        RtnStatus rtn_status;
+        std::vector<int32_t> jog_vec;
+        rtn_status = position(jog_vec);
+        if (rtn_status.success())
+        {
+            for (int i=0; i<ind_vec.size(); i++)
+            {
+                jog_vec[i] = jog_vec[i] + ind_vec[i];
+            }
+            rtn_status = move_to_position(jog_vec);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::jog_position(std::map<Axis,int32_t> ind_map, bool wait)
+    {
+        RtnStatus rtn_status;
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::jog_position(Axis axis, double pos, bool wait)
+    {
+        RtnStatus rtn_status;
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::jog_position(std::vector<double> pos_vec, bool wait)
+    {
+        RtnStatus rtn_status;
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::jog_position(std::map<Axis,double> pos_map, bool wait)
+    {
+        RtnStatus rtn_status;
+        return rtn_status;
+    }
+
+
+
+
+
+    // Protected Methods
     // ----------------------------------------------------------------------------------
 
     RtnStatus Controller::send_command( HostToDevMsg &host_to_dev_msg, DevToHostMsg &dev_to_host_msg)
@@ -274,48 +510,6 @@ namespace motion
     }
 
 
-    RtnStatus Controller::wait_for_ready()
-    {
-        bool done = false;
-        DevToHostMsg dev_to_host_msg;
-        HostToDevMsg host_to_dev_msg;
-        RtnStatus rtn_status;
-
-        while (!done && !quit_flag)
-        {
-            // Wait - receiving and sending messages - until mode changes back to ready
-            if (!hid_dev_.recvData(&dev_to_host_msg))
-            {
-                rtn_status.set_success(false);
-                rtn_status.set_error_msg("did not receive message from device while in wait loop");
-                break;
-            }
-
-            host_to_dev_msg.count =  msg_count_;
-            host_to_dev_msg.command = Cmd_Empty;
-            if (!hid_dev_.sendData(&host_to_dev_msg))
-            {
-                rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable send data to device while in wait loop");
-                break;
-            }
-            msg_count_++;
-
-            // Check to see if done
-            OperatingMode mode = get_operating_mode(dev_to_host_msg);
-            if (mode  == Mode_Ready)
-            {
-                done = true;
-            }
-            if (mode == Mode_Disabled)
-            {
-                rtn_status.set_success(false);
-                rtn_status.set_error_msg("system disabled while in wait loop");
-                break;
-            }
-        }
-        return rtn_status;
-    }
 
 
     void Controller::test()

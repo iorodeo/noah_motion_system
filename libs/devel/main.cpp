@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
     motion::RtnStatus rtn_status;
     motion::Controller controller;
 
+
     rtn_status = controller.open();
     if (!rtn_status.success())
     {
@@ -29,11 +30,12 @@ int main(int argc, char *argv[])
     std::cout << std::endl;
     std::cout << "start: ";
     controller.print_position();
+    controller.print_position(false);
 
     //std::vector<int32_t> pos_vec = {0,0,0,0,0};
     //rtn_status = controller.move_to_position(pos_vec);
 
-    std::map<motion::Axis,int32_t> pos_map = {{motion::Axis_X, 500}, {motion::Axis_Z, 20}};
+    std::map<motion::Axis,int32_t> pos_map = {{motion::Axis_X, 0}, {motion::Axis_Z, 0}};
     rtn_status = controller.move_to_position(pos_map);
 
     if (!rtn_status.success())

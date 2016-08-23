@@ -3,12 +3,6 @@
 #include <cstdint>
 #include "motion_constants.hpp"
 
-//const int NumStepper = 5;
-//const int NumAnalogInput = 10;
-//const int NumPwm = 5;
-//const int NumTrigger = 2;
-//const int NumDigitalOutput = 2;
-
 namespace motion
 {
 
