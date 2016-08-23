@@ -39,12 +39,13 @@ class SystemState
 
         HostToDevMsg host_to_dev_msg_last_;
 
+        bool stop_motion_flag_= false;
+
         Stepper stepper_[constants::NumStepper];  
         Trigger trigger_[constants::NumTrigger];
 
-        bool stop_motion_flag_= false;
         uint8_t homing_axis_ = 0;
-
+        bool homed_flag_[constants::NumStepper];
 
         // Controllers/Monitors
         VelocityController velocity_controller_[constants::NumStepper]; 
@@ -83,7 +84,9 @@ class SystemState
         void set_mode_positioning();
         void set_mode_velocity_control();
         void stop_motion_cmd();
-        void set_home_position_cmd();
+        void set_axis_homed_cmd();
+
+        bool all_axes_homed();
 
         // Setup/Initialization methods
         void setup_stepper();

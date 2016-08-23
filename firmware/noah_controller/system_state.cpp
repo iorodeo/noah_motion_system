@@ -29,11 +29,6 @@ void SystemState::initialize()
 
 void SystemState::update_on_loop()
 {
-    //digitalWrite(constants::StepperDriveEnablePin, HIGH);
-    //Serial.println(mode_);
-    //Serial.println(analogRead(constants::EStopMonitorPin));
-    //Serial.println();
-
     if (estop_monitor_.is_stopped() && (mode_ != constants::Mode_Disabled))
     {
         set_mode_disabled();
@@ -269,8 +264,11 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     time_us_ += uint64_t(micros_dt);
     dev_to_host_msg.time_us = time_us_;
 
-    // Echo back message count for lag checking 
+    // Echo back message count  for lag checking 
     dev_to_host_msg.count = host_to_dev_msg_last_.count;
+
+    // Echo back last command
+    dev_to_host_msg.command = host_to_dev_msg_last_.command;
 
     for (int i=0; i<constants::NumStepper; i++)
     {
@@ -325,8 +323,8 @@ void SystemState::command_switchyard()
             stop_motion_cmd();
             break;
 
-        case constants::Cmd_SetHomePosition:
-            set_home_position_cmd();
+        case constants::Cmd_SetAxisHomed:
+            set_axis_homed_cmd();
             break;
 
         case constants::Cmd_GetTriggerCount:
@@ -413,7 +411,7 @@ void SystemState::set_mode_homing()
 
 void SystemState::set_mode_positioning()
 {
-    if (mode_ == constants::Mode_Ready)
+    if ((mode_ == constants::Mode_Ready) && all_axes_homed())
     { 
         // Check to make sure positions are within bounds
         bool bounds_error = false;
@@ -453,7 +451,7 @@ void SystemState::set_mode_positioning()
 
 void SystemState::set_mode_velocity_control()
 {
-    if (mode_ == constants::Mode_Ready)
+    if ((mode_ == constants::Mode_Ready) && all_axes_homed())
     {
         for (int i=0; i<constants::NumStepper; i++)
         {
@@ -488,8 +486,28 @@ void SystemState::stop_motion_cmd()
 }
 
 
-void SystemState::set_home_position_cmd()
+void SystemState::set_axis_homed_cmd()
 {
+    uint8_t axis = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (axis < constants::NumStepper)
+    {
+        homed_flag_[axis] = true;
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+bool SystemState::all_axes_homed()
+{
+    bool rval = true;
+    for (int i =0; i<constants::NumStepper; i++)
+    {
+        rval &= homed_flag_[i];
+    }
+    return rval;
 }
 
 
@@ -526,6 +544,7 @@ void SystemState::setup_stepper()
         stepper_[i].set_max_speed(constants::StepperMaximumSpeed[i]);
         stepper_[i].disable_bounds_check();
         stepper_[i].set_velocity(0);
+        homed_flag_[i] = false;
     }
 }
 

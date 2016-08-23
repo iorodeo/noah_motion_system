@@ -1,10 +1,26 @@
 #include "constants.h"
-#include "Arduino.h"
 
 namespace constants
 {
     const uint8_t NumModeBits = 4; 
 
+    // PWM parameter - shared with host software
+    const float PwmFrequency = 50.0;
+    const uint8_t PwmResolution = 16;
+    const uint16_t PwmMinimumValue = 3276;
+    const uint16_t PwmMaximumValue = 6553;
+    const uint16_t  PwmDefaultValue = (PwmMinimumValue + PwmMaximumValue)/2;
+
+    // Stepper parameters  - shared with host software
+    // all units in steps, steps/sec and steps/sec**2
+    const int32_t StepperMaximumSpeed[NumStepper]    = {  8000,   8000,   8000,   8000,   8000    };
+    const int32_t StepperMaximumAccel[NumStepper]    = {  10000,  10000,  10000,  10000,  10000   }; 
+    const int32_t StepperMinimumPosition[NumStepper] = { -10000, -10000, -10000, -10000, -10000   };
+    const int32_t StepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  10000,  10000   };  
+    const int32_t StepperHomePosition[NumStepper]    = { -10000, -10000, -10000, -10000, -10000   };
+
+
+#ifndef  __linux__
     // Communications timeouts
     const uint16_t DevToHostTimeout = 50;
     const uint16_t HostToDevTimeout = 50;
@@ -21,20 +37,10 @@ namespace constants
     const uint8_t AnalogRefType = INTERNAL;
     const uint8_t AnalogInputPinArray[NumAnalogInput] = {A0,A1,A2,A3,A4,A5,A10,A11,A12,A13};
 
-    // PWM parameters
-    const float PwmFrequency = 50.0;
-    const uint8_t PwmResolution = 16;
-    const uint16_t PwmMinimumValue = 3276;
-    const uint16_t PwmMaximumValue = 6553;
-    const uint16_t  PwmDefaultValue = (PwmMinimumValue + PwmMaximumValue)/2;
+    // PWM parameters - firmware only
     const uint8_t PwmPinArray[NumPwm] = {20,21,22,23,10};
 
     // Stepper parameters - all units in steps, steps/sec and steps/sec**2
-    const int32_t StepperMaximumSpeed[NumStepper]    = {  8000,   8000,   8000,   8000,   8000    };
-    const int32_t StepperMaximumAccel[NumStepper]    = {  10000,  10000,  10000,  10000,  10000   }; 
-    const int32_t StepperMinimumPosition[NumStepper] = { -10000, -10000, -10000, -10000, -10000   };
-    const int32_t StepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  10000,  10000   };  
-    const int32_t StepperHomePosition[NumStepper]    = { -10000, -10000, -10000, -10000, -10000   };
     const StepperPin StepperPinArray[NumStepper]     = {  {2,3},  {4,5},  {6,7},  {8,9},  {24,25} };
     const uint8_t StepperClockHighDelay = 1;  // us
     const uint8_t StepperDriveEnablePin = 32;
@@ -62,6 +68,7 @@ namespace constants
     const uint8_t EStopMonitorPin = A20;
     const uint16_t EStopMonitorThreshold = 40000;
     const uint32_t EStopMonitorStartupDelay = 200;
+#endif
 
-}
+};
 

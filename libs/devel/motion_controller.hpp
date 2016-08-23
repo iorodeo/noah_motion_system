@@ -1,93 +1,72 @@
 #ifndef MOTION_CONTROLLER_H
 #define MOTION_CONTROLLER_H
+
 #include "rawhid_device.hpp"
-#include <map>
-#include <list>
+#include "rawhid_msg_types.h"
+#include "motion_constants.hpp"
+#include "rtn_status.hpp"
+
+#include <string>
 #include <vector>
-#include <functional>
-#include <iostream>
+#include <map>
 
-enum Axis 
+namespace motion
 {
-    Axis_X=0,
-    Axis_Y,
-    Axis_Z,
-    Axis_A,
-    Axis_B,
-    Pwm_0,
-    Pwm_1,
-    Pwm_2,
-    Pwm_3,
-    Pwm_4,
-    NumAxes
-};
+    class Controller
+    {
+        public:
 
-// Operating modes
-enum OperatingMode
-{
-    Mode_Disabled = 0,
-    Mode_Ready,
-    Mode_Homing,
-    Mode_Positioning,
-    Mode_VelocityControl
-};
-extern const uint8_t NumModeBits; 
+            Controller(int vid=USB_VendorId, int pid=USB_ProductId);
 
-// Commands
-enum UsbCommand
-{
-    Cmd_Empty   = 0,
-    Cmd_SetModeDisabled,
-    Cmd_SetModeReady,
-    Cmd_SetModeHoming,
-    Cmd_SetModePositioning,
-    Cmd_SetModeVelocityControl,
-    Cmd_StopMotion,
-    Cmd_SetHomePosition,
-    Cmd_GetTriggerCount,
-    Cmd_SetTriggerCount,
-    Cmd_GetTriggerEnabled,
-    Cmd_GetDigitalOutput
-};
+            RtnStatus open();
+            RtnStatus close();
 
 
-class MotionController
-{
-    public:
+            RtnStatus position(std::vector<int32_t> &position);
+            RtnStatus print_position();
 
-        static const std::list<Axis> AxisList;
-        static const std::list<Axis> StepperList;
-        static const std::list<Axis> PwmList;
+            RtnStatus set_mode_ready();
+            RtnStatus set_mode_disabled();
 
-        MotionController(int vid=0, int pid=0);
+            void enable_homing(Axis axis);
+            void disable_homing(Axis axis);
+            bool is_homing_enabled(Axis axis);
 
-        bool open();
-        void close();
-        void test();
+            RtnStatus home(Axis axis, bool wait=true);
+            RtnStatus set_homed_true(Axis axis);
 
-        // Homing functions
-        // ---------------------------------------------------------
-        void enable_homing(Axis axis);
-        void disable_homing(Axis axis);
-        bool is_homing_enabled(Axis axis);
-        void home(Axis axis);
+            RtnStatus wait_for_ready();
+            RtnStatus move_to_position(Axis axis, int32_t pos, bool wait=true);
+            RtnStatus move_to_position(std::vector<int32_t> pos_vec, bool wait=true);
+            RtnStatus move_to_position(std::map<Axis,int32_t> pos_map, bool wait=true);
 
-        void move_to_position(Axis axis, int pos);
-        void move_to_position(std::vector<int> pos_vec);
-        void move_to_position(std::map<Axis,int> pos_map);
+            //ControllerConfig config();
+            //RtnStatus load_config(std::string filename);
+            //RtnStatus set_config(ControllerConfig config);
+            //RtnStatus outscan_trajectory();
 
-        void outscan_trajectory();
+            // ----------------------------------------------------------
+            //
+            void test();
 
-        // ----------------------------------------------------------
+        private:
 
-    private:
+            RawHIDDevice hid_dev_;
+            std::map<Axis,bool> homing_enabled_map_;
+            uint8_t msg_count_ = 0;
 
-        RawHIDDevice hid_dev_;
-        std::map<Axis,bool> homing_enabled_map_;
+            RtnStatus send_command(HostToDevMsg &host_to_dev_msg, DevToHostMsg &dev_to_host_msg);
 
-        void set_mode_to_home(int axis);
+    };
 
-};
+    // Utility functions
+    // --------------------------------------------------------------------
+    OperatingMode get_operating_mode(DevToHostMsg msg);
+    std::string operating_mode_to_string(OperatingMode mode);
+    std::string axis_to_string(Axis axis);
+
+
+} // namespace motion
 
 // Using class method as callback
 // --------------------------------------------------------------------------------------

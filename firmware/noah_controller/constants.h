@@ -1,6 +1,12 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
+
+#ifndef __linux__
+#include "Arduino.h"
 #include "stepper_pin.h"
+#else
+#include <cstdint>
+#endif
 
 namespace constants
 {
@@ -25,12 +31,34 @@ namespace constants
         Cmd_SetModePositioning,
         Cmd_SetModeVelocityControl,
         Cmd_StopMotion,
-        Cmd_SetHomePosition,
+        Cmd_SetAxisHomed,
         Cmd_GetTriggerCount,
         Cmd_SetTriggerCount,
         Cmd_GetTriggerEnabled,
         Cmd_GetDigitalOutput
     };
+
+    const uint8_t NumAnalogInput = 10;
+    const uint8_t NumPwm = 5;
+    const uint8_t NumStepper = 5;
+    const uint8_t NumTrigger = 2;
+    const uint8_t NumDigitalOutput = 2;
+
+    // Stepper parameters - shared with host software
+    // all units in steps, steps/sec and steps/sec**2
+    extern const int32_t StepperMaximumSpeed[NumStepper];
+    extern const int32_t StepperMaximumAccel[NumStepper];
+    extern const int32_t StepperMinimumPosition[NumStepper];
+    extern const int32_t StepperMaximumPosition[NumStepper];
+    extern const int32_t StepperHomePosition[NumStepper];
+
+    extern const float PwmFrequency;
+    extern const uint8_t PwmResolution;
+    extern const uint16_t PwmMinimumValue;
+    extern const uint16_t PwmMaximumValue;
+    extern const uint16_t PwmDefaultValue;
+
+#ifndef __linux__
 
     // Communications timeouts
     extern const uint16_t DevToHostTimeout;
@@ -43,28 +71,15 @@ namespace constants
     extern const uint32_t NewMessageCount;
 
     // Analog input parameters
-    const uint8_t NumAnalogInput = 10;
     extern const uint8_t AnalogReadNumBits;
     extern const uint8_t AnalogReadNumAvg;
     extern const uint8_t AnalogRefType;
     extern const uint8_t AnalogInputPinArray[NumAnalogInput]; 
 
-    // PWM parameters
-    const uint8_t NumPwm = 5;
-    extern const float PwmFrequency;
-    extern const uint8_t PwmResolution;
-    extern const uint16_t PwmMinimumValue;
-    extern const uint16_t PwmMaximumValue;
-    extern const uint16_t PwmDefaultValue;
+    // PWM parameters - firmware only
     extern const uint8_t PwmPinArray[NumPwm];
 
-    // Stepper parameters - all units in steps, steps/sec and steps/sec**2
-    const uint8_t NumStepper = 5;
-    extern const int32_t StepperMaximumSpeed[NumStepper];
-    extern const int32_t StepperMaximumAccel[NumStepper];
-    extern const int32_t StepperMinimumPosition[NumStepper];
-    extern const int32_t StepperMaximumPosition[NumStepper];
-    extern const int32_t StepperHomePosition[NumStepper];
+    // Stepper parameters - firmware only
     extern const StepperPin StepperPinArray[NumStepper];
     extern const uint8_t StepperClockHighDelay;
     extern const uint8_t StepperDriveEnablePin;
@@ -79,14 +94,12 @@ namespace constants
     extern const uint32_t HomingSpeed[NumStepper]; 
 
     // Trigger parameters
-    const uint8_t  NumTrigger = 2;
     extern const bool DefaultTriggerEnabled[NumTrigger];
     extern const uint16_t DefaultTriggerCount[NumTrigger];
     extern const uint8_t TriggerPinArray[NumTrigger];
     extern const uint8_t TriggerHighDelay;
 
     // Digital output parameters
-    const uint8_t NumDigitalOutput = 2;
     extern const uint8_t DigitalOutputPinArray[NumDigitalOutput];
     extern const uint8_t DefaultDigitalOutputValue[NumDigitalOutput];
 
@@ -94,6 +107,7 @@ namespace constants
     extern const uint8_t EStopMonitorPin;
     extern const uint16_t EStopMonitorThreshold;
     extern const uint32_t EStopMonitorStartupDelay;
+#endif 
     
 
 }
