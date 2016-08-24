@@ -26,6 +26,10 @@ namespace motion
             RtnStatus open();
             RtnStatus close();
 
+            RtnStatus mode();  // TODO
+            RtnStatus set_mode_ready();
+            RtnStatus set_mode_disabled();
+
             RtnStatus position(Axis axis, int32_t &ind);
             RtnStatus position(std::vector<int32_t> &ind_vec); 
             RtnStatus position(std::map<Axis,int32_t> &ind_map);
@@ -38,13 +42,9 @@ namespace motion
 
             RtnStatus print_position(bool unit=true);  
 
-            RtnStatus set_mode_ready();
-            RtnStatus set_mode_disabled();
-
             void enable_homing(Axis axis);
             void disable_homing(Axis axis);
             bool is_homing_enabled(Axis axis);
-
             RtnStatus home(Axis axis, bool backoff=true, bool wait=true);
             RtnStatus set_homed_true(Axis axis);
 
@@ -101,7 +101,6 @@ namespace motion
         protected:
 
             MotionConfig config_;
-
             RawHIDDevice hid_dev_;
             uint8_t msg_count_ = 0;
 
