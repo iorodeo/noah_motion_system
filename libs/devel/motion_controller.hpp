@@ -26,10 +26,17 @@ namespace motion
             RtnStatus open();
             RtnStatus close();
 
+            bool exit_on_error();
+            void set_exit_on_error(bool value);
+
+            bool display_position_on_move();
+            void set_display_position_on_move(bool value);
+
             RtnStatus mode(OperatingMode &mode);  
             RtnStatus mode(std::string &mode_str);
             RtnStatus set_mode_ready();
             RtnStatus set_mode_disabled(); 
+            RtnStatus stop_motion(bool wait=true,bool check=true);
 
             RtnStatus position(Axis axis, int32_t &ind);
             RtnStatus position(std::vector<int32_t> &ind_vec); 
@@ -49,32 +56,32 @@ namespace motion
             RtnStatus home(Axis axis, bool backoff=true, bool wait=true);
             RtnStatus set_homed_true(Axis axis);
 
-            RtnStatus wait_for_ready();
+            RtnStatus wait_for_ready(bool check=true);
             Unit axis_unit(Axis axis);
 
             // Move to position methods for index arguments
             RtnStatus move_to_position(Axis axis, int32_t ind, bool wait=true);
             RtnStatus move_to_position(std::vector<int32_t> ind_vec, bool wait=true);
             RtnStatus move_to_position(std::map<Axis,int32_t> ind_map, bool wait=true);
-            RtnStatus move_to_position(arma::Row<int32_t> ind_vec, bool wait=true); // TODO
+            RtnStatus move_to_position(arma::Row<int32_t> ind_vec, bool wait=true); 
 
             // Move to position methods for unit arguments (m,deg)
             RtnStatus move_to_position(Axis axis, double pos, bool wait=true);
             RtnStatus move_to_position(std::vector<double> pos_vec, bool wait=true);
             RtnStatus move_to_position(std::map<Axis,double> pos_map, bool wait=true);
-            RtnStatus move_to_position(arma::Row<double> pos_vec, bool wait=true); // TODO
+            RtnStatus move_to_position(arma::Row<double> pos_vec, bool wait=true); 
 
             // Jog position methods for index arguments
             RtnStatus jog_position(Axis axis, int32_t ind, bool wait=true);
             RtnStatus jog_position(std::vector<int32_t> ind_vec, bool wait=true);
             RtnStatus jog_position(std::map<Axis,int32_t> ind_map, bool wait=true);
-            RtnStatus jog_position(arma::Row<int32_t> ind_vec, bool wait=true); // TODO
+            RtnStatus jog_position(arma::Row<int32_t> ind_vec, bool wait=true);  
 
             // Jog position methods for unit arguments
             RtnStatus jog_position(Axis axis, double pos, bool wait=true);
             RtnStatus jog_position(std::vector<double> pos_vec, bool wait=true);
             RtnStatus jog_position(std::map<Axis,double> pos_map, bool wait=true);
-            RtnStatus jog_position(arma::Row<double> pos_vec, bool wait=true); //TODO
+            RtnStatus jog_position(arma::Row<double> pos_vec, bool wait=true); 
 
             // Outscan methods for index arguments
             // NOT DONE - need to return data 
@@ -104,8 +111,11 @@ namespace motion
             Configuration config_;
             RawHIDDevice hid_dev_;
             uint8_t msg_count_ = 0;
+            bool exit_on_error_ = false;
+            bool display_position_on_move_= false;
 
             RtnStatus send_command(HostToDevMsg &host_to_dev_msg, DevToHostMsg &dev_to_host_msg);
+            RtnStatus check_status(RtnStatus rtn_status);
 
     };
 

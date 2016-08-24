@@ -93,8 +93,8 @@ namespace motion
         {Axis_X, 3.989832e-05}, // CRP NEMA 34 standard rack and pinon drive
         {Axis_Y, 3.989832e-05}, // CRP NEMA 34 standard rack and pinon drive
         {Axis_Z, 1.270000e-05}, // CRP standard ACME lead screw drive 
-        {Axis_A, 0.018},        // Sherline rotary axis 
-        {Axis_B, 0.018},        // Sherline rotary axis 
+        {Axis_A, 0.005},        // Sherline rotary axis 
+        {Axis_B, 0.005},        // Sherline rotary axis 
         {Pwm_0,  0.0344853},    // Generic RC servo 113 deg/ms with 16-bit pwm
         {Pwm_1,  0.0344853},    // Generic RC servo 113 deg/ms with 16-bit pwm
         {Pwm_2,  0.0344853},    // Generic RC servo 113 deg/ms with 16-bit pwm

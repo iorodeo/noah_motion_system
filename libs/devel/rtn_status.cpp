@@ -21,6 +21,17 @@ namespace motion
     }
 
 
+    bool RtnStatus::user_quit()
+    {
+        return user_quit_;
+    }
+
+
+    void RtnStatus::set_user_quit(bool value)
+    {
+        user_quit_ = value;
+    }
+
     std::string RtnStatus::error_msg()
     {
         return error_msg_;

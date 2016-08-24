@@ -7,6 +7,7 @@
 #include <chrono>
 #include <thread>
 #include <algorithm>
+#include <iomanip>
 
 
 namespace motion
@@ -42,7 +43,7 @@ namespace motion
             rtn_status.set_success(false);
             rtn_status.set_error_msg("unable to open device");
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -52,6 +53,29 @@ namespace motion
         return RtnStatus();
     }
 
+
+    bool Controller::exit_on_error()
+    {
+        return exit_on_error_;
+    }
+
+
+    void Controller::set_exit_on_error(bool value)
+    {
+        exit_on_error_ = value;
+    }
+
+
+    bool Controller::display_position_on_move()
+    {
+        return display_position_on_move_;
+    }
+
+
+    void Controller::set_display_position_on_move(bool value)
+    {
+        display_position_on_move_ = value;
+    }
 
     RtnStatus Controller::mode(OperatingMode &mode)
     {
@@ -64,7 +88,7 @@ namespace motion
         {
             mode = get_operating_mode(dev_to_host_msg);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -77,7 +101,7 @@ namespace motion
         {
             mode_str = operating_mode_to_string(op_mode);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -88,7 +112,7 @@ namespace motion
         DevToHostMsg dev_to_host_msg;
         host_to_dev_msg.command = Cmd_SetModeReady;
         rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -99,6 +123,25 @@ namespace motion
         DevToHostMsg dev_to_host_msg;
         host_to_dev_msg.command = Cmd_SetModeDisabled;
         rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::stop_motion(bool wait, bool check)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_StopMotion;
+        rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
+        if (wait)
+        {
+            rtn_status = wait_for_ready(check);
+        }
+        if (check)
+        {
+            rtn_status = check_status(rtn_status);
+        }
         return rtn_status;
     }
 
@@ -112,7 +155,7 @@ namespace motion
         {
             ind = ind_vec[axis];
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -127,7 +170,7 @@ namespace motion
         {
             ind_vec = get_index_position_std(dev_to_host_msg);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -145,7 +188,7 @@ namespace motion
                 ind_map.insert(kv);
             }
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -160,7 +203,7 @@ namespace motion
         {
             ind_vec = get_index_position_arma(dev_to_host_msg);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -173,7 +216,7 @@ namespace motion
         {
             pos = pos_vec[axis];
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -187,7 +230,7 @@ namespace motion
             pos_vec.resize(ind_vec.size());
             pos_vec = config_.index_to_unit(ind_vec);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -205,7 +248,7 @@ namespace motion
                 pos_map.insert(kv);
             }
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -218,7 +261,7 @@ namespace motion
         {
             pos_vec = config_.index_to_unit(ind_vec);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -251,7 +294,7 @@ namespace motion
                 std::cout << std::endl;
             }
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -282,7 +325,7 @@ namespace motion
         host_to_dev_msg.command = Cmd_SetAxisHomed;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -309,16 +352,24 @@ namespace motion
             }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(HomingDebounceSleep_ms));
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
-    RtnStatus Controller::wait_for_ready()
+    RtnStatus Controller::wait_for_ready(bool check)
     {
         bool done = false;
         DevToHostMsg dev_to_host_msg;
         HostToDevMsg host_to_dev_msg;
         RtnStatus rtn_status;
+
+        std::streamsize original_precision = std::cout.precision();
+        if (display_position_on_move_)
+        {
+            std::cout << std::setprecision(4);
+            std::cout << std::fixed;
+            std::cout << std::endl;
+        }
 
         while (!done && !quit_flag)
         {
@@ -340,6 +391,22 @@ namespace motion
             }
             msg_count_++;
 
+
+            // DEVEL
+            // ---------------------------------------------------------------------
+            if (display_position_on_move_)
+            {
+                arma::Row<int32_t> ind_vec = get_index_position_arma(dev_to_host_msg);
+                arma::Row<double>  pos_vec = config_.index_to_unit(ind_vec);
+                std::cout << '\r';
+                for (auto pos : pos_vec)
+                {
+                    std::cout << std::setw(10) << pos; 
+                }
+                std::cout << std::flush;
+            }
+            // ---------------------------------------------------------------------
+
             // Check to see if done
             OperatingMode op_mode = get_operating_mode(dev_to_host_msg);
             if (op_mode  == Mode_Ready)
@@ -352,6 +419,17 @@ namespace motion
                 rtn_status.set_error_msg("system disabled while in wait loop");
                 break;
             }
+        }
+
+        if (display_position_on_move_)
+        {
+            std::cout << std::setprecision(original_precision);
+            std::cout << std::endl << std::endl;
+        }
+
+        if (check)
+        {
+            rtn_status = check_status(rtn_status);
         }
         return rtn_status;
     }
@@ -381,7 +459,7 @@ namespace motion
                 rtn_status = wait_for_ready();
             }
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -405,7 +483,7 @@ namespace motion
                 rtn_status = wait_for_ready();
             }
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -443,7 +521,7 @@ namespace motion
                 }
             }
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -467,7 +545,7 @@ namespace motion
                 rtn_status = wait_for_ready();
             }
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -476,7 +554,7 @@ namespace motion
         RtnStatus rtn_status;
         int32_t ind = config_.unit_to_index(axis,pos);
         rtn_status = move_to_position(axis,ind,wait);
-        return rtn_status; 
+        return check_status(rtn_status); 
     }
 
 
@@ -485,7 +563,7 @@ namespace motion
         RtnStatus rtn_status;
         std::vector<int32_t> ind_vec = config_.unit_to_index(pos_vec);
         rtn_status = move_to_position(ind_vec,wait);
-        return rtn_status; 
+        return check_status(rtn_status); 
     }
 
 
@@ -494,7 +572,15 @@ namespace motion
         RtnStatus rtn_status;
         std::map<Axis,int32_t> ind_map = config_.unit_to_index(pos_map);
         rtn_status = move_to_position(ind_map,wait);
-        return rtn_status; 
+        return check_status(rtn_status); 
+    }
+
+    RtnStatus Controller::move_to_position(arma::Row<double> pos_vec, bool wait) 
+    {
+        RtnStatus rtn_status;
+        arma::Row<int32_t> ind_vec = config_.unit_to_index(pos_vec);
+        rtn_status = move_to_position(ind_vec,wait);
+        return check_status(rtn_status);
     }
 
     RtnStatus Controller::jog_position(Axis axis, int32_t ind, bool wait)
@@ -507,7 +593,7 @@ namespace motion
             jog_vec[axis] = jog_vec[axis] + ind;
             rtn_status = move_to_position(jog_vec,wait);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -524,7 +610,7 @@ namespace motion
             }
             rtn_status = move_to_position(jog_vec,wait);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -544,7 +630,21 @@ namespace motion
             }
             rtn_status = move_to_position(jog_map,wait);
         }
-        return rtn_status;
+        return check_status(rtn_status);
+    }
+
+    RtnStatus Controller::jog_position(arma::Row<int32_t> ind_vec, bool wait) 
+    {
+        RtnStatus rtn_status;
+        arma::Row<int32_t> jog_vec;
+        rtn_status = position(jog_vec);
+        if (rtn_status.success())
+        {
+            jog_vec = jog_vec + ind_vec;
+            rtn_status = move_to_position(jog_vec,wait);
+        }
+
+        return check_status(rtn_status);
     }
 
 
@@ -553,7 +653,7 @@ namespace motion
         RtnStatus rtn_status;
         int32_t ind = config_.unit_to_index(axis,pos);
         rtn_status = jog_position(axis,ind,wait);
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -562,7 +662,7 @@ namespace motion
         RtnStatus rtn_status;
         std::vector<int32_t> ind_vec = config_.unit_to_index(pos_vec);
         rtn_status = jog_position(ind_vec,wait);
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
 
@@ -571,7 +671,15 @@ namespace motion
         RtnStatus rtn_status;
         std::map<Axis,int32_t> ind_map = config_.unit_to_index(pos_map);
         rtn_status = jog_position(ind_map,wait);
-        return rtn_status;
+        return check_status(rtn_status);
+    }
+
+    RtnStatus Controller::jog_position(arma::Row<double> pos_vec, bool wait)
+    {
+        RtnStatus rtn_status;
+        arma::Row<int32_t> ind_vec = config_.unit_to_index(pos_vec);
+        rtn_status = jog_position(ind_vec,wait);
+        return check_status(rtn_status);
     }
 
 
@@ -624,6 +732,28 @@ namespace motion
     }
 
 
+    
+    RtnStatus Controller::check_status(RtnStatus rtn_status)
+    {
+        rtn_status.set_user_quit(quit_flag);
+        if (exit_on_error_ && (!rtn_status.success() || rtn_status.user_quit()))
+        {
+            if (!rtn_status.success())
+            {
+                std::cerr << "error: " << rtn_status.error_msg() << std::endl;
+            }
+            if (rtn_status.user_quit())
+            {
+                std::cout << std::endl;
+                std::cout << "(SIGINT) user quit, stopping ... " << std::flush;
+                stop_motion(true,false);
+                std::cout << "done" << std::endl << std::endl;
+            }
+            close();
+            exit(0);
+        }
+        return rtn_status;
+    }
 
 
     void Controller::test()

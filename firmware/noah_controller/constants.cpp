@@ -16,8 +16,8 @@ namespace constants
     // all units in steps, steps/sec and steps/sec**2
     const int32_t StepperMaximumSpeed[NumStepper]    = {  8000,   8000,   8000,   8000,   8000    };
     const int32_t StepperMaximumAccel[NumStepper]    = {  10000,  10000,  10000,  10000,  10000   }; 
-    const int32_t StepperMinimumPosition[NumStepper] = { -10000, -10000, -10000, -10000, -10000   };
-    const int32_t StepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  10000,  10000   };  
+    const int32_t StepperMinimumPosition[NumStepper] = { -10000, -10000, -10000, -30000, -30000   };
+    const int32_t StepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  30000,  30000   };  
     const int32_t StepperHomePosition[NumStepper]    = { -10000, -10000, -10000, -10000, -10000   };
 
     // Homing parameters - shared with host software
