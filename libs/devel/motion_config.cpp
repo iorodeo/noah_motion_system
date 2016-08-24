@@ -1,4 +1,5 @@
 #include "motion_config.hpp"
+#include <cmath>
 
 namespace motion
 {
@@ -7,6 +8,7 @@ namespace motion
     MotionConfig::MotionConfig()
     {
         homing_enabled_map_ = DefaultHomingEnabledMap;
+        homing_backoff_map_ = DefaultHomingBackoffMap; 
         axis_to_unit_map_ = DefaultAxisToUnitMap;
         axis_to_unit_conversion_map_ = DefaultAxisToUnitConversionMap;
 
@@ -146,6 +148,35 @@ namespace motion
         return index_map;
     }
 
+
+    double MotionConfig::homing_backoff(Axis axis)
+    {
+        double backoff = 0.0;
+        double direction = 1.0;
+
+        if (homing_backoff_map_.count(axis) > 0)
+        {
+            backoff = homing_backoff_map_[axis];
+        }
+
+        if (axis < NumStepper)
+        {
+            if (HomingDirection[axis] > 0)
+            {
+                direction = -1.0;
+            }
+        }
+        return direction*backoff;
+    }
+
+
+    void MotionConfig::set_homing_backoff(Axis axis, double value)
+    {
+        if (homing_backoff_map_.count(axis) > 0)
+        {
+            homing_backoff_map_[axis] = fabs(value);
+        }
+    }
 
     // Utility functions
     // ----------------------------------------------------------------------------------

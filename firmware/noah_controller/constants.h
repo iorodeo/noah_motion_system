@@ -58,6 +58,8 @@ namespace constants
     extern const uint16_t PwmMaximumValue;
     extern const uint16_t PwmDefaultValue;
 
+    extern const int8_t HomingDirection[NumStepper];
+
 #ifndef __linux__
 
     // Communications timeouts
@@ -90,7 +92,6 @@ namespace constants
 
     // Homing parameters
     extern const uint8_t HomingInterruptPin;
-    extern const int8_t HomingDirection[NumStepper];
     extern const uint32_t HomingSpeed[NumStepper]; 
 
     // Trigger parameters

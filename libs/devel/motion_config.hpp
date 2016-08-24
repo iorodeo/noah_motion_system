@@ -30,11 +30,14 @@ namespace motion
             double axis_conversion(Axis axis);
             void set_axis_conversion(Axis axis, double value);
 
+            double homing_backoff(Axis axis);
+            void set_homing_backoff(Axis axis, double value);
 
         protected:
             std::map<Axis,bool> homing_enabled_map_;
             std::map<Axis,Unit> axis_to_unit_map_;
             std::map<Axis,double> axis_to_unit_conversion_map_; 
+            std::map<Axis,double> homing_backoff_map_;
     };
 
     // Utility functions

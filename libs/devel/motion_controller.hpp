@@ -37,7 +37,7 @@ namespace motion
             void disable_homing(Axis axis);
             bool is_homing_enabled(Axis axis);
 
-            RtnStatus home(Axis axis, bool wait=true);
+            RtnStatus home(Axis axis, bool backoff=true, bool wait=true);
             RtnStatus set_homed_true(Axis axis);
 
             RtnStatus wait_for_ready();
@@ -53,24 +53,32 @@ namespace motion
             RtnStatus move_to_position(std::vector<double> pos_vec, bool wait=true);
             RtnStatus move_to_position(std::map<Axis,double> pos_map, bool wait=true);
 
-            // NOT DONE
-            // ------------------------------------------------------------------
+            // Jog position methods for index arguments
             RtnStatus jog_position(Axis axis, int32_t ind, bool wait=true);
             RtnStatus jog_position(std::vector<int32_t> ind_vec, bool wait=true);
             RtnStatus jog_position(std::map<Axis,int32_t> ind_map, bool wait=true);
 
+            // Jog position methods for unit arguments
             RtnStatus jog_position(Axis axis, double pos, bool wait=true);
             RtnStatus jog_position(std::vector<double> pos_vec, bool wait=true);
             RtnStatus jog_position(std::map<Axis,double> pos_map, bool wait=true);
-            // -------------------------------------------------------------------
+
+            // Outscan methods for index arguments
+            // NOT DONE - need to return data 
+            RtnStatus outscan(Axis axis, std::vector<int32_t> ind_vec);
+            RtnStatus outscan(std::map<Axis,int32_t> ind_map);
+
+            // Outscan methods for unit arguments
+            // NOT DONE - need to return data
+            RtnStatus outscan(Axis axis, std::vector<double> pos_vec);
+            RtnStatus outscan(std::map<Axis,double> pos_map);
+
 
             //MotionConfig config();
             //RtnStatus load_config(std::string filename);
             //RtnStatus set_config(MotionConfig config);
             //RtnStatus outscan_trajectory();
 
-            // ----------------------------------------------------------
-            //
             void test();
 
         protected:

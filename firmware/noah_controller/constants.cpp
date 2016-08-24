@@ -19,6 +19,8 @@ namespace constants
     const int32_t StepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  10000,  10000   };  
     const int32_t StepperHomePosition[NumStepper]    = { -10000, -10000, -10000, -10000, -10000   };
 
+    // Homing parameters - shared with host software
+    const int8_t HomingDirection[NumStepper] = {-1,1,1,1,1}; // 1 or -1.
 
 #ifndef  __linux__
     // Communications timeouts
@@ -51,7 +53,6 @@ namespace constants
 
     // Homing parameters
     const uint8_t HomingInterruptPin = 28;
-    const int8_t HomingDirection[NumStepper] = {-1,1,1,1,1}; // 1 or -1.
     const uint32_t HomingSpeed[NumStepper] = {200,200,200,2000,200};
 
     // Trigger parameters 

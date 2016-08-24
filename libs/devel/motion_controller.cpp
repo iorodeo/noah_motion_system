@@ -222,7 +222,7 @@ namespace motion
     }
 
 
-    RtnStatus Controller::home(Axis axis, bool wait)
+    RtnStatus Controller::home(Axis axis, bool backoff, bool wait)
     {
         RtnStatus rtn_status;
         HostToDevMsg host_to_dev_msg;
@@ -230,9 +230,19 @@ namespace motion
         host_to_dev_msg.command = Cmd_SetModeHoming;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
-        if (rtn_status.success() && wait)
+        if (rtn_status.success() && (wait || backoff))
         {
             rtn_status = wait_for_ready();
+
+            if (rtn_status.success() && backoff)
+            {
+                double backoff = config_.homing_backoff(axis);
+                rtn_status = jog_position(axis,backoff);
+                if (rtn_status.success())
+                {
+                    rtn_status = wait_for_ready();
+                }
+            }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(HomingDebounceSleep_ms));
         return rtn_status;
@@ -407,7 +417,7 @@ namespace motion
         if (rtn_status.success())
         {
             jog_vec[axis] = jog_vec[axis] + ind;
-            rtn_status = move_to_position(jog_vec);
+            rtn_status = move_to_position(jog_vec,wait);
         }
         return rtn_status;
     }
@@ -424,7 +434,7 @@ namespace motion
             {
                 jog_vec[i] = jog_vec[i] + ind_vec[i];
             }
-            rtn_status = move_to_position(jog_vec);
+            rtn_status = move_to_position(jog_vec,wait);
         }
         return rtn_status;
     }
@@ -433,6 +443,19 @@ namespace motion
     RtnStatus Controller::jog_position(std::map<Axis,int32_t> ind_map, bool wait)
     {
         RtnStatus rtn_status;
+        std::map<Axis,int32_t> jog_map;
+        rtn_status = position(jog_map);
+        if (rtn_status.success())
+        {
+            for (auto kv : jog_map)
+            {
+                if (ind_map.count(kv.first) > 0)
+                {
+                    jog_map[kv.first] = jog_map[kv.first] + kv.second;
+                }
+            }
+            rtn_status = move_to_position(jog_map,wait);
+        }
         return rtn_status;
     }
 
@@ -440,6 +463,8 @@ namespace motion
     RtnStatus Controller::jog_position(Axis axis, double pos, bool wait)
     {
         RtnStatus rtn_status;
+        int32_t ind = config_.unit_to_index(axis,pos);
+        rtn_status = jog_position(axis,ind,wait);
         return rtn_status;
     }
 
@@ -447,6 +472,8 @@ namespace motion
     RtnStatus Controller::jog_position(std::vector<double> pos_vec, bool wait)
     {
         RtnStatus rtn_status;
+        std::vector<int32_t> ind_vec = config_.unit_to_index(pos_vec);
+        rtn_status = jog_position(ind_vec,wait);
         return rtn_status;
     }
 
@@ -454,11 +481,10 @@ namespace motion
     RtnStatus Controller::jog_position(std::map<Axis,double> pos_map, bool wait)
     {
         RtnStatus rtn_status;
+        std::map<Axis,int32_t> ind_map = config_.unit_to_index(pos_map);
+        rtn_status = jog_position(ind_map,wait);
         return rtn_status;
     }
-
-
-
 
 
     // Protected Methods

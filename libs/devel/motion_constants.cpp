@@ -6,7 +6,6 @@ namespace motion
     const int USB_VendorId = 0x16C0;
     const int USB_ProductId = 0x0486;
 
-    const int HomingDebounceSleep_ms = 500;
 
     const std::list<Axis> AxisList = 
     {
@@ -73,6 +72,8 @@ namespace motion
     };
 
 
+    const int HomingDebounceSleep_ms = 500;
+
     std::map<Axis,Unit> DefaultAxisToUnitMap = 
     { 
         {Axis_X, Meter},
@@ -91,9 +92,9 @@ namespace motion
     {
         {Axis_X, 3.989832e-05}, // CRP NEMA 34 standard rack and pinon drive
         {Axis_Y, 3.989832e-05}, // CRP NEMA 34 standard rack and pinon drive
-        {Axis_Z, 1.270000e-5},  // CRP standard ACME lead screw drive 
-        {Axis_A, 1.270000e-5},  // CRP standard ACME lead screw drive 
-        {Axis_B, 1.270000e-5},  // CRP standard ACME lead screw drive 
+        {Axis_Z, 1.270000e-05}, // CRP standard ACME lead screw drive 
+        {Axis_A, 0.018},        // Sherline rotary axis 
+        {Axis_B, 0.018},        // Sherline rotary axis 
         {Pwm_0,  0.0344853},    // Generic RC servo 113 deg/ms with 16-bit pwm
         {Pwm_1,  0.0344853},    // Generic RC servo 113 deg/ms with 16-bit pwm
         {Pwm_2,  0.0344853},    // Generic RC servo 113 deg/ms with 16-bit pwm
@@ -113,6 +114,16 @@ namespace motion
         {Pwm_2,  false},
         {Pwm_3,  false},
     };
+
+    std::map<Axis,double> DefaultHomingBackoffMap =
+    {
+        {Axis_X, 0.005,},
+        {Axis_Y, 0.005},
+        {Axis_Z, 0.005},
+        {Axis_A, 5.0},
+        {Axis_B, 5.0},
+    };
+
 
 
 }
