@@ -1,10 +1,13 @@
 #include <iostream>
 #include <functional>
+#include <armadillo>
 #include "motion_controller.hpp"
 
 
 int main(int argc, char *argv[])
 {
+    arma::Mat<int32_t> A(10,10,arma::fill::zeros);
+
     motion::RtnStatus rtn_status;
     motion::Controller controller;
 

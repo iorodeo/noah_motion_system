@@ -21,5 +21,5 @@ add_executable(
     ${firmware_constants_SOURCE}
     ${devel_SOURCE}
     )
-target_link_libraries(devel usb)
+target_link_libraries(devel usb armadillo)
 
