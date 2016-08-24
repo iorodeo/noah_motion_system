@@ -20,6 +20,7 @@ namespace constants
         Mode_VelocityControl
     };
     extern const uint8_t NumModeBits; 
+    extern const uint8_t ModeBitsMask;
 
     // Commands
     enum UsbCommand

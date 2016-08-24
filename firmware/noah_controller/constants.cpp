@@ -3,6 +3,7 @@
 namespace constants
 {
     const uint8_t NumModeBits = 4; 
+    const uint8_t ModeBitsMask = 0x0f;
 
     // PWM parameter - shared with host software
     const float PwmFrequency = 50.0;

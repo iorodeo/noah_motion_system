@@ -241,7 +241,7 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
 
     // Set status information
     dev_to_host_msg.status = 0;
-    dev_to_host_msg.status = 0xf & mode_;  
+    dev_to_host_msg.status = constants::ModeBitsMask & mode_;  
 
     dev_to_host_msg.status |= (stop_motion_flag_ << 4);
     if (send_msg_error_flag_ || recv_msg_error_flag_)

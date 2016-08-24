@@ -1,17 +1,18 @@
 #ifndef MOTION_CONFIG_HPP
-#define MOTINO_CONFIG_HPP
+#define MOTION_CONFIG_HPP
 
 #include "motion_constants.hpp"
 
 #include <map>
 #include <vector>
+#include <armadillo>
 
 namespace motion
 {
-    class MotionConfig
+    class Configuration
     {
         public:
-            MotionConfig();
+            Configuration();
 
             bool homing_enabled(Axis axis);
             void set_homing_enabled(Axis axis, bool value);
@@ -22,10 +23,12 @@ namespace motion
             double index_to_unit(Axis axis, int32_t index);
             std::vector<double> index_to_unit(std::vector<int32_t> index_vec);
             std::map<Axis,double> index_to_unit(std::map<Axis,int32_t> index_map);
+            arma::Row<double> index_to_unit(arma::Row<int32_t> index_vec);
 
             int32_t unit_to_index(Axis axis, double  value);
             std::vector<int32_t> unit_to_index(std::vector<double> value_vec);
             std::map<Axis,int32_t> unit_to_index(std::map<Axis,double> value_map);
+            arma::Row<int32_t> unit_to_index(arma::Row<double> value_vec);
 
             double axis_conversion(Axis axis);
             void set_axis_conversion(Axis axis, double value);

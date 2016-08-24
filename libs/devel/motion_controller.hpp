@@ -26,19 +26,20 @@ namespace motion
             RtnStatus open();
             RtnStatus close();
 
-            RtnStatus mode();  // TODO
+            RtnStatus mode(OperatingMode &mode);  
+            RtnStatus mode(std::string &mode_str);
             RtnStatus set_mode_ready();
-            RtnStatus set_mode_disabled();
+            RtnStatus set_mode_disabled(); 
 
             RtnStatus position(Axis axis, int32_t &ind);
             RtnStatus position(std::vector<int32_t> &ind_vec); 
             RtnStatus position(std::map<Axis,int32_t> &ind_map);
-            RtnStatus position(arma::Row<int32_t> &ind_vec); // TODO
+            RtnStatus position(arma::Row<int32_t> &ind_vec); 
 
             RtnStatus position(Axis axis, double  &pos);
             RtnStatus position(std::vector<double>  &pos_vec); 
             RtnStatus position(std::map<Axis,double>  &pos_map);
-            RtnStatus position(arma::Row<double> &pos_vec);  // TODO
+            RtnStatus position(arma::Row<double> &pos_vec);  
 
             RtnStatus print_position(bool unit=true);  
 
@@ -100,7 +101,7 @@ namespace motion
 
         protected:
 
-            MotionConfig config_;
+            Configuration config_;
             RawHIDDevice hid_dev_;
             uint8_t msg_count_ = 0;
 
@@ -111,6 +112,8 @@ namespace motion
     // Utility functions
     // --------------------------------------------------------------------
     OperatingMode get_operating_mode(DevToHostMsg msg);
+    std::vector<int32_t> get_index_position_std(DevToHostMsg msg);
+    arma::Row<int32_t>   get_index_position_arma(DevToHostMsg msg);
 
 
 } // namespace motion

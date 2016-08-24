@@ -53,6 +53,56 @@ namespace motion
     }
 
 
+    RtnStatus Controller::mode(OperatingMode &mode)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_Empty;
+        rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
+        if (rtn_status.success())
+        {
+            mode = get_operating_mode(dev_to_host_msg);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::mode(std::string &mode_str)
+    {
+        RtnStatus rtn_status;
+        OperatingMode op_mode;
+        rtn_status = mode(op_mode);
+        if (rtn_status.success())
+        {
+            mode_str = operating_mode_to_string(op_mode);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::set_mode_ready()
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetModeReady;
+        rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::set_mode_disabled()
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetModeDisabled;
+        rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
+        return rtn_status;
+    }
+
+
     RtnStatus Controller::position(Axis axis, int32_t &ind)
     {
         RtnStatus rtn_status;
@@ -61,19 +111,6 @@ namespace motion
         if (rtn_status.success())
         {
             ind = ind_vec[axis];
-        }
-        return rtn_status;
-    }
-
-
-    RtnStatus Controller::position(Axis axis, double  &pos)
-    {
-        RtnStatus rtn_status;
-        std::vector<double> pos_vec;
-        rtn_status = position(pos_vec);
-        if (rtn_status.success())
-        {
-            pos = pos_vec[axis];
         }
         return rtn_status;
     }
@@ -88,24 +125,7 @@ namespace motion
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
         if (rtn_status.success())
         {
-            ind_vec.resize(NumStepper);
-            for (auto num : StepperList)
-            {
-                ind_vec[num] = dev_to_host_msg.stepper_position[num];
-            }
-        }
-        return rtn_status;
-    }
-
-    RtnStatus Controller::position(std::vector<double>  &pos_vec)
-    {
-        RtnStatus rtn_status;
-        std::vector<int32_t> ind_vec;
-        rtn_status = position(ind_vec);
-        if (rtn_status.success())
-        {
-            pos_vec.resize(ind_vec.size());
-            pos_vec = config_.index_to_unit(ind_vec);
+            ind_vec = get_index_position_std(dev_to_host_msg);
         }
         return rtn_status;
     }
@@ -129,6 +149,48 @@ namespace motion
     }
 
 
+    RtnStatus Controller::position(arma::Row<int32_t> &ind_vec)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_Empty;
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        if (rtn_status.success())
+        {
+            ind_vec = get_index_position_arma(dev_to_host_msg);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::position(Axis axis, double  &pos)
+    {
+        RtnStatus rtn_status;
+        std::vector<double> pos_vec;
+        rtn_status = position(pos_vec);
+        if (rtn_status.success())
+        {
+            pos = pos_vec[axis];
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::position(std::vector<double>  &pos_vec)
+    {
+        RtnStatus rtn_status;
+        std::vector<int32_t> ind_vec;
+        rtn_status = position(ind_vec);
+        if (rtn_status.success())
+        {
+            pos_vec.resize(ind_vec.size());
+            pos_vec = config_.index_to_unit(ind_vec);
+        }
+        return rtn_status;
+    }
+
+
     RtnStatus Controller::position(std::map<Axis,double> &pos_map)
     {
         RtnStatus rtn_status;
@@ -147,11 +209,22 @@ namespace motion
     }
 
 
+    RtnStatus Controller::position(arma::Row<double> &pos_vec)  
+    {
+        RtnStatus rtn_status;
+        arma::Row<int32_t> ind_vec;
+        rtn_status = position(ind_vec);
+        if (rtn_status.success())
+        {
+            pos_vec = config_.index_to_unit(ind_vec);
+        }
+        return rtn_status;
+    }
+
+
     RtnStatus Controller::print_position(bool unit)
     {
-        // NOT DONE - need to handle unit argument
         RtnStatus rtn_status;
-
         if (unit)
         {
             std::vector<double> pos_vec;
@@ -181,15 +254,6 @@ namespace motion
         return rtn_status;
     }
 
-    RtnStatus Controller::set_mode_ready()
-    {
-        RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
-        host_to_dev_msg.command = Cmd_SetModeReady;
-        rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
-        return rtn_status;
-    }
 
 
     void Controller::enable_homing(Axis axis)
@@ -277,12 +341,12 @@ namespace motion
             msg_count_++;
 
             // Check to see if done
-            OperatingMode mode = get_operating_mode(dev_to_host_msg);
-            if (mode  == Mode_Ready)
+            OperatingMode op_mode = get_operating_mode(dev_to_host_msg);
+            if (op_mode  == Mode_Ready)
             {
                 done = true;
             }
-            if (mode == Mode_Disabled)
+            if (op_mode == Mode_Disabled)
             {
                 rtn_status.set_success(false);
                 rtn_status.set_error_msg("system disabled while in wait loop");
@@ -321,10 +385,10 @@ namespace motion
     }
 
 
-    RtnStatus Controller::move_to_position(std::vector<int32_t> pos_vec, bool wait)
+    RtnStatus Controller::move_to_position(std::vector<int32_t> ind_vec, bool wait)
     {
         RtnStatus rtn_status;
-        if (pos_vec.size() != NumStepper)
+        if (ind_vec.size() != NumStepper)
         {
             rtn_status.set_success(false);
             rtn_status.set_error_msg("position vector size must equal NumStepper");
@@ -334,7 +398,7 @@ namespace motion
             HostToDevMsg host_to_dev_msg;
             DevToHostMsg dev_to_host_msg;
             host_to_dev_msg.command = Cmd_SetModePositioning;
-            std::copy(pos_vec.begin(), pos_vec.end(), host_to_dev_msg.stepper_position);
+            std::copy(ind_vec.begin(), ind_vec.end(), host_to_dev_msg.stepper_position);
             rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
             if (rtn_status.success() && wait)
             {
@@ -345,11 +409,11 @@ namespace motion
     }
 
 
-    RtnStatus Controller::move_to_position(std::map<Axis,int32_t> pos_map, bool wait)
+    RtnStatus Controller::move_to_position(std::map<Axis,int32_t> ind_map, bool wait)
     {
         RtnStatus rtn_status;
         bool ok = true;
-        for (auto kv : pos_map)
+        for (auto kv : ind_map)
         {
             ok &= (std::find(StepperList.begin(), StepperList.end(), kv.first) != StepperList.end());
         }
@@ -360,15 +424,15 @@ namespace motion
         }
         else
         {
-            std::vector<int32_t> cur_pos_vec;
-            rtn_status = position(cur_pos_vec);
+            std::vector<int32_t> cur_ind_vec;
+            rtn_status = position(cur_ind_vec);
             if (rtn_status.success())
             {
                 HostToDevMsg host_to_dev_msg;
                 DevToHostMsg dev_to_host_msg;
                 host_to_dev_msg.command = Cmd_SetModePositioning;
-                std::copy(cur_pos_vec.begin(), cur_pos_vec.end(), host_to_dev_msg.stepper_position);
-                for (auto kv : pos_map)
+                std::copy(cur_ind_vec.begin(), cur_ind_vec.end(), host_to_dev_msg.stepper_position);
+                for (auto kv : ind_map)
                 {
                     host_to_dev_msg.stepper_position[kv.first] = kv.second;
                 }
@@ -377,6 +441,30 @@ namespace motion
                 {
                     rtn_status = wait_for_ready();
                 }
+            }
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Controller::move_to_position(arma::Row<int32_t> ind_vec, bool wait)
+    {
+        RtnStatus rtn_status;
+        if (ind_vec.size() != NumStepper)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("position vector size must equal NumStepper");
+        }
+        else
+        {
+            HostToDevMsg host_to_dev_msg;
+            DevToHostMsg dev_to_host_msg;
+            host_to_dev_msg.command = Cmd_SetModePositioning;
+            std::copy(ind_vec.begin(), ind_vec.end(), host_to_dev_msg.stepper_position);
+            rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+            if (rtn_status.success() && wait)
+            {
+                rtn_status = wait_for_ready();
             }
         }
         return rtn_status;
@@ -662,17 +750,30 @@ namespace motion
     // ----------------------------------------------------------------------------------
     OperatingMode get_operating_mode(DevToHostMsg msg)
     {
-        uint8_t mask = 0;
-        //for (int i=0; i<constants::NumModeBits; i++)
-        for (int i=0; i<NumModeBits; i++)
-        {
-            mask |= (1 << i);
-        }
-        OperatingMode mode = OperatingMode(msg.status & mask);
+        OperatingMode mode = OperatingMode(msg.status & ModeBitsMask);
         return mode;
     }
 
-
+    std::vector<int32_t> get_index_position_std(DevToHostMsg msg)
+    {
+        std::vector<int32_t> ind_vec(NumStepper);
+        for (auto num : StepperList)
+        {
+            ind_vec[num] = msg.stepper_position[num];
+        }
+        return ind_vec;
+    }
+    
+    arma::Row<int32_t> get_index_position_arma(DevToHostMsg msg)
+    {
+        arma::Row<int32_t> ind_vec(NumStepper);
+        for (auto num : StepperList)
+        {
+            ind_vec(num) = msg.stepper_position[num];
+        }
+        return ind_vec;
+    }
+    
 
 } // namespace motion
 
