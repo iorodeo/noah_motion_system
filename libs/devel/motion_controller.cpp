@@ -750,7 +750,7 @@ namespace motion
             }
 
             // On first receive check to ensure device recieved set velocity mode command.
-            if (i==0)
+            if (i==1)
             {
                 if (dev_to_host_msg.command != Cmd_SetModeVelocityControl)
                 {

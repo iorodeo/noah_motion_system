@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
 void get_trajectory(arma::Mat<int32_t> &pos_ind, arma::Mat<int32_t> &vel_ind)
 {
-    int num_reps = 10.0;
+    int num_reps = 2.0;
     double period = 5.0;
     double dt = motion::MessagePeriod_us*1.0e-6;
     double amp = 3000.0;
