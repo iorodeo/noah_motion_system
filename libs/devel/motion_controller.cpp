@@ -689,6 +689,7 @@ namespace motion
             rtn_status.set_success(false);
             rtn_status.set_error_msg("matrices must have #columns == NumStepper");
         }
+        // NOT DONE ... check matrix n_rows!!!!!
         else
         {
              
