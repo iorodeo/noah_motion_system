@@ -630,7 +630,7 @@ void SystemState::setup_pwm_output()
 void SystemState::setup_timer()
 {
     timer_.priority(constants::TimerPriority);
-    timer_.begin(timer_callback,constants::TimerPeriod);
+    timer_.begin(timer_callback,constants::TimerPeriod_us);
 }
 
 

@@ -392,8 +392,7 @@ namespace motion
             msg_count_++;
 
 
-            // DEVEL
-            // ---------------------------------------------------------------------
+            // Display position data
             if (display_position_on_move_)
             {
                 arma::Row<int32_t> ind_vec = get_index_position_arma(dev_to_host_msg);
@@ -405,7 +404,6 @@ namespace motion
                 }
                 std::cout << std::flush;
             }
-            // ---------------------------------------------------------------------
 
             // Check to see if done
             OperatingMode op_mode = get_operating_mode(dev_to_host_msg);
@@ -683,6 +681,131 @@ namespace motion
     }
 
 
+    RtnStatus Controller::outscan(arma::Mat<int32_t> pos_ind, arma::Mat<int32_t> vel_ind)
+    {
+        RtnStatus rtn_status;
+        if ((pos_ind.n_cols != NumStepper) || (vel_ind.n_cols != NumStepper))
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("matrices must have #columns == NumStepper");
+        }
+        else
+        {
+             
+            // Move to start position 
+            std::cout << std::endl;
+            std::cout << "move to start" << std::endl;
+            rtn_status = move_to_position(pos_ind.row(0),true);
+
+            if (rtn_status.success())
+            {
+                // Wait for a bit
+                if (config_.outscan_start_delay() > 0.0)
+                {
+                    std::cout << "outscan start delay ... " << std::flush;
+                    std::this_thread::sleep_for(std::chrono::milliseconds(config_.outscan_start_delay()));
+                    std::cout << "done" << std::endl;
+                }
+
+                rtn_status = set_mode_velocity_control();
+                if (rtn_status.success())
+                {
+                    // Setup display output
+                    std::streamsize original_precision = std::cout.precision();
+                    if (display_position_on_move_)
+                    {
+                        std::cout << std::setprecision(4);
+                        std::cout << std::fixed;
+                        std::cout << std::endl;
+                    }
+
+                    DevToHostMsg dev_to_host_msg;
+                    HostToDevMsg host_to_dev_msg;
+
+                    std::cout << "outscan trajectory" << std::endl << std::endl;
+
+                    // Outscan trajectory
+                    for (int i=1; i<pos_ind.n_rows; i++)
+                    {
+
+                        // Receive data from device
+                        if (!hid_dev_.recvData(&dev_to_host_msg))
+                        {
+                            rtn_status.set_success(false);
+                            rtn_status.set_error_msg("unable to sync messaging loop");
+                            break;
+                        }
+
+                        // Check to ensure device recieved set velocity mode command.
+                        if (i==0)
+                        {
+                            if (dev_to_host_msg.command != Cmd_SetModeVelocityControl)
+                            {
+                                rtn_status.set_success(false);
+                                rtn_status.set_error_msg("failed to receive Cmd_SetModeVelocityControl");
+                                break;
+                            }
+                        }
+
+                        // Get controller velocity correction using tracking error. 
+                        arma::Row<int32_t> traj_next = pos_ind.row(i);            
+                        arma::Row<int32_t> velo_next = vel_ind.row(i);
+                        arma::Row<int32_t> axis_curr = get_index_position_arma(dev_to_host_msg);
+                        arma::Row<int32_t> error = traj_next - axis_curr;
+                        arma::Row<int32_t> velo_ctlr = config_.gain()*error + velo_next;
+                        
+                        // Create host to dev message and send to device
+                        host_to_dev_msg.command = Cmd_Empty;
+                        for (auto num : StepperList)
+                        {
+                            host_to_dev_msg.stepper_velocity[num] = velo_ctlr(num);
+                        }
+                        if (!hid_dev_.sendData(&host_to_dev_msg))
+                        {
+                            rtn_status.set_success(false);
+                            rtn_status.set_error_msg("unable to sync messaging loop");
+                            break;
+                        }
+
+                        // Display position
+                        if (display_position_on_move_)
+                        {
+                            arma::Row<double>  pos_vec = arma::conv_to<arma::Row<double>>::from(error);
+                            //arma::Row<double>  pos_vec = config_.index_to_unit(axis_curr);
+                            std::cout << '\r';
+                            for (auto pos : pos_vec)
+                            {
+                                std::cout << std::setw(10) << pos; 
+                            }
+                            std::cout << std::flush;
+                        }
+
+                        if (quit_flag)
+                        {
+                            break;
+                        }
+
+                    } // for (int i
+
+                    // Restore cout settings
+                    if (display_position_on_move_)
+                    {
+                        std::cout << std::setprecision(original_precision);
+                        std::cout << std::endl << std::endl;
+                    }
+
+                }
+            } 
+
+            // Stop velocity control mode 
+            bool display_orig = display_position_on_move();
+            set_display_position_on_move(false);
+            rtn_status = stop_motion(true);
+            set_display_position_on_move(display_orig);
+        }
+
+        return check_status(rtn_status);
+    }
     // Protected Methods
     // ----------------------------------------------------------------------------------
 
@@ -753,6 +876,42 @@ namespace motion
             exit(0);
         }
         return rtn_status;
+    }
+
+
+    RtnStatus Controller::set_mode_velocity_control()
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetModeVelocityControl;
+        for (auto num : StepperList)
+        {
+            host_to_dev_msg.stepper_velocity[num] = 0;
+        }
+
+        // Clear buffer to sync messages 
+        hid_dev_.clearRecvBuffer();
+
+        // start recv -> send communication pairs.
+        if (!hid_dev_.recvData(&dev_to_host_msg))
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("unable to sync messaging loop");
+        }
+        else
+        {
+            msg_count_ = dev_to_host_msg.count;
+            msg_count_++;
+
+            // Send command to device
+            if (!hid_dev_.sendData(&host_to_dev_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("cound not send command to device");
+            }
+        }
+        return check_status(rtn_status);
     }
 
 
@@ -903,7 +1062,6 @@ namespace motion
         }
         return ind_vec;
     }
-    
 
 } // namespace motion
 

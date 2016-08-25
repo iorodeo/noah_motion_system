@@ -5,6 +5,10 @@ namespace constants
     const uint8_t NumModeBits = 4; 
     const uint8_t ModeBitsMask = 0x0f;
 
+    // Timing parameters - shared with host software
+    const uint32_t TimerPeriod_us = 50ul;
+    const uint32_t MessagePeriod_us = 5000ul;
+
     // PWM parameter - shared with host software
     const float PwmFrequency = 50.0;
     const uint8_t PwmResolution = 16;
@@ -30,9 +34,7 @@ namespace constants
 
     // Timing parameters 
     const uint8_t  TimerPriority = 1;
-    const uint32_t TimerPeriod = 50ul;
-    const uint32_t MessagePeriod = 5000ul;
-    const uint32_t NewMessageCount = MessagePeriod/TimerPeriod;
+    const uint32_t NewMessageCount = MessagePeriod_us/TimerPeriod_us;
 
     // Analog input parameters
     const uint8_t AnalogReadNumBits = 16;
@@ -58,7 +60,7 @@ namespace constants
 
     // Trigger parameters 
     const bool DefaultTriggerEnabled[NumTrigger] = {true,false};
-    const uint16_t DefaultTriggerCount[NumTrigger] = {10000/TimerPeriod, 10000/TimerPeriod};
+    const uint16_t DefaultTriggerCount[NumTrigger] = {10000/TimerPeriod_us, 10000/TimerPeriod_us};
     const uint8_t TriggerPinArray[NumTrigger] = {26,27};
     const uint8_t  TriggerHighDelay = 1; // us
 

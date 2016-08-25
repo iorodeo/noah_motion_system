@@ -36,11 +36,19 @@ namespace motion
             double homing_backoff(Axis axis);
             void set_homing_backoff(Axis axis, double value);
 
+            int outscan_start_delay();
+            void set_outscan_start_delay(int value);
+
+            int32_t gain();
+            void set_gain(int32_t gain);
+
         protected:
             std::map<Axis,bool> homing_enabled_map_;
             std::map<Axis,Unit> axis_to_unit_map_;
             std::map<Axis,double> axis_to_unit_conversion_map_; 
             std::map<Axis,double> homing_backoff_map_;
+            int outscan_start_delay_;
+            int32_t gain_;
     };
 
     // Utility functions

@@ -29,8 +29,6 @@ namespace motion
 
     enum Unit {Meter=0, Degree, NoUnit, NumUnit};
 
-    // Homing parameters
-
     // Device USB vendor and product IDs
     extern const int USB_VendorId;
     extern const int USB_ProductId;
@@ -45,12 +43,16 @@ namespace motion
     extern std::map<Unit,std::string> UnitToStringMap;
     extern std::map<Axis,std::string> AxisToStringMap;
 
-    // Unit default assignments and conversions
+    // Unit default parameters, assignments and conversions
     extern const int HomingDebounceSleep_ms;
+    extern const int DefaultOutscanStartDelay_ms;
+    extern const int32_t DefaultGain;
+
     extern std::map<Axis,Unit> DefaultAxisToUnitMap;
     extern std::map<Axis,double> DefaultAxisToUnitConversionMap;
-    extern std::map<Axis, bool> DefaultHomingEnabledMap;
+    extern std::map<Axis,bool> DefaultHomingEnabledMap;
     extern std::map<Axis,double> DefaultHomingBackoffMap;
+
 
 }
 

@@ -85,15 +85,15 @@ namespace motion
 
             // Outscan methods for index arguments
             // NOT DONE - need to return data 
-            RtnStatus outscan(Axis axis, std::vector<int32_t> ind_vec);
-            RtnStatus outscan(Axis axis, arma::Col<int32_t> ind_vec); // TODO
-            RtnStatus outscan(arma::Mat<int32_t> ind_mat); // TODO
+            //RtnStatus outscan(Axis axis, std::vector<int32_t> ind_vec);
+            //RtnStatus outscan(Axis axis, arma::Col<int32_t> ind_vec);    // TODO
+            //RtnStatus outscan(Axis axis, std::vector<double> pos_vec);   // TODO
+            //RtnStatus outscan(Axis axis, arma::Col<double> pos_vec);     // TODO
+
+            RtnStatus outscan(arma::Mat<int32_t> pos_ind, arma::Mat<int32_t> vel_ind); // TODO
 
             // Outscan methods for unit arguments
-            // NOT DONE - need to return data
-            RtnStatus outscan(Axis axis, std::vector<double> pos_vec, OutscanData &data); // TODO
-            RtnStatus outscan(Axis axis, arma::Col<double> pos_vec, OutscanData &data);   // TODO
-            RtnStatus outscan(arma::Mat<double> pos_mat, OutscanData &data);              // TODO
+            RtnStatus outscan(arma::Mat<double> pos_mat);   
 
             // Outscan method for file argument
             RtnStatus outscan(std::string filename, OutscanData &data, bool unit=true);   // TODO
@@ -116,6 +116,8 @@ namespace motion
 
             RtnStatus send_command(HostToDevMsg &host_to_dev_msg, DevToHostMsg &dev_to_host_msg);
             RtnStatus check_status(RtnStatus rtn_status);
+            RtnStatus set_mode_velocity_control();
+
 
     };
 

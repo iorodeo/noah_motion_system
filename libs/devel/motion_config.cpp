@@ -11,6 +11,8 @@ namespace motion
         homing_backoff_map_ = DefaultHomingBackoffMap; 
         axis_to_unit_map_ = DefaultAxisToUnitMap;
         axis_to_unit_conversion_map_ = DefaultAxisToUnitConversionMap;
+        outscan_start_delay_ = DefaultOutscanStartDelay_ms;
+        gain_ = DefaultGain;
 
     }
 
@@ -196,6 +198,28 @@ namespace motion
         {
             homing_backoff_map_[axis] = fabs(value);
         }
+    }
+
+
+    int Configuration::outscan_start_delay()
+    {
+        return outscan_start_delay_;
+    }
+
+
+    void Configuration::set_outscan_start_delay(int value)
+    {
+        outscan_start_delay_ = value;
+    }
+
+    int32_t Configuration::gain()
+    {
+        return gain_;
+    }
+
+    void Configuration::set_gain(int32_t gain)
+    {
+        gain_ = gain;
     }
 
     // Utility functions

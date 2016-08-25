@@ -45,6 +45,10 @@ namespace constants
     const uint8_t NumTrigger = 2;
     const uint8_t NumDigitalOutput = 2;
 
+    // Timing parameters - shared with host software
+    extern const uint32_t TimerPeriod_us;
+    extern const uint32_t MessagePeriod_us;
+
     // Stepper parameters - shared with host software
     // all units in steps, steps/sec and steps/sec**2
     extern const int32_t StepperMaximumSpeed[NumStepper];
@@ -69,8 +73,6 @@ namespace constants
 
     // Timing parameters 
     extern const uint8_t  TimerPriority;
-    extern const uint32_t TimerPeriod;
-    extern const uint32_t MessagePeriod;
     extern const uint32_t NewMessageCount;
 
     // Analog input parameters
