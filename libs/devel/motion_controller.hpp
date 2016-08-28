@@ -36,7 +36,7 @@ namespace motion
             RtnStatus mode(std::string &mode_str);
             RtnStatus set_mode_ready();
             RtnStatus set_mode_disabled(); 
-            RtnStatus stop_motion(bool wait=true,bool check=true);
+            RtnStatus stop_motion(bool wait=true, bool check=true);
 
             RtnStatus position(Axis axis, int32_t &ind);
             RtnStatus position(std::vector<int32_t> &ind_vec); 
@@ -56,7 +56,7 @@ namespace motion
             RtnStatus home(Axis axis, bool backoff=true, bool wait=true);
             RtnStatus set_homed_true(Axis axis);
 
-            RtnStatus wait_for_ready(bool check=true);
+            RtnStatus wait_for_ready(bool check=true, bool quiet=false);
             Unit axis_unit(Axis axis);
 
             // Move to position methods for index arguments
@@ -83,28 +83,27 @@ namespace motion
             RtnStatus jog_position(std::map<Axis,double> pos_map, bool wait=true);
             RtnStatus jog_position(arma::Row<double> pos_vec, bool wait=true); 
 
+
             // Outscan methods for index arguments
+            RtnStatus outscan(arma::Mat<int32_t> ind_pos_mat, arma::Mat<int32_t> ind_vel_mat,bool quiet=false); 
+
+            // Outscan methods for unit arguments
+            RtnStatus outscan(arma::Mat<double> pos_mat, bool quiet=false);   
+
+            // Outscan method for file argument
+            RtnStatus outscan(std::string filename);
+
             // NOT DONE - need to return data 
             //RtnStatus outscan(Axis axis, std::vector<int32_t> ind_vec);
             //RtnStatus outscan(Axis axis, arma::Col<int32_t> ind_vec);    // TODO
             //RtnStatus outscan(Axis axis, std::vector<double> pos_vec);   // TODO
             //RtnStatus outscan(Axis axis, arma::Col<double> pos_vec);     // TODO
 
-            RtnStatus outscan(arma::Mat<int32_t> pos_ind, arma::Mat<int32_t> vel_ind); // TODO
-
-            // Outscan methods for unit arguments
-            RtnStatus outscan(arma::Mat<double> pos_mat);   
-
-            // Outscan method for file argument
-            RtnStatus outscan(std::string filename, OutscanData &data, bool unit=true);   // TODO
-
 
             //MotionConfig config();
             //RtnStatus load_config(std::string filename);
             //RtnStatus set_config(MotionConfig config);
             //RtnStatus outscan_trajectory();
-
-            void test();
 
         protected:
 
