@@ -24,13 +24,16 @@ namespace motion
             std::vector<double> index_to_unit(std::vector<int32_t> index_vec);
             std::map<Axis,double> index_to_unit(std::map<Axis,int32_t> index_map);
             arma::Row<double> index_to_unit(arma::Row<int32_t> index_vec);
+            arma::Mat<double> index_to_unit(arma::Mat<int32_t> index_mat);
 
             int32_t unit_to_index(Axis axis, double  value);
             std::vector<int32_t> unit_to_index(std::vector<double> value_vec);
             std::map<Axis,int32_t> unit_to_index(std::map<Axis,double> value_map);
             arma::Row<int32_t> unit_to_index(arma::Row<double> value_vec);
+            arma::Mat<int32_t> unit_to_index(arma::Mat<double> value_mat);
 
             double axis_conversion(Axis axis);
+            double axis_conversion_inv(Axis axis);
             void set_axis_conversion(Axis axis, double value);
 
             double homing_backoff(Axis axis);

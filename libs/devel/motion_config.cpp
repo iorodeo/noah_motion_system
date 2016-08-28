@@ -69,6 +69,18 @@ namespace motion
     }
 
 
+    double Configuration::axis_conversion_inv(Axis axis)
+    {
+        double scale_fact = axis_conversion(axis);
+        double scale_fact_inv = 1.0;
+        if (scale_fact > 0.0)
+        {
+            scale_fact_inv = 1.0/scale_fact;
+        }
+        return scale_fact_inv;
+    }
+
+
     void Configuration::set_axis_conversion(Axis axis, double value)
     {
         if (axis_to_unit_conversion_map_.count(axis) > 0)
@@ -77,14 +89,10 @@ namespace motion
         }
     }
 
+
     double Configuration::index_to_unit(Axis axis, int32_t index)
     {
-        double scale_fact = 1.0;
-        if (axis_to_unit_conversion_map_.count(axis) > 0)
-        {
-            scale_fact = axis_to_unit_conversion_map_[axis];
-        }
-        return scale_fact*index;
+        return axis_conversion(axis)*index;
     }
 
 
@@ -111,6 +119,7 @@ namespace motion
         return value_map;
     }
 
+
     arma::Row<double> Configuration::index_to_unit(arma::Row<int32_t> index_vec)
     {
         arma::Row<double> value_vec(index_vec.size());
@@ -122,18 +131,20 @@ namespace motion
     }
 
 
+    arma::Mat<double> Configuration::index_to_unit(arma::Mat<int32_t> index_mat)
+    {
+        arma::Mat<double> value_mat = arma::conv_to<arma::Mat<double>>::from(index_mat);
+        for (int i=0; i<value_mat.n_cols; i++)
+        {
+            value_mat.col(i) = axis_conversion(Axis(i))*value_mat.col(i);
+        }
+        return value_mat;
+    }
+
+
     int32_t Configuration::unit_to_index(Axis axis, double  value)
     {
-        double scale_fact = 1.0;
-        if (axis_to_unit_conversion_map_.count(axis) > 0)
-        {
-            double scale_fact_inv = axis_to_unit_conversion_map_[axis];
-            if (scale_fact_inv != 0)
-            {
-                scale_fact = 1.0/scale_fact_inv;
-            }
-        }
-        return scale_fact*value;
+        return int32_t(axis_conversion_inv(axis)*value);
     }
 
 
@@ -160,6 +171,7 @@ namespace motion
         return index_map;
     }
 
+
     arma::Row<int32_t> Configuration::unit_to_index(arma::Row<double> index_vec)
     {
         arma::Row<int32_t> value_vec(index_vec.size());
@@ -168,6 +180,18 @@ namespace motion
             value_vec(i) = unit_to_index(Axis(i),index_vec(i));
         }
         return value_vec;
+    }
+
+
+    arma::Mat<int32_t> Configuration::unit_to_index(arma::Mat<double> value_mat)
+    {
+        arma::Mat<int32_t> index_mat(value_mat.n_rows,value_mat.n_cols);
+        for (int i=0; i<index_mat.n_cols; i++)
+        {
+            arma::Col<double> index_col_dbl = axis_conversion_inv(Axis(i))*value_mat.col(i);
+            index_mat.col(i) = arma::conv_to<arma::Mat<int32_t>>::from(index_col_dbl);
+        }
+        return index_mat;
     }
 
 

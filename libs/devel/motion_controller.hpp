@@ -83,11 +83,8 @@ namespace motion
             RtnStatus jog_position(std::map<Axis,double> pos_map, bool wait=true);
             RtnStatus jog_position(arma::Row<double> pos_vec, bool wait=true); 
 
-
-            // Outscan methods for index arguments
+            // Outscan methods 
             RtnStatus outscan(arma::Mat<int32_t> ind_pos_mat, arma::Mat<int32_t> ind_vel_mat,bool quiet=false); 
-
-            // Outscan methods for unit arguments
             RtnStatus outscan(arma::Mat<double> pos_mat, bool quiet=false);   
 
             // Outscan method for file argument

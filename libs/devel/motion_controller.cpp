@@ -837,13 +837,16 @@ namespace motion
             rtn_status.set_error_msg("position matrix size incorrent, n_cols != NumStepper");
             return check_status(rtn_status);
         }
-
         if (pos_mat.n_rows < 2)
         {
             rtn_status.set_success(false);
             rtn_status.set_error_msg("position matrix size incorrect, n_row < 2");
             return check_status(rtn_status);
         }
+
+        // Compute velocities 
+        arma::Mat<double> vel_mat(pos_mat.n_rows,pos_mat.n_cols);
+
 
         return check_status(rtn_status);
     }
