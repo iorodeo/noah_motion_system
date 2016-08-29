@@ -86,21 +86,12 @@ namespace motion
             // Outscan methods 
             RtnStatus outscan(arma::Mat<int32_t> ind_pos_mat, arma::Mat<int32_t> ind_vel_mat,bool quiet=false); 
             RtnStatus outscan(arma::Mat<double> pos_mat, bool quiet=false);   
-
-            // Outscan method for file argument
-            RtnStatus outscan(std::string filename);
-
-            // NOT DONE - need to return data 
-            //RtnStatus outscan(Axis axis, std::vector<int32_t> ind_vec);
-            //RtnStatus outscan(Axis axis, arma::Col<int32_t> ind_vec);    // TODO
-            //RtnStatus outscan(Axis axis, std::vector<double> pos_vec);   // TODO
-            //RtnStatus outscan(Axis axis, arma::Col<double> pos_vec);     // TODO
-
+            RtnStatus outscan(std::string filename, bool quiet=false);
+            RtnStatus outscan(const char filename[], bool quiet=false);
 
             //MotionConfig config();
             //RtnStatus load_config(std::string filename);
             //RtnStatus set_config(MotionConfig config);
-            //RtnStatus outscan_trajectory();
 
         protected:
 
@@ -113,8 +104,6 @@ namespace motion
             RtnStatus send_command(HostToDevMsg &host_to_dev_msg, DevToHostMsg &dev_to_host_msg);
             RtnStatus check_status(RtnStatus rtn_status);
             RtnStatus set_mode_velocity_control();
-
-
     };
 
     // Utility functions

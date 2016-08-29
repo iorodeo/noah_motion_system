@@ -489,7 +489,7 @@ namespace motion
     {
         RtnStatus rtn_status;
         bool ok = true;
-        for (auto kv : ind_map)
+        for (auto kv : ind_map) 
         {
             ok &= (std::find(StepperList.begin(), StepperList.end(), kv.first) != StepperList.end());
         }
@@ -825,7 +825,6 @@ namespace motion
     }
 
 
-
     RtnStatus Controller::outscan(arma::Mat<double> pos_mat, bool quiet)   
     {
         RtnStatus rtn_status;
@@ -837,18 +836,56 @@ namespace motion
             rtn_status.set_error_msg("position matrix size incorrent, n_cols != NumStepper");
             return check_status(rtn_status);
         }
-        if (pos_mat.n_rows < 2)
+        if (pos_mat.n_rows < 3)
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("position matrix size incorrect, n_row < 2");
+            rtn_status.set_error_msg("position matrix size incorrect, n_row < 3");
             return check_status(rtn_status);
         }
 
-        // Compute velocities 
-        arma::Mat<double> vel_mat(pos_mat.n_rows,pos_mat.n_cols);
+        // Compute velocity matrix via central difference
+        int n_rows = pos_mat.n_rows;
+        int n_cols = pos_mat.n_cols;
+        arma::Mat<double> vel_mat(n_rows,n_cols);
 
+        double dt = MessagePeriod_us*1.0e-6;
 
+        vel_mat.row(0) = arma::Row<double>(n_cols,arma::fill::zeros);
+        vel_mat.row(n_rows-1) = arma::Row<double>(n_cols,arma::fill::zeros);
+       
+        arma::Mat<double> pos_mat_t0 = pos_mat.submat(0,0,n_rows-3,n_cols-1);
+        arma::Mat<double> pos_mat_t1 = pos_mat.submat(2,0,n_rows-1,n_cols-1);
+        vel_mat.submat(1,0,n_rows-2,n_cols-1) = (pos_mat_t1 - pos_mat_t0)/(2.0*dt);
+
+        // Convert to indices
+        arma::Mat<int32_t> ind_pos_mat = config_.unit_to_index(pos_mat);
+        arma::Mat<int32_t> ind_vel_mat = config_.unit_to_index(vel_mat);
+
+        // Outscan trajectory
+        rtn_status = outscan(ind_pos_mat,ind_vel_mat,quiet);
         return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::outscan(std::string filename, bool quiet)
+    {
+        RtnStatus rtn_status;
+        arma::Mat<double> pos_mat;
+        pos_mat.load(filename,arma::raw_ascii);
+        if (pos_mat.n_elem  == 0)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("loading outscan trajectory matrix failed - zero elements loaded");
+            return check_status(rtn_status);
+        }
+        rtn_status = outscan(pos_mat,quiet);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::outscan(const char filename[], bool quiet)
+    {
+        return outscan(std::string(filename),quiet);
     }
 
 
