@@ -58,6 +58,18 @@ namespace motion
     }
 
 
+    std::string Configuration::axis_unit_string(Axis axis)
+    {
+        Unit unit = axis_unit(axis);
+        return unit_to_string(unit);
+    }
+
+
+    std::string Configuration::axis_name(Axis axis)
+    {
+        return axis_to_string(axis);
+    }
+
     double Configuration::axis_conversion(Axis axis)
     {
         double value = 1.0;

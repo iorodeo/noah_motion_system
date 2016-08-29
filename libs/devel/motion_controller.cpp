@@ -438,6 +438,17 @@ namespace motion
         return config_.axis_unit(axis);
     }
 
+    std::string Controller::axis_unit_string(Axis axis)
+    {
+        return config_.axis_unit_string(axis);
+    }
+
+
+    std::string Controller::axis_name(Axis axis)
+    {
+        return config_.axis_name(axis);
+    }
+
 
     RtnStatus Controller::move_to_position(Axis axis, int32_t ind, bool wait)
     {

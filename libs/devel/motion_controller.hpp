@@ -58,6 +58,8 @@ namespace motion
 
             RtnStatus wait_for_ready(bool check=true, bool quiet=false);
             Unit axis_unit(Axis axis);
+            std::string axis_unit_string(Axis axis);
+            std::string axis_name(Axis axis);
 
             // Move to position methods for index arguments
             RtnStatus move_to_position(Axis axis, int32_t ind, bool wait=true);
