@@ -9,6 +9,7 @@
 #include <utility>
 #include <functional>
 
+
 static const char USAGE[] =
 R"(mctrl 
 
@@ -141,6 +142,8 @@ int main(int argc, char *argv[])
 std::map<std::string,docopt::value>  get_arg_map(int argc, char *argv[]) 
 {
     // Replace '-' before numbers with 'n' and parse command line arguments
+    // This is to prevent docopt parser from thinking negative numbers are 
+    // options. 
     for (int i=0;i<argc;i++)
     {
         if (strlen(argv[i]) > 2)
