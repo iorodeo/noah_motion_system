@@ -340,7 +340,6 @@ namespace motion
         if (rtn_status.success() && (wait || backoff))
         {
             rtn_status = wait_for_ready();
-
             if (rtn_status.success() && backoff)
             {
                 double backoff = config_.homing_backoff(axis);

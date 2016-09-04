@@ -25,7 +25,7 @@ namespace constants
     const int32_t StepperHomePosition[NumStepper]    = { -10000, -10000, -10000, -10000, -10000   };
 
     // Homing parameters - shared with host software
-    const int8_t HomingDirection[NumStepper] = {-1,1,1,1,1}; // 1 or -1.
+    const int8_t HomingDirection[NumStepper] = {1,1,1,1,1}; // 1 or -1.
 
 #ifndef  __linux__
     // Communications timeouts

@@ -14,17 +14,17 @@ def get_trajectory(amplitude, period, cycles, dt):
 if __name__ == '__main__':
 
     filename = 'test_trajectory.txt'
-    amplitude = scipy.array([0.1, 0.08 , 0.06 , 30.0, 15.0])
-    cycles = 2
-    period = 10.0
+    amplitude = scipy.array([0.05, 0.03 , 0.015 , 20.0, 0.0])
+    cycles = 4
+    period = 5.0
     dt = 0.005
 
     t, traj = get_trajectory(amplitude,period,cycles,dt)
     scipy.savetxt(filename,traj)
 
-    #for i in range(traj.shape[1]):
-    #    plt.plot(t, traj)
-    #plt.show()
+    for i in range(traj.shape[1]):
+        plt.plot(t, traj)
+    plt.show()
 
 
 
