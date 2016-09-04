@@ -52,11 +52,11 @@ namespace motion
 
     std::map<Axis,std::string> AxisToStringMap = 
     {
-        {Axis_X, std::string("Axis_X")},
-        {Axis_Y, std::string("Axis_Y")},
-        {Axis_Z, std::string("Axis_Z")},
-        {Axis_A, std::string("Axis_A")},
-        {Axis_B, std::string("Axis_B")},
+        {Axis_X, std::string("X")},
+        {Axis_Y, std::string("Y")},
+        {Axis_Z, std::string("Z")},
+        {Axis_A, std::string("A")},
+        {Axis_B, std::string("B")},
         {Pwm_0,  std::string("Pwm_0")},
         {Pwm_1,  std::string("Pwm_1")},
         {Pwm_2,  std::string("Pwm_2")},

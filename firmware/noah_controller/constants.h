@@ -33,6 +33,7 @@ namespace constants
         Cmd_SetModeVelocityControl,
         Cmd_StopMotion,
         Cmd_SetAxisHomed,
+        Cmd_GetAxisHomed,
         Cmd_GetTriggerCount,
         Cmd_SetTriggerCount,
         Cmd_GetTriggerEnabled,

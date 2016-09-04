@@ -38,6 +38,7 @@ class SystemState
         bool error_flag_ = false;
 
         HostToDevMsg host_to_dev_msg_last_;
+        uint16_t command_response_data_;
 
         bool stop_motion_flag_= false;
 
@@ -85,6 +86,7 @@ class SystemState
         void set_mode_velocity_control();
         void stop_motion_cmd();
         void set_axis_homed_cmd();
+        void get_axis_homed_cmd();
 
         bool all_axes_homed();
 

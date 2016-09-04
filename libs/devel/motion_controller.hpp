@@ -55,6 +55,8 @@ namespace motion
             bool is_homing_enabled(Axis axis);
             RtnStatus home(Axis axis, bool backoff=true, bool wait=true);
             RtnStatus set_homed_true(Axis axis);
+            RtnStatus is_homed(Axis axis, bool &is_homed_flag);
+            RtnStatus is_homed(std::map<Axis,bool> &is_homed_map);
 
             RtnStatus wait_for_ready(bool check=true, bool quiet=false);
             Unit axis_unit(Axis axis);

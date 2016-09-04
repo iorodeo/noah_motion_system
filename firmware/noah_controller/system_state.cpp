@@ -265,12 +265,6 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     time_us_ += uint64_t(micros_dt);
     dev_to_host_msg.time_us = time_us_;
 
-    // Echo back message count  for lag checking 
-    dev_to_host_msg.count = host_to_dev_msg_last_.count;
-
-    // Echo back last command
-    dev_to_host_msg.command = host_to_dev_msg_last_.command;
-
     for (int i=0; i<constants::NumStepper; i++)
     {
         dev_to_host_msg.stepper_position[i] = stepper_[i].position();
@@ -282,6 +276,14 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     {
         dev_to_host_msg.analog_input[i] = analogRead(constants::AnalogInputPinArray[i]);
     }
+
+    // Echo back message count  for lag checking 
+    dev_to_host_msg.count = host_to_dev_msg_last_.count;
+
+    // Echo back last command and set command response data
+    dev_to_host_msg.command = host_to_dev_msg_last_.command;
+    dev_to_host_msg.command_data = command_response_data_;
+
     return dev_to_host_msg;
 }
 
@@ -326,6 +328,10 @@ void SystemState::command_switchyard()
 
         case constants::Cmd_SetAxisHomed:
             set_axis_homed_cmd();
+            break;
+
+        case constants::Cmd_GetAxisHomed:
+            get_axis_homed_cmd();
             break;
 
         case constants::Cmd_GetTriggerCount:
@@ -498,6 +504,21 @@ void SystemState::set_axis_homed_cmd()
     {
         // Error:
     }
+}
+
+
+void SystemState::get_axis_homed_cmd()
+{
+    uint8_t axis = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (axis < constants::NumStepper)
+    {
+        command_response_data_ = homed_flag_[axis];
+    }
+    else
+    {
+        // Error:
+    }
+
 }
 
 

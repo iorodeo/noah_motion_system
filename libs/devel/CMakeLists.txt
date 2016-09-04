@@ -29,7 +29,7 @@ target_link_libraries(motion usb armadillo)
 add_executable(outscan_test main.cpp)
 target_link_libraries(outscan_test motion)
 
-add_executable(mctrl cmd_line_app.cpp)
-target_link_libraries(mctrl motion)
+add_executable(mctl cmd_line_app.cpp)
+target_link_libraries(mctl motion)
 
 

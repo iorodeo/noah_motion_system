@@ -329,6 +329,40 @@ namespace motion
     }
 
 
+    RtnStatus Controller::is_homed(Axis axis, bool &is_homed_flag)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_GetAxisHomed;
+        host_to_dev_msg.command_data[0] = axis;
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        if (rtn_status.success())
+        {
+            is_homed_flag = (dev_to_host_msg.command_data != 0);
+        }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::is_homed(std::map<Axis,bool> &is_homed_map)
+    {
+        RtnStatus rtn_status;
+        is_homed_map.clear();
+        for (auto num : StepperList)
+        {
+            bool is_homed_flag;
+            rtn_status = is_homed(Axis(num),is_homed_flag);
+            if (!rtn_status.success())
+            {
+                break;
+            }
+            is_homed_map.insert(std::pair<Axis,bool>(Axis(num), is_homed_flag));
+        }
+        return check_status(rtn_status);
+    }
+
+
     RtnStatus Controller::home(Axis axis, bool backoff, bool wait)
     {
         RtnStatus rtn_status;
