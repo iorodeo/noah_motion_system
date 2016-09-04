@@ -85,6 +85,8 @@ void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value>
 
 void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
+void cmd_help(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+
 double get_docopt_value_as_double(docopt::value docopt_value);
 
 
@@ -102,6 +104,7 @@ std::map<std::string,std::function<void(motion::Controller&,std::map<std::string
     {"move-to", &cmd_move_to},
     {"jog", &cmd_jog},
     {"outscan", &cmd_outscan},
+    {"help", &cmd_help},
 };
 
 
@@ -391,6 +394,11 @@ void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::va
     }
 }
 
+
+void cmd_help(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+{
+    std::cout << "help command" << std::endl;
+}
 
 double get_docopt_value_as_double(docopt::value docopt_value)
 {
