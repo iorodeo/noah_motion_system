@@ -11,11 +11,14 @@ namespace motion
         homing_backoff_map_ = DefaultHomingBackoffMap; 
         axis_to_unit_map_ = DefaultAxisToUnitMap;
         axis_to_unit_conversion_map_ = DefaultAxisToUnitConversionMap;
-        outscan_start_delay_ = DefaultOutscanStartDelay_ms;
+
         gain_ = DefaultGain;
+        outscan_start_delay_ = DefaultOutscanStartDelay_ms;
+
+        analog_input_scale_ = DefaultAnalogInputScale;
+        analog_input_offset_ = DefaultAnalogInputOffset;
 
     }
-
 
     // Configuration protected methods
     // ----------------------------------------------------------------------------------
@@ -206,6 +209,89 @@ namespace motion
         return index_mat;
     }
 
+    double Configuration::analog_int_to_volt(uint16_t value_int)
+    {
+        return analog_input_scale_*value_int + analog_input_offset_;
+    }
+
+
+    std::vector<double> Configuration::analog_int_to_volt(std::vector<uint16_t> int_vec)
+    {
+        std::vector<double> volt_vec(int_vec.size());
+        for (int i=0; i<volt_vec.size(); i++)
+        {
+            volt_vec[i] = analog_int_to_volt(int_vec[i]);
+        }
+        return volt_vec;
+    }
+
+
+    arma::Row<double> Configuration::analog_int_to_volt(arma::Row<uint16_t> int_vec)
+    {
+        arma::Row<double> volt_vec(int_vec.size());
+        for (int i=0; i<volt_vec.size(); i++)
+        {
+            volt_vec(i) = analog_int_to_volt(int_vec(i));
+        }
+        return volt_vec;
+    }
+
+
+    arma::Mat<double> Configuration::analog_int_to_volt(arma::Mat<uint16_t> int_mat)
+    {
+        arma::Mat<double> volt_mat(int_mat.n_rows, int_mat.n_cols);
+        for (int i=0;i<volt_mat.n_rows; i++)
+        {
+            for (int j=0; j<volt_mat.n_cols; i++)
+            {
+                volt_mat(i,j) = analog_int_to_volt(int_mat(i,j)); 
+            }
+        }
+        return volt_mat;
+    }
+
+
+    uint16_t Configuration::analog_volt_to_int(double value_volt)
+    {
+        return uint16_t((value_volt - analog_input_offset_)/analog_input_scale_);
+    }
+
+
+    std::vector<uint16_t> Configuration::analog_volt_to_int(std::vector<double> volt_vec)
+    {
+        std::vector<uint16_t> int_vec(volt_vec.size());
+        for (int i=0; i<int_vec.size(); i++)
+        {
+            int_vec[i] = analog_volt_to_int(volt_vec[i]);
+        }
+        return int_vec;
+    }
+
+
+    arma::Row<uint16_t> Configuration::analog_volt_to_int(arma::Row<double> volt_vec)
+    {
+        arma::Row<uint16_t> int_vec(volt_vec.size());
+        for (int i=0; i<int_vec.size(); i++)
+        {
+            int_vec(i) = analog_volt_to_int(volt_vec(i));
+        }
+        return int_vec;
+    }
+
+
+    arma::Mat<uint16_t> Configuration::analog_volt_to_int(arma::Mat<double> volt_mat)
+    {
+        arma::Mat<uint16_t> int_mat(volt_mat.n_rows,volt_mat.n_cols);
+        for (int i=0; i<int_mat.n_rows; i++)
+        {
+            for (int j=0; j<int_mat.n_cols; j++)
+            {
+                int_mat(i,j) = analog_volt_to_int(volt_mat(i,j));
+            }
+        }
+        return int_mat;
+    }
+
 
     double Configuration::homing_backoff(Axis axis)
     {
@@ -237,6 +323,18 @@ namespace motion
     }
 
 
+    int32_t Configuration::gain()
+    {
+        return gain_;
+    }
+
+
+    void Configuration::set_gain(int32_t gain)
+    {
+        gain_ = gain;
+    }
+
+
     int Configuration::outscan_start_delay()
     {
         return outscan_start_delay_;
@@ -248,15 +346,30 @@ namespace motion
         outscan_start_delay_ = value;
     }
 
-    int32_t Configuration::gain()
+
+    double Configuration::analog_input_scale()
     {
-        return gain_;
+        return analog_input_scale_;
     }
 
-    void Configuration::set_gain(int32_t gain)
+
+    void Configuration::set_analog_input_scale(double value)
     {
-        gain_ = gain;
+        analog_input_scale_ = value;
     }
+
+
+    double Configuration::analog_input_offset()
+    {
+        return analog_input_offset_;
+    }
+
+
+    void Configuration::set_analog_input_offset(double value)
+    {
+        analog_input_offset_ = value;
+    }
+
 
     // Utility functions
     // ----------------------------------------------------------------------------------

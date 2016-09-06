@@ -725,7 +725,12 @@ namespace motion
     }
 
 
-    RtnStatus Controller::outscan(arma::Mat<int32_t> ind_pos_mat, arma::Mat<int32_t> ind_vel_mat, bool quiet)
+    RtnStatus Controller::outscan(
+            arma::Mat<int32_t> ind_pos_mat, 
+            arma::Mat<int32_t> ind_vel_mat, 
+            OutscanData &data,
+            bool quiet
+            )
     {
         RtnStatus rtn_status;
 
@@ -869,7 +874,7 @@ namespace motion
     }
 
 
-    RtnStatus Controller::outscan(arma::Mat<double> pos_mat, bool quiet)   
+    RtnStatus Controller::outscan(arma::Mat<double> pos_mat, OutscanData &data, bool quiet)   
     {
         RtnStatus rtn_status;
 
@@ -906,12 +911,12 @@ namespace motion
         arma::Mat<int32_t> ind_vel_mat = config_.unit_to_index(vel_mat);
 
         // Outscan trajectory
-        rtn_status = outscan(ind_pos_mat,ind_vel_mat,quiet);
+        rtn_status = outscan(ind_pos_mat,ind_vel_mat,data,quiet);
         return check_status(rtn_status);
     }
 
 
-    RtnStatus Controller::outscan(std::string filename, bool quiet)
+    RtnStatus Controller::outscan(std::string filename, OutscanData &data, bool quiet)
     {
         RtnStatus rtn_status;
         arma::Mat<double> pos_mat;
@@ -922,14 +927,20 @@ namespace motion
             rtn_status.set_error_msg("loading outscan trajectory matrix failed - zero elements loaded");
             return check_status(rtn_status);
         }
-        rtn_status = outscan(pos_mat,quiet);
+        rtn_status = outscan(pos_mat,data,quiet);
         return check_status(rtn_status);
     }
 
 
-    RtnStatus Controller::outscan(const char filename[], bool quiet)
+    RtnStatus Controller::outscan(const char filename[], OutscanData &data, bool quiet)
     {
-        return outscan(std::string(filename),quiet);
+        return outscan(std::string(filename),data, quiet);
+    }
+
+
+    Configuration Controller::config()
+    {
+        return config_;
     }
 
 

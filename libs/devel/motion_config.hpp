@@ -34,6 +34,16 @@ namespace motion
             arma::Row<int32_t> unit_to_index(arma::Row<double> value_vec);
             arma::Mat<int32_t> unit_to_index(arma::Mat<double> value_mat);
 
+            double analog_int_to_volt(uint16_t value_int);
+            std::vector<double> analog_int_to_volt(std::vector<uint16_t> int_vec);
+            arma::Row<double> analog_int_to_volt(arma::Row<uint16_t> int_vec);
+            arma::Mat<double> analog_int_to_volt(arma::Mat<uint16_t> int_mat);
+
+            uint16_t analog_volt_to_int(double value_volt);
+            std::vector<uint16_t> analog_volt_to_int(std::vector<double> volt_vec);
+            arma::Row<uint16_t> analog_volt_to_int(arma::Row<double> volt_vec);
+            arma::Mat<uint16_t> analog_volt_to_int(arma::Mat<double> volt_mat);
+
             double axis_conversion(Axis axis);
             double axis_conversion_inv(Axis axis);
             void set_axis_conversion(Axis axis, double value);
@@ -41,19 +51,30 @@ namespace motion
             double homing_backoff(Axis axis);
             void set_homing_backoff(Axis axis, double value);
 
-            int outscan_start_delay();
-            void set_outscan_start_delay(int value);
-
             int32_t gain();
             void set_gain(int32_t gain);
 
+            int outscan_start_delay();
+            void set_outscan_start_delay(int value);
+
+            double analog_input_scale();
+            void set_analog_input_scale(double value);
+
+            double analog_input_offset();
+            void set_analog_input_offset(double value);
+
         protected:
+
             std::map<Axis,bool> homing_enabled_map_;
             std::map<Axis,Unit> axis_to_unit_map_;
             std::map<Axis,double> axis_to_unit_conversion_map_; 
             std::map<Axis,double> homing_backoff_map_;
-            int outscan_start_delay_;
+
             int32_t gain_;
+            int outscan_start_delay_;
+
+            double analog_input_scale_;
+            double analog_input_offset_;
     };
 
     // Utility functions

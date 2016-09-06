@@ -6,6 +6,7 @@
 #include "motion_constants.hpp"
 #include "motion_config.hpp"
 #include "rtn_status.hpp"
+#include "outscan_data.hpp"
 
 #include <string>
 #include <vector>
@@ -14,7 +15,6 @@
 
 namespace motion
 {
-    // Temporary
     class OutscanData;
 
     class Controller
@@ -88,12 +88,19 @@ namespace motion
             RtnStatus jog_position(arma::Row<double> pos_vec, bool wait=true); 
 
             // Outscan methods 
-            RtnStatus outscan(arma::Mat<int32_t> ind_pos_mat, arma::Mat<int32_t> ind_vel_mat,bool quiet=false); 
-            RtnStatus outscan(arma::Mat<double> pos_mat, bool quiet=false);   
-            RtnStatus outscan(std::string filename, bool quiet=false);
-            RtnStatus outscan(const char filename[], bool quiet=false);
+            RtnStatus outscan(
+                    arma::Mat<int32_t> ind_pos_mat, 
+                    arma::Mat<int32_t> ind_vel_mat, 
+                    OutscanData &data, 
+                    bool quiet=false
+                    ); 
 
-            //MotionConfig config();
+            RtnStatus outscan(arma::Mat<double> pos_mat, OutscanData &data, bool quiet=false);   
+            RtnStatus outscan(std::string filename, OutscanData &data, bool quiet=false);
+            RtnStatus outscan(const char filename[], OutscanData &data, bool quiet=false);
+
+            // Configuration methods
+            Configuration config();
             //RtnStatus load_config(std::string filename);
             //RtnStatus set_config(MotionConfig config);
 

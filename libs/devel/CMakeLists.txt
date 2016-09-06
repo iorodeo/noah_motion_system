@@ -20,14 +20,15 @@ add_library(
     docopt.cpp
     rtn_status.cpp
     rawhid_device.cpp
+    outscan_data.cpp
     motion_constants.cpp
     motion_controller.cpp
     motion_config.cpp
     )
-target_link_libraries(motion usb armadillo)
+target_link_libraries(motion usb armadillo hdf5_cpp hdf5)
 
-add_executable(outscan_test main.cpp)
-target_link_libraries(outscan_test motion)
+add_executable(devel_test main.cpp)
+target_link_libraries(devel_test motion)
 
 add_executable(mctl cmd_line_app.cpp)
 target_link_libraries(mctl motion)

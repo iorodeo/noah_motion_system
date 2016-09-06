@@ -420,7 +420,9 @@ void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::va
     {
         std::string filename = arg_map["FILENAME"].asString();
         std::cout << "outscanning " << filename << std::endl;
-        controller.outscan(filename);
+
+        motion::OutscanData data;
+        controller.outscan(filename,data);
     }
     else
     {
@@ -434,7 +436,7 @@ void cmd_status(motion::Controller &controller, std::map<std::string,docopt::val
     arg_map["AXIS"] = docopt::value(std::string("all"));
     std::cout << std::endl;
     std::cout << "               Motion Controller Status               " << std::endl;
-    std::cout << "------------------------------------------------------" << std::endl;
+    std::cout << "======================================================" << std::endl;
     std::cout << std::endl;
     cmd_get_mode(controller,arg_map);
     std::cout << std::endl;

@@ -75,6 +75,9 @@ namespace motion
     const int DefaultOutscanStartDelay_ms = 2000;
     const int32_t DefaultGain = 100;
 
+    const double DefaultAnalogInputScale = (49900.0/3000.0)*(1.2/65535.0);
+    const double DefaultAnalogInputOffset = -10.0;
+
     std::map<Axis,Unit> DefaultAxisToUnitMap = 
     { 
         {Axis_X, Meter},

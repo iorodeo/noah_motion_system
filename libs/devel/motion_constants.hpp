@@ -48,11 +48,13 @@ namespace motion
     extern const int DefaultOutscanStartDelay_ms;
     extern const int32_t DefaultGain;
 
+    extern const double DefaultAnalogInputScale;
+    extern const double DefaultAnalogInputOffset;
+
     extern std::map<Axis,Unit> DefaultAxisToUnitMap;
     extern std::map<Axis,double> DefaultAxisToUnitConversionMap;
     extern std::map<Axis,bool> DefaultHomingEnabledMap;
     extern std::map<Axis,double> DefaultHomingBackoffMap;
-
 
 }
 
