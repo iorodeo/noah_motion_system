@@ -18,6 +18,7 @@ namespace motion
             OutscanData();
             arma::Col<double> time();
             arma::Mat<double> stepper_position();
+            arma::Mat<double> stepper_velocity();
             arma::Mat<double> pwm_position();
             arma::Mat<double> analog_input();
             arma::Mat<double> force_and_torque();
@@ -46,8 +47,103 @@ namespace motion
             std::deque<uint8_t> command_;
             std::deque<uint16_t> command_data_;
             Configuration config_;
+
+            arma::Mat<double> stepper_position_t();
+            arma::Mat<double> stepper_velocity_t();
+            arma::Mat<double> pwm_position_t();
+            arma::Mat<double> analog_input_t();
+            arma::Mat<double> force_and_torque_t();
+
     };
-}
+
+
+    // Utility functions
+    //---------------------------------------------------------------------------------------
+
+    template<typename T>
+    arma::Col<T> col_from_deque(std::deque<T> deque)
+    {
+        arma::Col<T> col(deque.size());
+        int index = 0;
+        for (auto val : deque)
+        {
+            col(index) = val;
+            index++;
+        }
+        return col;
+    }
+
+    template<typename T>
+    arma::Mat<T> mat_from_deque(std::deque<std::vector<T>> deque, int vector_size)
+    {
+        arma::Mat<T> mat;
+        if (deque.size() == 0)
+        {
+            return mat;
+        }
+        int n_rows = deque.size();
+        int n_cols = deque[0].size();
+        if (n_cols != vector_size)
+        {
+            return mat;
+        }
+
+        int index = 0;
+        mat.resize(n_rows,n_cols);
+
+        for (auto row_vec : deque)
+        {
+            if (row_vec.size() == vector_size)
+            {
+                mat.row(index) = arma::Row<T>(row_vec);
+            }
+            else
+            {
+                mat.reset();
+                break;
+            }
+            index ++;
+        }
+        return mat;
+    }
+    
+    template<typename T>
+    arma::Mat<T>  mat_trans_from_deque(std::deque<std::vector<T>> deque, int vector_size)
+    {
+        // Returns transpose of matrix - used for writing hdf5 data
+        arma::Mat<T> mat;
+        if (deque.size() == 0)
+        {
+            return mat;
+        }
+        int n_cols = deque.size();
+        int n_rows = deque[0].size();
+        if (n_rows != vector_size)
+        {
+            return mat;
+        }
+
+        int index = 0;
+        mat.resize(n_rows,n_cols);
+
+        for (auto col_vec : deque)
+        {
+            if (col_vec.size() == vector_size)
+            {
+                mat.col(index) = arma::Col<T>(col_vec);
+            }
+            else
+            {
+                mat.reset();
+                break;
+            }
+            index ++;
+        }
+        return mat;
+    }
+
+} // namespace motion
+
 
 
 #endif
