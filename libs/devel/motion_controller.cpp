@@ -841,6 +841,9 @@ namespace motion
                 break;
             }
 
+            // Update Outscan data
+            data.update(dev_to_host_msg);
+
             // Display position
             if (display_position_on_move_ && !quiet)
             {

@@ -15,7 +15,6 @@
 
 namespace motion
 {
-    class OutscanData;
 
     class Controller
     {

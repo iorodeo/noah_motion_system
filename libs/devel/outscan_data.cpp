@@ -5,25 +5,21 @@
 namespace motion
 {
 
-    OutscanData::OutscanData() 
-    {
-        for (int i=0; i<100; i++)
-        {
-            time_.push_back(0.1*i);
-        }
-    }
+    OutscanData::OutscanData() { }
 
     arma::Mat<double> OutscanData::time()
     {
         arma::Mat<double> time_mat(time_.size(),1); 
         int ind = 0;
+        double t0 = time_[0];
         for (auto val : time_)
         {
-            time_mat(ind,0) = val;
+            time_mat(ind,0) = val - t0;;
             ind++;
         }
         return time_mat;
     }
+
 
     void OutscanData::update(DevToHostMsg msg)
     {
@@ -58,7 +54,26 @@ namespace motion
             analog_vec[i] = config_.analog_int_to_volt(msg.analog_input[i]);
         }
         analog_input_.push_back(analog_vec);
-        
+
+        // Add device information - status, count, command, command_data. 
+        status_.push_back(msg.status);
+        count_.push_back(msg.count);
+        command_.push_back(msg.command);
+        command_data_.push_back(msg.command_data);
+    }
+    
+
+    void OutscanData::clear()
+    {
+        time_.clear();
+        stepper_position_.clear();
+        stepper_velocity_.clear();
+        pwm_position_.clear();
+        analog_input_.clear();
+        status_.clear();
+        count_.clear();
+        command_.clear();
+        command_data_.clear();
     }
 
 
@@ -67,20 +82,18 @@ namespace motion
         RtnStatus rtn_status;
 
         H5::H5File h5file(filename,H5F_ACC_TRUNC);
-        //H5::DataSet dataset = h5file.openDataSet(std::string("outscan_data"));
+
+        // Add time data to h5 file
+        int  time_rank = 1;
+        hsize_t time_dims[] = {time_.size()};
+        H5::DataSpace time_dataspace(time_rank,time_dims);
+        
+        H5::DataSet dataset = h5file.createDataSet("time",H5::PredType::NATIVE_DOUBLE,time_dataspace);
+        std::vector<double> time_vec(time_.begin(), time_.end());
+        dataset.write(time_vec.data(),H5::PredType::NATIVE_DOUBLE);
 
 
         return rtn_status;
     }
 }
 
-        //uint64_t time_us;
-        //int16_t  stepper_position[NumStepper];
-        //int16_t  stepper_velocity[NumStepper];
-        //uint16_t pwm_position[NumPwm];
-        //uint16_t analog_input[NumAnalogInput];
-        //uint8_t  status;  
-        //uint8_t  count;
-        //uint8_t  command;
-        //uint16_t command_data;
-        //uint8_t  padding;

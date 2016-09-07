@@ -30,6 +30,8 @@ namespace motion
             void set_config(Configuration new_config);
 
             void update(DevToHostMsg msg);
+            void clear();
+
             RtnStatus save(std::string filename);
 
         protected:
