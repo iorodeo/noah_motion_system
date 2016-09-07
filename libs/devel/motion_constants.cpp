@@ -71,6 +71,7 @@ namespace motion
         {Degree, std::string("deg")},
     };
 
+    const int ForceAndTorqueRowDim = 6;
     const int HomingDebounceSleep_ms = 500;
     const int DefaultOutscanStartDelay_ms = 2000;
     const int32_t DefaultGain = 100;

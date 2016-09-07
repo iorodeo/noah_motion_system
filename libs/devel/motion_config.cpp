@@ -293,6 +293,34 @@ namespace motion
     }
 
 
+    // DEVEL - NOT DONE
+    // -------------------------------------------------------------------------
+    
+    std::vector<double> Configuration::get_force_and_torque(std::vector<double> analog_input)
+    {
+        // PLACE HOLDER - NOT FINISHED
+        std::vector<double> tmp_vec(ForceAndTorqueRowDim,0.0);
+        return tmp_vec;
+    }
+
+
+    arma::Row<double> Configuration::get_force_and_torque(arma::Row<double> analog_input)
+    {
+        // PLACE HOLDER - NOT FINISHED
+        arma::Row<double> tmp_vec(ForceAndTorqueRowDim,arma::fill::zeros);
+        return tmp_vec;
+    }
+
+
+    arma::Mat<double> Configuration::get_force_and_torque(arma::Mat<double> analog_input)
+    {
+        // PLACE HOLDER - NOT FINISHED
+        arma::Mat<double> tmp_mat(analog_input.n_rows,ForceAndTorqueRowDim,arma::fill::zeros);
+        return tmp_mat;
+    }
+
+    // -------------------------------------------------------------------------
+
     double Configuration::homing_backoff(Axis axis)
     {
         double backoff = 0.0;

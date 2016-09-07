@@ -44,6 +44,7 @@ namespace motion
     extern std::map<Axis,std::string> AxisToStringMap;
 
     // Unit default parameters, assignments and conversions
+    extern const int ForceAndTorqueRowDim;
     extern const int HomingDebounceSleep_ms;
     extern const int DefaultOutscanStartDelay_ms;
     extern const int32_t DefaultGain;

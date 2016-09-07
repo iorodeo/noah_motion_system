@@ -44,6 +44,13 @@ namespace motion
             arma::Row<uint16_t> analog_volt_to_int(arma::Row<double> volt_vec);
             arma::Mat<uint16_t> analog_volt_to_int(arma::Mat<double> volt_mat);
 
+            // DEVEL - NOT DONE
+            // -------------------------------------------------------------------------
+            std::vector<double> get_force_and_torque(std::vector<double> analog_input);
+            arma::Row<double> get_force_and_torque(arma::Row<double> analog_input);
+            arma::Mat<double> get_force_and_torque(arma::Mat<double> analog_input);
+            // -------------------------------------------------------------------------
+
             double axis_conversion(Axis axis);
             double axis_conversion_inv(Axis axis);
             void set_axis_conversion(Axis axis, double value);

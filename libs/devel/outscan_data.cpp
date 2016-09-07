@@ -42,8 +42,8 @@ namespace motion
 
     arma::Mat<double> OutscanData::force_and_torque()
     {
+        return config_.get_force_and_torque(analog_input());
     }
-
 
     arma::Col<uint8_t> OutscanData::status()
     {
@@ -124,6 +124,7 @@ namespace motion
     RtnStatus OutscanData::save(std::string filename)
     {
         RtnStatus rtn_status;
+        std::string units_str("units");
 
         H5::H5File h5file(filename,H5F_ACC_TRUNC);
 
@@ -134,6 +135,12 @@ namespace motion
         H5::DataSpace time_dataspace(time_rank,time_dims);
         H5::DataSet time_dataset = h5file.createDataSet("time", H5::PredType::NATIVE_DOUBLE, time_dataspace);
         time_dataset.write(time_vec.memptr(), H5::PredType::NATIVE_DOUBLE);
+
+        std::string time_unit_str("sec");
+        H5::DataSpace time_attr_dataspace(H5S_SCALAR);
+        H5::StrType time_attr_type(H5::PredType::C_S1,time_unit_str.size());
+        H5::Attribute time_attr = time_dataset.createAttribute(units_str,time_attr_type,time_attr_dataspace); 
+        time_attr.write(time_attr_type,time_unit_str);
 
         // Note arma::Mat is column major, but hdf5 expects row major so we work with transpose 
         // and swap column and row dimensions.  
@@ -187,6 +194,8 @@ namespace motion
 
     arma::Mat<double> OutscanData::force_and_torque_t()
     {
+        arma::Mat<double> ft_mat = force_and_torque();
+        return ft_mat.t();
     }
 
 
