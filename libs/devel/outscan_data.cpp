@@ -1,6 +1,7 @@
 #include "outscan_data.hpp"
 
 #include <H5Cpp.h>
+#include <algorithm>
 
 namespace motion
 {
@@ -124,7 +125,7 @@ namespace motion
     RtnStatus OutscanData::save(std::string filename)
     {
         RtnStatus rtn_status;
-        std::string units_str("units");
+        std::string units_name_str("units");
 
         H5::H5File h5file(filename,H5F_ACC_TRUNC);
 
@@ -136,11 +137,11 @@ namespace motion
         H5::DataSet time_dataset = h5file.createDataSet("time", H5::PredType::NATIVE_DOUBLE, time_dataspace);
         time_dataset.write(time_vec.memptr(), H5::PredType::NATIVE_DOUBLE);
 
-        std::string time_unit_str("sec");
+        std::string sec_str("sec");
         H5::DataSpace time_attr_dataspace(H5S_SCALAR);
-        H5::StrType time_attr_type(H5::PredType::C_S1,time_unit_str.size());
-        H5::Attribute time_attr = time_dataset.createAttribute(units_str,time_attr_type,time_attr_dataspace); 
-        time_attr.write(time_attr_type,time_unit_str);
+        H5::StrType time_attr_type(H5::PredType::C_S1, sec_str.size());
+        H5::Attribute time_attr = time_dataset.createAttribute(units_name_str,time_attr_type,time_attr_dataspace); 
+        time_attr.write(time_attr_type,sec_str);
 
         // Note arma::Mat is column major, but hdf5 expects row major so we work with transpose 
         // and swap column and row dimensions.  
@@ -152,6 +153,22 @@ namespace motion
         H5::DataSpace position_dataspace(position_rank, position_dims);
         H5::DataSet position_dataset = h5file.createDataSet("stepper_position", H5::PredType::NATIVE_DOUBLE,position_dataspace); 
         position_dataset.write(position_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+
+        //std::vector<std::string> position_units_vec(NumStepper);
+        //std::vector<int> position_units_len(NumStepper);
+        //for (int i=0; i<NumStepper; i++)
+        //{
+        //    std::string units_str = config_.axis_unit_string(Axis(i));
+        //    position_units_vec[i] = units_str;
+        //    position_units_len[i] = int(units_str.size());
+        //}
+        //int position_attr_rank = 2;
+        //hsize_t position_attr_dims[] = {1,position_units_vec.size()};
+        //H5::DataSpace position_attr_dataspace(position_attr_rank,position_attr_dims);
+        //auto max_position_units_len = std::max_element(position_units_len.begin(), position_units_len.end());
+        //H5::StrType position_attr_type(H5::PredType::C_S1, *max_position_units_len);
+        //H5::Attribute position_attr = position_dataset.createAttribute(units_name_str,position_attr_type,position_attr_dataspace);
+        //position_attr.write(position_attr_type, position_units_vec.data());
 
         // Add stepper velocity
         int velocity_rank = 2;
