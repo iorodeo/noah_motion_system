@@ -16,7 +16,7 @@ if __name__ == '__main__':
     filename = 'test_trajectory.txt'
     amplitude = scipy.array([0.01, 0.01 , 0.01 , 5.0, 5.0])
     cycles = 1
-    period = 1.0
+    period = 5.0
     dt = 0.005
 
     t, traj = get_trajectory(amplitude,period,cycles,dt)

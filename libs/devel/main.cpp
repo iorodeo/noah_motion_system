@@ -18,13 +18,6 @@ int main(int argc, char *argv[])
     motion::OutscanData data;
     controller.outscan("test_trajectory.txt", data);
 
-    int cnt = 0;
-    for (auto val : data.time())
-    {
-        std::cout << cnt << " " << val << std::endl;
-        cnt++;
-    }
-
     data.save("test_data.h5");
 
     controller.close();

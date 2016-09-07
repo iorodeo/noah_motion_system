@@ -7,17 +7,46 @@ namespace motion
 
     OutscanData::OutscanData() { }
 
-    arma::Mat<double> OutscanData::time()
+    arma::Col<double> OutscanData::time()
     {
-        arma::Mat<double> time_mat(time_.size(),1); 
+        arma::Col<double> time_vec(time_.size()); 
         int ind = 0;
         double t0 = time_[0];
         for (auto val : time_)
         {
-            time_mat(ind,0) = val - t0;;
+            time_vec(ind) = val - t0;;
             ind++;
         }
-        return time_mat;
+        return time_vec;
+    }
+
+    arma::Mat<double> OutscanData::stepper_position()
+    {
+        arma::Mat<double> pos_mat;
+        if (stepper_position_.size() > 0)
+        {
+            int n_rows = stepper_position_.size();
+            int n_cols = stepper_position_[0].size();
+            if (n_cols == NumStepper)
+            {
+                pos_mat.resize(n_rows,n_cols);
+                int ind = 0;
+                for (auto pos_vec : stepper_position_)
+                {
+                    if (pos_vec.size() == NumStepper)
+                    {
+                        pos_mat.row(ind) = arma::Row<double>(pos_vec);
+                    }
+                    else
+                    {
+                        pos_mat.zeros();
+                        break;
+                    }
+                    ind ++;
+                }
+            }
+        }
+        return pos_mat;
     }
 
 
@@ -85,12 +114,21 @@ namespace motion
 
         // Add time data to h5 file
         int  time_rank = 1;
-        hsize_t time_dims[] = {time_.size()};
+        arma::Col<double> time_vec = time();
+        hsize_t time_dims[] = {time_vec.size()};
         H5::DataSpace time_dataspace(time_rank,time_dims);
-        
-        H5::DataSet dataset = h5file.createDataSet("time",H5::PredType::NATIVE_DOUBLE,time_dataspace);
-        std::vector<double> time_vec(time_.begin(), time_.end());
-        dataset.write(time_vec.data(),H5::PredType::NATIVE_DOUBLE);
+        H5::DataSet time_dataset = h5file.createDataSet("time",H5::PredType::NATIVE_DOUBLE,time_dataspace);
+        time_dataset.write(time_vec.memptr(), H5::PredType::NATIVE_DOUBLE);
+
+        // Add stepper position to h5 file. Note arma::Mat is column major, but hdf5 expects row major so
+        // we work with transpose and swap column and row dimensions.
+        int position_rank = 2;
+        arma::Mat<double> position_mat = stepper_position().t();
+        hsize_t position_dims[] = {position_mat.n_cols, position_mat.n_rows};
+        H5::DataSpace position_dataspace(position_rank, position_dims);
+        H5::DataSet position_dataset = h5file.createDataSet("stepper_position", H5::PredType::NATIVE_DOUBLE,position_dataspace); 
+        position_dataset.write(position_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+
 
 
         return rtn_status;

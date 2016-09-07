@@ -16,15 +16,15 @@ namespace motion
         public:
 
             OutscanData();
-            arma::Mat<double> time();
+            arma::Col<double> time();
             arma::Mat<double> stepper_position();
             arma::Mat<double> pwm_position();
             arma::Mat<double> analog_input();
             arma::Mat<double> force_and_torque();
-            arma::Mat<uint8_t> status();
-            arma::Mat<uint8_t> count();
-            arma::Mat<uint8_t> command();
-            arma::Mat<uint16_t> command_data(); 
+            arma::Col<uint8_t> status();
+            arma::Col<uint8_t> count();
+            arma::Col<uint8_t> command();
+            arma::Col<uint16_t> command_data(); 
 
             Configuration config();
             void set_config(Configuration new_config);
