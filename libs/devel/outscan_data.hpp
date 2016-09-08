@@ -7,6 +7,7 @@
 #include <string>
 #include <deque>
 #include <armadillo>
+#include <H5Cpp.h>
 
 namespace motion
 {
@@ -48,11 +49,25 @@ namespace motion
             std::deque<uint16_t> command_data_;
             Configuration config_;
 
+            const std::string units_name_ = std::string("units");
+
             arma::Mat<double> stepper_position_t();
             arma::Mat<double> stepper_velocity_t();
             arma::Mat<double> pwm_position_t();
             arma::Mat<double> analog_input_t();
             arma::Mat<double> force_and_torque_t();
+
+            RtnStatus add_time_dataset(H5::H5File &h5file);
+            RtnStatus add_stepper_position_dataset(H5::H5File &h5file);
+            RtnStatus add_stepper_velocity_dataset(H5::H5File &h5file);
+            RtnStatus add_pwm_position_dataset(H5::H5File &h5file);
+            RtnStatus add_analog_input_dataset(H5::H5File &h5file);
+            RtnStatus add_force_and_torque_dataset(H5::H5File &h5file);
+
+            RtnStatus add_status_dataset(H5::H5File &h5file);
+            RtnStatus add_count_dataset(H5::H5File &h5file);
+            RtnStatus add_command_dataset(H5::H5File &h5file);
+            RtnStatus add_command_data_dataset(H5::H5File &h5file);
 
     };
 

@@ -1,6 +1,5 @@
 #include "outscan_data.hpp"
 
-#include <H5Cpp.h>
 #include <algorithm>
 
 namespace motion
@@ -48,21 +47,25 @@ namespace motion
 
     arma::Col<uint8_t> OutscanData::status()
     {
+        return col_from_deque<uint8_t>(status_);
     }
 
 
     arma::Col<uint8_t> OutscanData::count()
     {
+        return col_from_deque<uint8_t>(count_);
     }
 
 
     arma::Col<uint8_t> OutscanData::command()
     {
+        return col_from_deque<uint8_t>(command_);
     }
 
 
     arma::Col<uint16_t> OutscanData::command_data() 
     {
+        return col_from_deque<uint16_t>(command_data_);
     }
 
 
@@ -125,58 +128,22 @@ namespace motion
     RtnStatus OutscanData::save(std::string filename)
     {
         RtnStatus rtn_status;
-        std::string units_name_str("units");
-
         H5::H5File h5file(filename,H5F_ACC_TRUNC);
 
-        // Add time data to h5 file
-        int  time_rank = 1;
-        arma::Col<double> time_vec = time();
-        hsize_t time_dims[] = {time_vec.size()};
-        H5::DataSpace time_dataspace(time_rank,time_dims);
-        H5::DataSet time_dataset = h5file.createDataSet("time", H5::PredType::NATIVE_DOUBLE, time_dataspace);
-        time_dataset.write(time_vec.memptr(), H5::PredType::NATIVE_DOUBLE);
+        // TODO: check return status 
 
-        std::string sec_str("sec");
-        H5::DataSpace time_attr_dataspace(H5S_SCALAR);
-        H5::StrType time_attr_type(H5::PredType::C_S1, sec_str.size());
-        H5::Attribute time_attr = time_dataset.createAttribute(units_name_str,time_attr_type,time_attr_dataspace); 
-        time_attr.write(time_attr_type,sec_str);
+        rtn_status = add_time_dataset(h5file);
 
-        // Note arma::Mat is column major, but hdf5 expects row major so we work with transpose 
-        // and swap column and row dimensions.  
-        
-        // Add stepper position to h5 file. 
-        int position_rank = 2;
-        arma::Mat<double> position_mat = stepper_position_t();
-        hsize_t position_dims[] = {position_mat.n_cols, position_mat.n_rows};
-        H5::DataSpace position_dataspace(position_rank, position_dims);
-        H5::DataSet position_dataset = h5file.createDataSet("stepper_position", H5::PredType::NATIVE_DOUBLE,position_dataspace); 
-        position_dataset.write(position_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        rtn_status = add_stepper_position_dataset(h5file);
 
-        //std::vector<std::string> position_units_vec(NumStepper);
-        //std::vector<int> position_units_len(NumStepper);
-        //for (int i=0; i<NumStepper; i++)
-        //{
-        //    std::string units_str = config_.axis_unit_string(Axis(i));
-        //    position_units_vec[i] = units_str;
-        //    position_units_len[i] = int(units_str.size());
-        //}
-        //int position_attr_rank = 2;
-        //hsize_t position_attr_dims[] = {1,position_units_vec.size()};
-        //H5::DataSpace position_attr_dataspace(position_attr_rank,position_attr_dims);
-        //auto max_position_units_len = std::max_element(position_units_len.begin(), position_units_len.end());
-        //H5::StrType position_attr_type(H5::PredType::C_S1, *max_position_units_len);
-        //H5::Attribute position_attr = position_dataset.createAttribute(units_name_str,position_attr_type,position_attr_dataspace);
-        //position_attr.write(position_attr_type, position_units_vec.data());
+        rtn_status = add_stepper_velocity_dataset(h5file);
 
-        // Add stepper velocity
-        int velocity_rank = 2;
-        arma::Mat<double> velocity_mat = stepper_velocity_t();
-        hsize_t velocity_dims[] = {velocity_mat.n_cols, velocity_mat.n_rows};
-        H5::DataSpace velocity_dataspace(velocity_rank, velocity_dims);
-        H5::DataSet velocity_dataset = h5file.createDataSet("stepper_velocity", H5::PredType::NATIVE_DOUBLE,velocity_dataspace); 
-        velocity_dataset.write(velocity_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        rtn_status = add_pwm_position_dataset(h5file);
+
+        rtn_status = add_analog_input_dataset(h5file);
+
+        rtn_status = add_force_and_torque_dataset(h5file);
+
 
 
         return rtn_status;
@@ -215,6 +182,142 @@ namespace motion
         return ft_mat.t();
     }
 
+
+    RtnStatus OutscanData::add_time_dataset(H5::H5File &h5file)
+    {
+        RtnStatus rtn_status;
+
+        // Add array data
+        int  rank = 1;
+        arma::Col<double> time_vec = time();
+        hsize_t dims[] = {time_vec.size()};
+        H5::DataSpace dataspace(rank,dims);
+        H5::DataSet dataset = h5file.createDataSet("time",H5::PredType::NATIVE_DOUBLE,dataspace);
+        dataset.write(time_vec.memptr(),H5::PredType::NATIVE_DOUBLE);
+
+        // Add units attribute
+        std::string units_str("sec");
+        H5::DataSpace units_dataspace(H5S_SCALAR);
+        H5::StrType units_type(H5::PredType::C_S1, units_str.size());
+        H5::Attribute units_attr = dataset.createAttribute(units_name_, units_type, units_dataspace); 
+        units_attr.write(units_type,units_str);
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_stepper_position_dataset(H5::H5File &h5file)
+    {
+        // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
+        // matrices in row major order - so we work wiht the transpose matrix.
+        RtnStatus rtn_status;
+
+        // Add matrix data
+        int rank = 2;
+        arma::Mat<double> pos_mat = stepper_position_t();
+        hsize_t dims[] = {pos_mat.n_cols, pos_mat.n_rows};
+        H5::DataSpace dataspace(rank,dims);
+        H5::DataSet dataset = h5file.createDataSet("stepper_position", H5::PredType::NATIVE_DOUBLE,dataspace); 
+        dataset.write(pos_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_stepper_velocity_dataset(H5::H5File &h5file)
+    {
+        // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
+        // matrices in row major order - so we work wiht the transpose matrix.
+        RtnStatus rtn_status;
+
+        // Add matrix data
+        int rank = 2;
+        arma::Mat<double> vel_mat = stepper_velocity_t();
+        hsize_t dims[] = {vel_mat.n_cols, vel_mat.n_rows};
+        H5::DataSpace dataspace(rank, dims);
+        H5::DataSet dataset = h5file.createDataSet("stepper_velocity",H5::PredType::NATIVE_DOUBLE,dataspace); 
+        dataset.write(vel_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        return rtn_status;
+    }
+
+    RtnStatus OutscanData::add_pwm_position_dataset(H5::H5File &h5file)
+    {
+        // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
+        // matrices in row major order - so we work wiht the transpose matrix.
+        RtnStatus rtn_status;
+
+        // Add matrix data
+        int rank = 2;
+        arma::Mat<double> pwm_mat = pwm_position_t();
+        hsize_t dims[] = {pwm_mat.n_cols, pwm_mat.n_rows};
+        H5::DataSpace dataspace(rank, dims);
+        H5::DataSet dataset = h5file.createDataSet("pwm_velocity",H5::PredType::NATIVE_DOUBLE,dataspace); 
+        dataset.write(pwm_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        return rtn_status;
+    }
+
+    RtnStatus OutscanData::add_analog_input_dataset(H5::H5File &h5file)
+    {
+        // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
+        // matrices in row major order - so we work wiht the transpose matrix.
+        RtnStatus rtn_status;
+
+        // Add matrix data
+        int rank = 2;
+        arma::Mat<double> ain_mat = analog_input_t();
+        hsize_t dims[] = {ain_mat.n_cols, ain_mat.n_rows};
+        H5::DataSpace dataspace(rank, dims);
+        H5::DataSet dataset = h5file.createDataSet("analog_input",H5::PredType::NATIVE_DOUBLE,dataspace); 
+        dataset.write(ain_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        return rtn_status;
+    }
+
+    RtnStatus OutscanData::add_force_and_torque_dataset(H5::H5File &h5file)
+    {
+        // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
+        // matrices in row major order - so we work wiht the transpose matrix.
+        RtnStatus rtn_status;
+
+        // Add matrix data
+        int rank = 2;
+        arma::Mat<double> ft_mat = force_and_torque_t();
+        hsize_t dims[] = {ft_mat.n_cols, ft_mat.n_rows};
+        H5::DataSpace dataspace(rank, dims);
+        H5::DataSet dataset = h5file.createDataSet("force_and_torque",H5::PredType::NATIVE_DOUBLE,dataspace); 
+        dataset.write(ft_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        return rtn_status;
+    }
+
+    RtnStatus OutscanData::add_status_dataset(H5::H5File &h5file)
+    {
+        RtnStatus rtn_status;
+        //int  rank = 1;
+        //arma::Col<uint8_t> status_vec = time();
+        //hsize_t dims[] = {status_vec.size()};
+        //H5::DataSpace dataspace(rank,dims);
+        //H5::DataSet dataset = h5file.createDataSet("status",H5::PredType::NATIVE_DOUBLE,dataspace);
+        //dataset.write(status_vec.memptr(),H5::PredType::NATIVE_DOUBLE);
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_count_dataset(H5::H5File &h5file)
+    {
+        RtnStatus rtn_status;
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_command_dataset(H5::H5File &h5file)
+    {
+        RtnStatus rtn_status;
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_command_data_dataset(H5::H5File &h5file)
+    {
+        RtnStatus rtn_status;
+        return rtn_status;
+    }
 
 } // namespace motion
 
