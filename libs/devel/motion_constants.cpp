@@ -69,6 +69,7 @@ namespace motion
     {
         {Meter,  std::string("m")},
         {Degree, std::string("deg")},
+        {Volt,   std::string("V")},
     };
 
     const int ForceAndTorqueRowDim = 6;
@@ -76,8 +77,9 @@ namespace motion
     const int DefaultOutscanStartDelay_ms = 2000;
     const int32_t DefaultGain = 100;
 
-    const double DefaultAnalogInputScale = (49900.0/3000.0)*(1.2/65535.0);
-    const double DefaultAnalogInputOffset = -10.0;
+    const double DefaultAnalogInputScale = (49900.0/3000.0)*(1.2/65535.0); // (Rin/Rf)*(AINREF/MAX_UINT16)
+    const double DefaultAnalogInputOffset = -10.0;                         // (-VREF)
+    const Unit DefaultAnalogInputUnit = Volt;
 
     std::map<Axis,Unit> DefaultAxisToUnitMap = 
     { 

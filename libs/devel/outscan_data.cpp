@@ -154,6 +154,7 @@ namespace motion
 
         rtn_status = add_command_data_dataset(h5file);
 
+
         // -----------------------------------------------------
 
         return rtn_status;
@@ -271,8 +272,13 @@ namespace motion
         hsize_t dims[] = {pwm_mat.n_cols, pwm_mat.n_rows};
         H5::DataSpace dataspace(rank, dims);
         H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
-        H5::DataSet dataset = h5file.createDataSet("pwm_velocity",datatype,dataspace); 
+        H5::DataSet dataset = h5file.createDataSet("pwm_position",datatype,dataspace); 
         dataset.write(pwm_mat.memptr(),datatype);
+
+        // TODO: add check of return status
+        rtn_status = add_pwm_unit_attribute(h5file,dataset);
+        rtn_status = add_pwm_axis_attribute(h5file,dataset);
+
         return rtn_status;
     }
 
@@ -290,6 +296,9 @@ namespace motion
         H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
         H5::DataSet dataset = h5file.createDataSet("analog_input",datatype,dataspace); 
         dataset.write(ain_mat.memptr(),datatype);
+
+        rtn_status = add_analog_input_unit_attribute(h5file,dataset);
+
         return rtn_status;
     }
 
@@ -382,15 +391,15 @@ namespace motion
         for (int i=0; i<NumStepper; i++)
         {
             ss << config_.axis_unit_string(Axis(i));
-            if (i<NumStepper-1)
+            if (i < (NumStepper-1))
             {
                 ss << ", ";
             }
         }
-        H5::DataSpace unit_dataspace(H5S_SCALAR);
-        H5::StrType unit_type(H5::PredType::C_S1, ss.str().size());
-        H5::Attribute unit_attr = dataset.createAttribute(unit_attr_name_, unit_type, unit_dataspace); 
-        unit_attr.write(unit_type,ss.str());
+        H5::DataSpace dataspace(H5S_SCALAR);
+        H5::StrType type(H5::PredType::C_S1, ss.str().size());
+        H5::Attribute attr = dataset.createAttribute(unit_attr_name_,type,dataspace); 
+        attr.write(type,ss.str());
         return rtn_status;
     }
 
@@ -402,22 +411,35 @@ namespace motion
         for (int i=0; i<NumStepper; i++)
         {
             ss << config_.axis_name(Axis(i));
-            if (i<NumStepper-1)
+            if (i < (NumStepper-1))
             {
                 ss << ", ";
             }
         }
-        H5::DataSpace axis_dataspace(H5S_SCALAR);
-        H5::StrType axis_type(H5::PredType::C_S1, ss.str().size());
-        H5::Attribute axis_attr = dataset.createAttribute(axis_attr_name_, axis_type, axis_dataspace); 
-        axis_attr.write(axis_type,ss.str());
+        H5::DataSpace dataspace(H5S_SCALAR);
+        H5::StrType type(H5::PredType::C_S1, ss.str().size());
+        H5::Attribute attr = dataset.createAttribute(axis_attr_name_, type, dataspace); 
+        attr.write(type,ss.str());
         return rtn_status;
     }
 
     RtnStatus OutscanData::add_pwm_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset)
     {
         RtnStatus rtn_status;
-
+        std::stringstream ss;
+        int ind = 0;
+        for (auto num : PwmList)
+        {
+            ss << config_.axis_unit_string(Axis(num));
+            if (ind < (NumPwm-1))
+            {
+                ss << ", ";
+            }
+        }
+        H5::DataSpace dataspace(H5S_SCALAR);
+        H5::StrType type(H5::PredType::C_S1, ss.str().size());
+        H5::Attribute attr = dataset.createAttribute(unit_attr_name_, type, dataspace); 
+        attr.write(type,ss.str());
         return rtn_status;
     }
     
@@ -425,7 +447,40 @@ namespace motion
     RtnStatus OutscanData::add_pwm_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset)
     {
         RtnStatus rtn_status;
+        std::stringstream ss;
+        int ind = 0;
+        for (auto num : PwmList)
+        {
+            ss << config_.axis_name(Axis(num));
+            if (ind < (NumPwm-1))
+            {
+                ss << ", ";
+            }
+            ind++;
+        }
+        H5::DataSpace dataspace(H5S_SCALAR);
+        H5::StrType type(H5::PredType::C_S1, ss.str().size());
+        H5::Attribute attr = dataset.createAttribute(axis_attr_name_, type, dataspace); 
+        attr.write(type,ss.str());
+        return rtn_status;
+    }
 
+    RtnStatus OutscanData::add_analog_input_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    {
+        RtnStatus rtn_status;
+        std::stringstream ss;
+        for (int i=0; i<NumAnalogInput; i++)
+        {
+            ss << config_.analog_input_unit_string();
+            if (i < (NumAnalogInput-1))
+            {
+                ss << ", ";
+            }
+        }
+        H5::DataSpace dataspace(H5S_SCALAR);
+        H5::StrType type(H5::PredType::C_S1, ss.str().size());
+        H5::Attribute attr = dataset.createAttribute(unit_attr_name_, type, dataspace); 
+        attr.write(type,ss.str());
         return rtn_status;
     }
     

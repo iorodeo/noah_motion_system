@@ -21,6 +21,10 @@ namespace motion
             void set_axis_unit(Axis axis, Unit unit);
             std::string axis_unit_string(Axis axis);
             std::string axis_name(Axis axis);
+            
+            Unit analog_input_unit();
+            void set_analog_input_unit(Unit unit);
+            std::string analog_input_unit_string();
 
             double index_to_unit(Axis axis, int32_t index);
             std::vector<double> index_to_unit(std::vector<int32_t> index_vec);
@@ -82,6 +86,7 @@ namespace motion
 
             double analog_input_scale_;
             double analog_input_offset_;
+            Unit analog_input_unit_;
     };
 
     // Utility functions

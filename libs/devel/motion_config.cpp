@@ -17,6 +17,7 @@ namespace motion
 
         analog_input_scale_ = DefaultAnalogInputScale;
         analog_input_offset_ = DefaultAnalogInputOffset;
+        analog_input_unit_ = DefaultAnalogInputUnit; 
 
     }
 
@@ -73,6 +74,7 @@ namespace motion
         return axis_to_string(axis);
     }
 
+
     double Configuration::axis_conversion(Axis axis)
     {
         double value = 1.0;
@@ -81,6 +83,24 @@ namespace motion
             value = axis_to_unit_conversion_map_[axis];
         }
         return value;
+    }
+
+
+    Unit Configuration::analog_input_unit()
+    {
+        return analog_input_unit_;
+    }
+
+
+    void Configuration::set_analog_input_unit(Unit unit)
+    {
+        analog_input_unit_ = unit;
+    }
+
+
+    std::string Configuration::analog_input_unit_string()
+    {
+        return unit_to_string(analog_input_unit_);
     }
 
 

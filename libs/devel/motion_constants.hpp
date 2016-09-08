@@ -27,7 +27,7 @@ namespace motion
         NumAxis
     };
 
-    enum Unit {Meter=0, Degree, NoUnit, NumUnit};
+    enum Unit {Meter=0, Degree, Volt, NoUnit, NumUnit};
 
     // Device USB vendor and product IDs
     extern const int USB_VendorId;
@@ -51,6 +51,7 @@ namespace motion
 
     extern const double DefaultAnalogInputScale;
     extern const double DefaultAnalogInputOffset;
+    extern const Unit DefaultAnalogInputUnit;
 
     extern std::map<Axis,Unit> DefaultAxisToUnitMap;
     extern std::map<Axis,double> DefaultAxisToUnitConversionMap;

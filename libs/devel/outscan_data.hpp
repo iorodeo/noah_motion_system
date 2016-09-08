@@ -73,6 +73,7 @@ namespace motion
             RtnStatus add_stepper_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset);
             RtnStatus add_pwm_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset);
             RtnStatus add_pwm_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset);
+            RtnStatus add_analog_input_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset);
 
     };
 
