@@ -63,7 +63,6 @@ namespace motion
             RtnStatus add_pwm_position_dataset(H5::H5File &h5file);
             RtnStatus add_analog_input_dataset(H5::H5File &h5file);
             RtnStatus add_force_and_torque_dataset(H5::H5File &h5file);
-
             RtnStatus add_status_dataset(H5::H5File &h5file);
             RtnStatus add_count_dataset(H5::H5File &h5file);
             RtnStatus add_command_dataset(H5::H5File &h5file);

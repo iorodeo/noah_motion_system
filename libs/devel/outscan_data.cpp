@@ -130,7 +130,8 @@ namespace motion
         RtnStatus rtn_status;
         H5::H5File h5file(filename,H5F_ACC_TRUNC);
 
-        // TODO: check return status 
+        // TODO: add status checks 
+        // -----------------------------------------------------
 
         rtn_status = add_time_dataset(h5file);
 
@@ -144,7 +145,15 @@ namespace motion
 
         rtn_status = add_force_and_torque_dataset(h5file);
 
+        rtn_status = add_status_dataset(h5file);
 
+        rtn_status = add_count_dataset(h5file);
+
+        rtn_status = add_command_dataset(h5file);
+
+        rtn_status = add_command_data_dataset(h5file);
+
+        // -----------------------------------------------------
 
         return rtn_status;
     }
@@ -192,8 +201,9 @@ namespace motion
         arma::Col<double> time_vec = time();
         hsize_t dims[] = {time_vec.size()};
         H5::DataSpace dataspace(rank,dims);
-        H5::DataSet dataset = h5file.createDataSet("time",H5::PredType::NATIVE_DOUBLE,dataspace);
-        dataset.write(time_vec.memptr(),H5::PredType::NATIVE_DOUBLE);
+        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
+        H5::DataSet dataset = h5file.createDataSet("time",datatype,dataspace);
+        dataset.write(time_vec.memptr(),datatype);
 
         // Add units attribute
         std::string units_str("sec");
@@ -216,8 +226,9 @@ namespace motion
         arma::Mat<double> pos_mat = stepper_position_t();
         hsize_t dims[] = {pos_mat.n_cols, pos_mat.n_rows};
         H5::DataSpace dataspace(rank,dims);
-        H5::DataSet dataset = h5file.createDataSet("stepper_position", H5::PredType::NATIVE_DOUBLE,dataspace); 
-        dataset.write(pos_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
+        H5::DataSet dataset = h5file.createDataSet("stepper_position",datatype,dataspace); 
+        dataset.write(pos_mat.memptr(),datatype);
         return rtn_status;
     }
 
@@ -233,8 +244,9 @@ namespace motion
         arma::Mat<double> vel_mat = stepper_velocity_t();
         hsize_t dims[] = {vel_mat.n_cols, vel_mat.n_rows};
         H5::DataSpace dataspace(rank, dims);
-        H5::DataSet dataset = h5file.createDataSet("stepper_velocity",H5::PredType::NATIVE_DOUBLE,dataspace); 
-        dataset.write(vel_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
+        H5::DataSet dataset = h5file.createDataSet("stepper_velocity",datatype,dataspace); 
+        dataset.write(vel_mat.memptr(),datatype);
         return rtn_status;
     }
 
@@ -249,8 +261,9 @@ namespace motion
         arma::Mat<double> pwm_mat = pwm_position_t();
         hsize_t dims[] = {pwm_mat.n_cols, pwm_mat.n_rows};
         H5::DataSpace dataspace(rank, dims);
-        H5::DataSet dataset = h5file.createDataSet("pwm_velocity",H5::PredType::NATIVE_DOUBLE,dataspace); 
-        dataset.write(pwm_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
+        H5::DataSet dataset = h5file.createDataSet("pwm_velocity",datatype,dataspace); 
+        dataset.write(pwm_mat.memptr(),datatype);
         return rtn_status;
     }
 
@@ -265,8 +278,9 @@ namespace motion
         arma::Mat<double> ain_mat = analog_input_t();
         hsize_t dims[] = {ain_mat.n_cols, ain_mat.n_rows};
         H5::DataSpace dataspace(rank, dims);
-        H5::DataSet dataset = h5file.createDataSet("analog_input",H5::PredType::NATIVE_DOUBLE,dataspace); 
-        dataset.write(ain_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
+        H5::DataSet dataset = h5file.createDataSet("analog_input",datatype,dataspace); 
+        dataset.write(ain_mat.memptr(),datatype);
         return rtn_status;
     }
 
@@ -281,20 +295,24 @@ namespace motion
         arma::Mat<double> ft_mat = force_and_torque_t();
         hsize_t dims[] = {ft_mat.n_cols, ft_mat.n_rows};
         H5::DataSpace dataspace(rank, dims);
-        H5::DataSet dataset = h5file.createDataSet("force_and_torque",H5::PredType::NATIVE_DOUBLE,dataspace); 
-        dataset.write(ft_mat.memptr(), H5::PredType::NATIVE_DOUBLE);
+        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
+        H5::DataSet dataset = h5file.createDataSet("force_and_torque",datatype,dataspace); 
+        dataset.write(ft_mat.memptr(),datatype);
         return rtn_status;
     }
 
     RtnStatus OutscanData::add_status_dataset(H5::H5File &h5file)
     {
         RtnStatus rtn_status;
-        //int  rank = 1;
-        //arma::Col<uint8_t> status_vec = time();
-        //hsize_t dims[] = {status_vec.size()};
-        //H5::DataSpace dataspace(rank,dims);
-        //H5::DataSet dataset = h5file.createDataSet("status",H5::PredType::NATIVE_DOUBLE,dataspace);
-        //dataset.write(status_vec.memptr(),H5::PredType::NATIVE_DOUBLE);
+
+        // Add status data vector
+        int  rank = 1;
+        arma::Col<uint8_t> status_vec = status();
+        hsize_t dims[] = {status_vec.size()};
+        H5::DataSpace dataspace(rank,dims);
+        H5::DataType datatype = H5::PredType::NATIVE_UINT8;
+        H5::DataSet dataset = h5file.createDataSet("status",datatype,dataspace);
+        dataset.write(status_vec.memptr(),datatype);
         return rtn_status;
     }
 
@@ -302,6 +320,15 @@ namespace motion
     RtnStatus OutscanData::add_count_dataset(H5::H5File &h5file)
     {
         RtnStatus rtn_status;
+
+        // Add count data vector
+        int  rank = 1;
+        arma::Col<uint8_t> count_vec = count();
+        hsize_t dims[] = {count_vec.size()};
+        H5::DataSpace dataspace(rank,dims);
+        H5::DataType datatype = H5::PredType::NATIVE_UINT8;
+        H5::DataSet dataset = h5file.createDataSet("count",datatype,dataspace);
+        dataset.write(count_vec.memptr(),datatype);
         return rtn_status;
     }
 
@@ -309,6 +336,16 @@ namespace motion
     RtnStatus OutscanData::add_command_dataset(H5::H5File &h5file)
     {
         RtnStatus rtn_status;
+
+        // Add command data vector
+        int  rank = 1;
+        arma::Col<uint8_t> cmd_vec = command();
+        hsize_t dims[] = {cmd_vec.size()};
+        H5::DataSpace dataspace(rank,dims);
+        H5::DataType datatype = H5::PredType::NATIVE_UINT8;
+        H5::DataSet dataset = h5file.createDataSet("command",datatype,dataspace);
+        dataset.write(cmd_vec.memptr(),datatype);
+
         return rtn_status;
     }
 
@@ -316,6 +353,15 @@ namespace motion
     RtnStatus OutscanData::add_command_data_dataset(H5::H5File &h5file)
     {
         RtnStatus rtn_status;
+
+        // Add command data vector
+        int  rank = 1;
+        arma::Col<uint16_t> cmd_data_vec = command_data();
+        hsize_t dims[] = {cmd_data_vec.size()};
+        H5::DataSpace dataspace(rank,dims);
+        H5::DataType datatype = H5::PredType::NATIVE_UINT16;
+        H5::DataSet dataset = h5file.createDataSet("command_data",datatype,dataspace);
+        dataset.write(cmd_data_vec.memptr(),datatype);
         return rtn_status;
     }
 
