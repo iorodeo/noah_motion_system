@@ -1,6 +1,7 @@
 #include "outscan_data.hpp"
 
 #include <algorithm>
+#include <sstream>
 
 namespace motion
 {
@@ -196,7 +197,7 @@ namespace motion
     {
         RtnStatus rtn_status;
 
-        // Add array data
+        // Add vector data
         int  rank = 1;
         arma::Col<double> time_vec = time();
         hsize_t dims[] = {time_vec.size()};
@@ -205,12 +206,12 @@ namespace motion
         H5::DataSet dataset = h5file.createDataSet("time",datatype,dataspace);
         dataset.write(time_vec.memptr(),datatype);
 
-        // Add units attribute
-        std::string units_str("sec");
-        H5::DataSpace units_dataspace(H5S_SCALAR);
-        H5::StrType units_type(H5::PredType::C_S1, units_str.size());
-        H5::Attribute units_attr = dataset.createAttribute(units_name_, units_type, units_dataspace); 
-        units_attr.write(units_type,units_str);
+        // Add unit attribute
+        std::string unit_str("sec");
+        H5::DataSpace unit_dataspace(H5S_SCALAR);
+        H5::StrType unit_type(H5::PredType::C_S1, unit_str.size());
+        H5::Attribute unit_attr = dataset.createAttribute(unit_attr_name_, unit_type, unit_dataspace); 
+        unit_attr.write(unit_type,unit_str);
         return rtn_status;
     }
 
@@ -221,7 +222,6 @@ namespace motion
         // matrices in row major order - so we work wiht the transpose matrix.
         RtnStatus rtn_status;
 
-        // Add matrix data
         int rank = 2;
         arma::Mat<double> pos_mat = stepper_position_t();
         hsize_t dims[] = {pos_mat.n_cols, pos_mat.n_rows};
@@ -229,6 +229,11 @@ namespace motion
         H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
         H5::DataSet dataset = h5file.createDataSet("stepper_position",datatype,dataspace); 
         dataset.write(pos_mat.memptr(),datatype);
+
+        // TODO: add check of return status
+        rtn_status = add_stepper_unit_attribute(h5file,dataset);
+        rtn_status = add_stepper_axis_attribute(h5file,dataset);
+
         return rtn_status;
     }
 
@@ -239,7 +244,6 @@ namespace motion
         // matrices in row major order - so we work wiht the transpose matrix.
         RtnStatus rtn_status;
 
-        // Add matrix data
         int rank = 2;
         arma::Mat<double> vel_mat = stepper_velocity_t();
         hsize_t dims[] = {vel_mat.n_cols, vel_mat.n_rows};
@@ -247,6 +251,11 @@ namespace motion
         H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
         H5::DataSet dataset = h5file.createDataSet("stepper_velocity",datatype,dataspace); 
         dataset.write(vel_mat.memptr(),datatype);
+
+        // TODO: add check of return status
+        rtn_status = add_stepper_unit_attribute(h5file,dataset);
+        rtn_status = add_stepper_axis_attribute(h5file,dataset);
+
         return rtn_status;
     }
 
@@ -364,6 +373,62 @@ namespace motion
         dataset.write(cmd_data_vec.memptr(),datatype);
         return rtn_status;
     }
+
+
+    RtnStatus OutscanData::add_stepper_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    {
+        RtnStatus rtn_status;
+        std::stringstream ss;
+        for (int i=0; i<NumStepper; i++)
+        {
+            ss << config_.axis_unit_string(Axis(i));
+            if (i<NumStepper-1)
+            {
+                ss << ", ";
+            }
+        }
+        H5::DataSpace unit_dataspace(H5S_SCALAR);
+        H5::StrType unit_type(H5::PredType::C_S1, ss.str().size());
+        H5::Attribute unit_attr = dataset.createAttribute(unit_attr_name_, unit_type, unit_dataspace); 
+        unit_attr.write(unit_type,ss.str());
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_stepper_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    {
+        RtnStatus rtn_status;
+        std::stringstream ss;
+        for (int i=0; i<NumStepper; i++)
+        {
+            ss << config_.axis_name(Axis(i));
+            if (i<NumStepper-1)
+            {
+                ss << ", ";
+            }
+        }
+        H5::DataSpace axis_dataspace(H5S_SCALAR);
+        H5::StrType axis_type(H5::PredType::C_S1, ss.str().size());
+        H5::Attribute axis_attr = dataset.createAttribute(axis_attr_name_, axis_type, axis_dataspace); 
+        axis_attr.write(axis_type,ss.str());
+        return rtn_status;
+    }
+
+    RtnStatus OutscanData::add_pwm_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    {
+        RtnStatus rtn_status;
+
+        return rtn_status;
+    }
+    
+
+    RtnStatus OutscanData::add_pwm_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    {
+        RtnStatus rtn_status;
+
+        return rtn_status;
+    }
+    
 
 } // namespace motion
 
