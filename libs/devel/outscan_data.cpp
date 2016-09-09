@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <ctime>
 
 namespace motion
 {
@@ -133,6 +134,7 @@ namespace motion
 
         // TODO: add status checks 
         // -----------------------------------------------------
+        rtn_status = add_date_attribute(h5file);
 
         rtn_status = add_time_dataset(h5file);
 
@@ -153,7 +155,6 @@ namespace motion
         rtn_status = add_command_dataset(h5file);
 
         rtn_status = add_command_data_dataset(h5file);
-
 
         // -----------------------------------------------------
 
@@ -380,6 +381,23 @@ namespace motion
         H5::DataType datatype = H5::PredType::NATIVE_UINT16;
         H5::DataSet dataset = h5file.createDataSet("command_data",datatype,dataspace);
         dataset.write(cmd_data_vec.memptr(),datatype);
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_date_attribute(H5::H5File &h5file)
+    {
+        RtnStatus rtn_status;
+        // Get current time
+        std::time_t now = std::time(nullptr);
+        std::stringstream ss;
+        ss << std::asctime(std::localtime(&now));
+        // Add datetime sting as attribute root group
+        H5::Group root_group = h5file.openGroup("/");
+        H5::DataSpace dataspace(H5S_SCALAR);
+        H5::StrType type(H5::PredType::C_S1, ss.str().size());
+        H5::Attribute attr = root_group.createAttribute(date_attr_name_,type,dataspace); 
+        attr.write(type,ss.str());
         return rtn_status;
     }
 

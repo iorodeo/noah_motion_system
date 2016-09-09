@@ -51,6 +51,7 @@ namespace motion
 
             const std::string unit_attr_name_ = std::string("unit");
             const std::string axis_attr_name_ = std::string("axis");
+            const std::string date_attr_name_ = std::string("date");
 
             arma::Mat<double> stepper_position_t();
             arma::Mat<double> stepper_velocity_t();
@@ -69,6 +70,7 @@ namespace motion
             RtnStatus add_command_dataset(H5::H5File &h5file);
             RtnStatus add_command_data_dataset(H5::H5File &h5file);
 
+            RtnStatus add_date_attribute(H5::H5File &h5file);
             RtnStatus add_stepper_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset);
             RtnStatus add_stepper_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset);
             RtnStatus add_pwm_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset);
