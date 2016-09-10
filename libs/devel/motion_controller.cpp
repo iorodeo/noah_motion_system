@@ -414,15 +414,15 @@ namespace motion
                 break;
             }
 
-            host_to_dev_msg.count =  msg_count_;
             host_to_dev_msg.command = Cmd_Empty;
+            host_to_dev_msg.count = msg_count_;
+            msg_count_++;
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
                 rtn_status.set_error_msg("unable send data to device while in wait loop");
                 break;
             }
-            msg_count_++;
 
 
             // Display position data
