@@ -57,7 +57,10 @@ namespace motion
             arma::Mat<double> stepper_velocity_t();
             arma::Mat<double> pwm_position_t();
             arma::Mat<double> analog_input_t();
+
             arma::Mat<double> force_and_torque_t();
+
+            RtnStatus open_h5file(H5::H5File &h5file, std::string filename);
 
             RtnStatus add_time_dataset(H5::H5File &h5file);
             RtnStatus add_stepper_position_dataset(H5::H5File &h5file);
@@ -71,11 +74,18 @@ namespace motion
             RtnStatus add_command_data_dataset(H5::H5File &h5file);
 
             RtnStatus add_date_attribute(H5::H5File &h5file);
-            RtnStatus add_stepper_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset);
-            RtnStatus add_stepper_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset);
-            RtnStatus add_pwm_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset);
-            RtnStatus add_pwm_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset);
-            RtnStatus add_analog_input_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset);
+            RtnStatus add_stepper_unit_attribute(H5::H5File &h5file, std::string dataset_name);
+            RtnStatus add_stepper_axis_attribute(H5::H5File &h5file, std::string dataset_name);
+            RtnStatus add_pwm_unit_attribute(H5::H5File &h5file, std::string dataset_name);
+            RtnStatus add_pwm_axis_attribute(H5::H5File &h5file, std::string dataset_name);
+            RtnStatus add_analog_input_unit_attribute(H5::H5File &h5file, std::string dataset_name);
+
+            RtnStatus add_col_uint8_dataset(H5::H5File &h5file, arma::Col<uint8_t> &col, std::string name);
+            RtnStatus add_col_uint16_dataset(H5::H5File &h5file, arma::Col<uint16_t> &col, std::string name);
+            RtnStatus add_col_double_dataset(H5::H5File &h5file, arma::Col<double> &col, std::string name);
+            RtnStatus add_mat_double_dataset(H5::H5File &h5file, arma::Mat<double> &mat_t, std::string name);
+            RtnStatus add_group_attribute(H5::H5File &h5file, std::string group_name, std::string attr_name, std::string attr_data);
+            RtnStatus add_dataset_attribute(H5::H5File &h5file, std::string dataset_name, std::string attr_name, std::string attr_data);
 
     };
 

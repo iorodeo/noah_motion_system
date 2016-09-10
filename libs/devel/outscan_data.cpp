@@ -130,34 +130,75 @@ namespace motion
     RtnStatus OutscanData::save(std::string filename)
     {
         RtnStatus rtn_status;
-        H5::H5File h5file(filename,H5F_ACC_TRUNC);
+        H5::H5File h5file;
 
-        // TODO: add status checks 
-        // -----------------------------------------------------
+        rtn_status = open_h5file(h5file,filename);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
         rtn_status = add_date_attribute(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_time_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_stepper_position_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_stepper_velocity_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_pwm_position_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_analog_input_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_force_and_torque_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_status_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_count_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_command_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         rtn_status = add_command_data_dataset(h5file);
-
-        // -----------------------------------------------------
-
         return rtn_status;
     }
 
@@ -195,25 +236,40 @@ namespace motion
     }
 
 
+    RtnStatus OutscanData::open_h5file(H5::H5File &h5file, std::string filename)
+    {
+        RtnStatus rtn_status;
+        try
+        {
+            h5file = H5::H5File(filename,H5F_ACC_TRUNC);
+        }
+        catch (H5::Exception &error)
+        {
+            std::stringstream error_ss;
+            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_ss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_ss.str());
+            rtn_status.set_success(false);
+        }
+        return rtn_status;
+    }
+
+
     RtnStatus OutscanData::add_time_dataset(H5::H5File &h5file)
     {
         RtnStatus rtn_status;
-
-        // Add vector data
-        int  rank = 1;
+        std::string dataset_name("time");
         arma::Col<double> time_vec = time();
-        hsize_t dims[] = {time_vec.size()};
-        H5::DataSpace dataspace(rank,dims);
-        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
-        H5::DataSet dataset = h5file.createDataSet("time",datatype,dataspace);
-        dataset.write(time_vec.memptr(),datatype);
 
-        // Add unit attribute
+        rtn_status = add_col_double_dataset(h5file,time_vec,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
         std::string unit_str("sec");
-        H5::DataSpace unit_dataspace(H5S_SCALAR);
-        H5::StrType unit_type(H5::PredType::C_S1, unit_str.size());
-        H5::Attribute unit_attr = dataset.createAttribute(unit_attr_name_, unit_type, unit_dataspace); 
-        unit_attr.write(unit_type,unit_str);
+        rtn_status = add_dataset_attribute(h5file,dataset_name,unit_attr_name_,unit_str);
+
         return rtn_status;
     }
 
@@ -223,21 +279,25 @@ namespace motion
         // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
         // matrices in row major order - so we work wiht the transpose matrix.
         RtnStatus rtn_status;
-
-        int rank = 2;
+        std::string dataset_name("stepper_position");
         arma::Mat<double> pos_mat = stepper_position_t();
-        hsize_t dims[] = {pos_mat.n_cols, pos_mat.n_rows};
-        H5::DataSpace dataspace(rank,dims);
-        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
-        H5::DataSet dataset = h5file.createDataSet("stepper_position",datatype,dataspace); 
-        dataset.write(pos_mat.memptr(),datatype);
 
-        // TODO: add check of return status
-        rtn_status = add_stepper_unit_attribute(h5file,dataset);
-        rtn_status = add_stepper_axis_attribute(h5file,dataset);
+        rtn_status = add_mat_double_dataset(h5file,pos_mat,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = add_stepper_unit_attribute(h5file,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        rtn_status = add_stepper_axis_attribute(h5file,dataset_name);
 
         return rtn_status;
     }
+
 
 
     RtnStatus OutscanData::add_stepper_velocity_dataset(H5::H5File &h5file)
@@ -245,18 +305,20 @@ namespace motion
         // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
         // matrices in row major order - so we work wiht the transpose matrix.
         RtnStatus rtn_status;
-
-        int rank = 2;
+        std::string dataset_name("stepper_velocity");
         arma::Mat<double> vel_mat = stepper_velocity_t();
-        hsize_t dims[] = {vel_mat.n_cols, vel_mat.n_rows};
-        H5::DataSpace dataspace(rank, dims);
-        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
-        H5::DataSet dataset = h5file.createDataSet("stepper_velocity",datatype,dataspace); 
-        dataset.write(vel_mat.memptr(),datatype);
 
-        // TODO: add check of return status
-        rtn_status = add_stepper_unit_attribute(h5file,dataset);
-        rtn_status = add_stepper_axis_attribute(h5file,dataset);
+        rtn_status = add_mat_double_dataset(h5file,vel_mat,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        rtn_status = add_stepper_unit_attribute(h5file,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        rtn_status = add_stepper_axis_attribute(h5file,dataset_name);
 
         return rtn_status;
     }
@@ -266,19 +328,21 @@ namespace motion
         // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
         // matrices in row major order - so we work wiht the transpose matrix.
         RtnStatus rtn_status;
-
-        // Add matrix data
-        int rank = 2;
+        std::string dataset_name("pwm_position");
         arma::Mat<double> pwm_mat = pwm_position_t();
-        hsize_t dims[] = {pwm_mat.n_cols, pwm_mat.n_rows};
-        H5::DataSpace dataspace(rank, dims);
-        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
-        H5::DataSet dataset = h5file.createDataSet("pwm_position",datatype,dataspace); 
-        dataset.write(pwm_mat.memptr(),datatype);
 
-        // TODO: add check of return status
-        rtn_status = add_pwm_unit_attribute(h5file,dataset);
-        rtn_status = add_pwm_axis_attribute(h5file,dataset);
+        rtn_status = add_mat_double_dataset(h5file,pwm_mat,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = add_pwm_unit_attribute(h5file,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        rtn_status = add_pwm_axis_attribute(h5file,dataset_name);
 
         return rtn_status;
     }
@@ -288,18 +352,16 @@ namespace motion
         // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
         // matrices in row major order - so we work wiht the transpose matrix.
         RtnStatus rtn_status;
-
-        // Add matrix data
-        int rank = 2;
+        std::string dataset_name("analog_input");
         arma::Mat<double> ain_mat = analog_input_t();
-        hsize_t dims[] = {ain_mat.n_cols, ain_mat.n_rows};
-        H5::DataSpace dataspace(rank, dims);
-        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
-        H5::DataSet dataset = h5file.createDataSet("analog_input",datatype,dataspace); 
-        dataset.write(ain_mat.memptr(),datatype);
 
-        rtn_status = add_analog_input_unit_attribute(h5file,dataset);
+        rtn_status = add_mat_double_dataset(h5file,ain_mat,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
+        rtn_status = add_analog_input_unit_attribute(h5file,dataset_name);
         return rtn_status;
     }
 
@@ -308,197 +370,297 @@ namespace motion
         // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
         // matrices in row major order - so we work wiht the transpose matrix.
         RtnStatus rtn_status;
-
-        // Add matrix data
-        int rank = 2;
+        std::string dataset_name("force_and_torque");
         arma::Mat<double> ft_mat = force_and_torque_t();
-        hsize_t dims[] = {ft_mat.n_cols, ft_mat.n_rows};
-        H5::DataSpace dataspace(rank, dims);
-        H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
-        H5::DataSet dataset = h5file.createDataSet("force_and_torque",datatype,dataspace); 
-        dataset.write(ft_mat.memptr(),datatype);
+
+        rtn_status = add_mat_double_dataset(h5file,ft_mat,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        // TODO: added units attribue.  Get this from sensor cal.
+
         return rtn_status;
     }
 
     RtnStatus OutscanData::add_status_dataset(H5::H5File &h5file)
     {
-        RtnStatus rtn_status;
-
-        // Add status data vector
-        int  rank = 1;
+        std::string dataset_name("status");
         arma::Col<uint8_t> status_vec = status();
-        hsize_t dims[] = {status_vec.size()};
-        H5::DataSpace dataspace(rank,dims);
-        H5::DataType datatype = H5::PredType::NATIVE_UINT8;
-        H5::DataSet dataset = h5file.createDataSet("status",datatype,dataspace);
-        dataset.write(status_vec.memptr(),datatype);
-        return rtn_status;
+        return add_col_uint8_dataset(h5file,status_vec,dataset_name);
     }
 
 
     RtnStatus OutscanData::add_count_dataset(H5::H5File &h5file)
     {
-        RtnStatus rtn_status;
-
-        // Add count data vector
-        int  rank = 1;
+        std::string dataset_name("count");
         arma::Col<uint8_t> count_vec = count();
-        hsize_t dims[] = {count_vec.size()};
-        H5::DataSpace dataspace(rank,dims);
-        H5::DataType datatype = H5::PredType::NATIVE_UINT8;
-        H5::DataSet dataset = h5file.createDataSet("count",datatype,dataspace);
-        dataset.write(count_vec.memptr(),datatype);
-        return rtn_status;
+        return add_col_uint8_dataset(h5file,count_vec,dataset_name);
     }
 
 
     RtnStatus OutscanData::add_command_dataset(H5::H5File &h5file)
     {
-        RtnStatus rtn_status;
-
-        // Add command data vector
-        int  rank = 1;
+        std::string dataset_name("command");
         arma::Col<uint8_t> cmd_vec = command();
-        hsize_t dims[] = {cmd_vec.size()};
-        H5::DataSpace dataspace(rank,dims);
-        H5::DataType datatype = H5::PredType::NATIVE_UINT8;
-        H5::DataSet dataset = h5file.createDataSet("command",datatype,dataspace);
-        dataset.write(cmd_vec.memptr(),datatype);
-
-        return rtn_status;
+        return add_col_uint8_dataset(h5file,cmd_vec,dataset_name);
     }
 
 
     RtnStatus OutscanData::add_command_data_dataset(H5::H5File &h5file)
     {
-        RtnStatus rtn_status;
-
-        // Add command data vector
-        int  rank = 1;
+        std::string dataset_name("command_data");
         arma::Col<uint16_t> cmd_data_vec = command_data();
-        hsize_t dims[] = {cmd_data_vec.size()};
-        H5::DataSpace dataspace(rank,dims);
-        H5::DataType datatype = H5::PredType::NATIVE_UINT16;
-        H5::DataSet dataset = h5file.createDataSet("command_data",datatype,dataspace);
-        dataset.write(cmd_data_vec.memptr(),datatype);
-        return rtn_status;
+        return add_col_uint16_dataset(h5file,cmd_data_vec,dataset_name);
     }
 
 
     RtnStatus OutscanData::add_date_attribute(H5::H5File &h5file)
     {
         RtnStatus rtn_status;
-        // Get current time
+        std::string group_name("/");
+
         std::time_t now = std::time(nullptr);
-        std::stringstream ss;
-        ss << std::asctime(std::localtime(&now));
-        // Add datetime sting as attribute root group
-        H5::Group root_group = h5file.openGroup("/");
-        H5::DataSpace dataspace(H5S_SCALAR);
-        H5::StrType type(H5::PredType::C_S1, ss.str().size());
-        H5::Attribute attr = root_group.createAttribute(date_attr_name_,type,dataspace); 
-        attr.write(type,ss.str());
+        std::stringstream date_data_ss;
+        date_data_ss << std::asctime(std::localtime(&now));
+
+        rtn_status = add_group_attribute(h5file,group_name,date_attr_name_,date_data_ss.str());
         return rtn_status;
     }
 
 
-    RtnStatus OutscanData::add_stepper_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    RtnStatus OutscanData::add_stepper_unit_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream ss;
+        std::stringstream unit_ss;
         for (int i=0; i<NumStepper; i++)
         {
-            ss << config_.axis_unit_string(Axis(i));
+            unit_ss << config_.axis_unit_string(Axis(i));
             if (i < (NumStepper-1))
             {
-                ss << ", ";
+                unit_ss << ", ";
             }
         }
-        H5::DataSpace dataspace(H5S_SCALAR);
-        H5::StrType type(H5::PredType::C_S1, ss.str().size());
-        H5::Attribute attr = dataset.createAttribute(unit_attr_name_,type,dataspace); 
-        attr.write(type,ss.str());
+        rtn_status = add_dataset_attribute(h5file,dataset_name,unit_attr_name_,unit_ss.str());
         return rtn_status;
     }
 
 
-    RtnStatus OutscanData::add_stepper_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    RtnStatus OutscanData::add_stepper_axis_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream ss;
+        std::stringstream axis_ss;
         for (int i=0; i<NumStepper; i++)
         {
-            ss << config_.axis_name(Axis(i));
+            axis_ss << config_.axis_name(Axis(i));
             if (i < (NumStepper-1))
             {
-                ss << ", ";
+                axis_ss << ", ";
             }
         }
-        H5::DataSpace dataspace(H5S_SCALAR);
-        H5::StrType type(H5::PredType::C_S1, ss.str().size());
-        H5::Attribute attr = dataset.createAttribute(axis_attr_name_, type, dataspace); 
-        attr.write(type,ss.str());
+        rtn_status = add_dataset_attribute(h5file, dataset_name, axis_attr_name_, axis_ss.str());
         return rtn_status;
     }
 
-    RtnStatus OutscanData::add_pwm_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    RtnStatus OutscanData::add_pwm_unit_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream ss;
+        std::stringstream unit_ss;
         int ind = 0;
         for (auto num : PwmList)
         {
-            ss << config_.axis_unit_string(Axis(num));
+            unit_ss << config_.axis_unit_string(Axis(num));
             if (ind < (NumPwm-1))
             {
-                ss << ", ";
+                unit_ss << ", ";
             }
         }
-        H5::DataSpace dataspace(H5S_SCALAR);
-        H5::StrType type(H5::PredType::C_S1, ss.str().size());
-        H5::Attribute attr = dataset.createAttribute(unit_attr_name_, type, dataspace); 
-        attr.write(type,ss.str());
+        rtn_status = add_dataset_attribute(h5file, dataset_name, unit_attr_name_, unit_ss.str());
         return rtn_status;
     }
     
 
-    RtnStatus OutscanData::add_pwm_axis_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    RtnStatus OutscanData::add_pwm_axis_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream ss;
+        std::stringstream axis_ss;
         int ind = 0;
         for (auto num : PwmList)
         {
-            ss << config_.axis_name(Axis(num));
+            axis_ss << config_.axis_name(Axis(num));
             if (ind < (NumPwm-1))
             {
-                ss << ", ";
+                axis_ss << ", ";
             }
             ind++;
         }
-        H5::DataSpace dataspace(H5S_SCALAR);
-        H5::StrType type(H5::PredType::C_S1, ss.str().size());
-        H5::Attribute attr = dataset.createAttribute(axis_attr_name_, type, dataspace); 
-        attr.write(type,ss.str());
+        rtn_status = add_dataset_attribute(h5file, dataset_name, axis_attr_name_, axis_ss.str());
         return rtn_status;
     }
 
-    RtnStatus OutscanData::add_analog_input_unit_attribute(H5::H5File &h5file, H5::DataSet &dataset)
+    RtnStatus OutscanData::add_analog_input_unit_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream ss;
+        std::stringstream ain_ss;
         for (int i=0; i<NumAnalogInput; i++)
         {
-            ss << config_.analog_input_unit_string();
+            ain_ss << config_.analog_input_unit_string();
             if (i < (NumAnalogInput-1))
             {
-                ss << ", ";
+                ain_ss << ", ";
             }
         }
-        H5::DataSpace dataspace(H5S_SCALAR);
-        H5::StrType type(H5::PredType::C_S1, ss.str().size());
-        H5::Attribute attr = dataset.createAttribute(unit_attr_name_, type, dataspace); 
-        attr.write(type,ss.str());
+        rtn_status = add_dataset_attribute(h5file, dataset_name, unit_attr_name_, ain_ss.str());
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_col_uint8_dataset(H5::H5File &h5file, arma::Col<uint8_t> &col, std::string name)
+    {
+        RtnStatus rtn_status;
+        int rank = 1;
+        hsize_t dims[rank] = {col.size()};
+        try
+        {
+            H5::DataSpace dataspace(rank,dims);
+            H5::DataType datatype = H5::PredType::NATIVE_UINT8;
+            H5::DataSet dataset = h5file.createDataSet(name,datatype,dataspace); 
+            dataset.write(col.memptr(),datatype);
+        }
+        catch (H5::Exception &error)
+        {
+            std::stringstream error_ss;
+            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_ss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_ss.str());
+            rtn_status.set_success(false);
+        }
+
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_col_uint16_dataset(H5::H5File &h5file, arma::Col<uint16_t> &col, std::string name)
+    {
+        RtnStatus rtn_status;
+        int rank = 1;
+        hsize_t dims[rank] = {col.size()};
+        try
+        {
+            H5::DataSpace dataspace(rank,dims);
+            H5::DataType datatype = H5::PredType::NATIVE_UINT16;
+            H5::DataSet dataset = h5file.createDataSet(name,datatype,dataspace); 
+            dataset.write(col.memptr(),datatype);
+        }
+        catch (H5::Exception &error)
+        {
+            std::stringstream error_ss;
+            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_ss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_ss.str());
+            rtn_status.set_success(false);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_col_double_dataset(H5::H5File &h5file, arma::Col<double> &col, std::string name)
+    {
+        RtnStatus rtn_status;
+        int rank = 1;
+        hsize_t dims[rank] = {col.size()};
+
+        try
+        {
+            H5::DataSpace dataspace(rank,dims);
+            H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
+            H5::DataSet dataset = h5file.createDataSet(name,datatype,dataspace); 
+            dataset.write(col.memptr(),datatype);
+        }
+        catch (H5::Exception &error)
+        {
+            std::stringstream error_ss;
+            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_ss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_ss.str());
+            rtn_status.set_success(false);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_mat_double_dataset(H5::H5File &h5file, arma::Mat<double> &mat_t, std::string name)
+    {
+        // ---------------------------------------------------------------------------------------------------------
+        // Note, mat_t is matrix transpose. This is due to fact that Armadillo stores matrices in column major format
+        // whereas HDF5 expects the matrix to be in row major format.
+        // ----------------------------------------------------------------------------------------------------------
+        RtnStatus rtn_status;
+        int rank = 2;
+        hsize_t dims[rank] = {mat_t.n_cols, mat_t.n_rows};
+
+        try
+        {
+            H5::DataSpace dataspace(rank,dims);
+            H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
+            H5::DataSet dataset = h5file.createDataSet(name,datatype,dataspace); 
+            dataset.write(mat_t.memptr(),datatype);
+        }
+        catch (H5::Exception &error)
+        {
+            std::stringstream error_ss;
+            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_ss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_ss.str());
+            rtn_status.set_success(false);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_group_attribute(H5::H5File &h5file, std::string group_name, std::string attr_name, std::string attr_data)
+    {
+        RtnStatus rtn_status;
+        try
+        {
+            H5::Group root_group = h5file.openGroup(group_name);
+            H5::DataSpace dataspace(H5S_SCALAR);
+            H5::StrType type(H5::PredType::C_S1, attr_data.size());
+            H5::Attribute attr = root_group.createAttribute(attr_name,type,dataspace); 
+            attr.write(type,attr_data);
+        }
+        catch (H5::Exception &error)
+        {
+            std::stringstream error_ss;
+            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_ss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_ss.str());
+            rtn_status.set_success(false);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_dataset_attribute(H5::H5File &h5file, std::string dataset_name, std::string attr_name, std::string attr_data)
+    {
+        RtnStatus rtn_status;
+        try
+        {
+            H5::DataSet dataset = h5file.openDataSet(dataset_name);
+            H5::DataSpace dataspace(H5S_SCALAR);
+            H5::StrType type(H5::PredType::C_S1, attr_data.size());
+            H5::Attribute attr = dataset.createAttribute(attr_name,type,dataspace); 
+            attr.write(type,attr_data);
+        }
+        catch (H5::Exception &error)
+        {
+            std::stringstream error_ss;
+            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_ss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_ss.str());
+            rtn_status.set_success(false);
+        }
         return rtn_status;
     }
     
