@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     controller.set_display_position_on_move(true);
 
     motion::OutscanData data;
-    controller.outscan("test_trajectory.txt", data);
+    controller.outscan("test_trajectory.txt", data, true);
 
     data.save("test_data.h5");
 

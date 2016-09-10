@@ -776,13 +776,6 @@ namespace motion
             }
         }
 
-        // Enable velocity control mode
-        rtn_status = set_mode_velocity_control();
-        if (!rtn_status.success())
-        {
-            return check_status(rtn_status);
-
-        }
         // Setup display output
         std::streamsize original_precision = std::cout.precision();
         if (display_position_on_move_)
@@ -794,9 +787,18 @@ namespace motion
 
         DevToHostMsg dev_to_host_msg;
         HostToDevMsg host_to_dev_msg;
+
         if (!quiet)
         {
             std::cout << "outscan trajectory" << std::endl << std::endl;
+        }
+
+        // Enable velocity control mode
+        rtn_status = set_mode_velocity_control();
+        if (!rtn_status.success())
+        {
+            return check_status(rtn_status);
+
         }
 
         // Outscan trajectory
@@ -830,6 +832,8 @@ namespace motion
 
             // Create host to dev message and send to device
             host_to_dev_msg.command = Cmd_Empty;
+            host_to_dev_msg.count = msg_count_;
+            msg_count_++;
             for (auto num : StepperList)
             {
                 host_to_dev_msg.stepper_velocity[num] = velo_ctlr(num);
