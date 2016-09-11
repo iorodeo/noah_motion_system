@@ -538,6 +538,12 @@ void SystemState::on_send_msg_error()
     // Take correct actions of message error/timeout ... need to flush this out.
     //time_us_ = 0;
     send_msg_error_flag_ = true;
+
+    for (int i=0; i<5; i++)
+    {
+        HostToDevMsg tmp_msg;
+        int num_bytes = RawHID.recv(&tmp_msg,0);
+    }
 }
 
 void SystemState::on_recv_msg_error()

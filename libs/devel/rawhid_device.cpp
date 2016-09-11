@@ -30,11 +30,12 @@ bool RawHIDDevice::open()
 {
     bool rval = true;
     int num = rawhid_open(1, vid_, pid_, usage_page_, usage_);
+    std::cout << "rawhid num: " << num << std::endl;
     if (num > 0)
     {
         for (int i=1; i<num; i++)
         {
-            if ( i!=device_num_)
+            if (i!=device_num_)
             {
                 rawhid_close(i);
             }
