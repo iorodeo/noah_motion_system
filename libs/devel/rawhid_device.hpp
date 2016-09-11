@@ -26,7 +26,7 @@ class RawHIDDevice
 {
     public:
         static const int DataBufSize = 64;
-        static const int ClearRecvBufCnt = 10;
+        static const int ClearRecvBufCnt = 4;
 
         RawHIDDevice(int vid=0, int pid=0, int usage_page=0xFFAB, int usage=0x0200);
         bool open();

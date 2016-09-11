@@ -34,7 +34,6 @@ namespace motion
         }
     }
 
-
     RtnStatus Controller::open()
     {
         RtnStatus rtn_status;
@@ -962,10 +961,8 @@ namespace motion
         hid_dev_.clearRecvBuffer();
 
         // start recv -> send communication pairs.
-        std::cout << "send_command" << std::endl;
         if (!hid_dev_.recvData(&dev_to_host_msg))
         {
-            std::cout << "*" << std::endl;;
             rtn_status.set_success(false);
             rtn_status.set_error_msg("unable to sync messaging loop");
         }

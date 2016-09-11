@@ -15,7 +15,6 @@ limitations under the License.
 */
 #include "rawhid_device.hpp"
 #include <iostream>
-#include <chrono>
 
 RawHIDDevice::RawHIDDevice(int vid, int pid, int usage_page, int usage)
 {
@@ -30,7 +29,6 @@ bool RawHIDDevice::open()
 {
     bool rval = true;
     int num = rawhid_open(1, vid_, pid_, usage_page_, usage_);
-    std::cout << "rawhid num: " << num << std::endl;
     if (num > 0)
     {
         for (int i=1; i<num; i++)
@@ -93,13 +91,11 @@ void RawHIDDevice::setRecvTimeout(int timeout)
 void RawHIDDevice::clearRecvBuffer()
 {
     char tmp_buf[DataBufSize];
-    int recv_timeout_tmp = recv_timeout_;
-    recv_timeout_ = 1;
+    rawhid_recv(device_num_, tmp_buf, DataBufSize, 0);
     for (int i=0; i<ClearRecvBufCnt; i++)
     {
-        recvData(&tmp_buf);
+        rawhid_recv(device_num_, tmp_buf, DataBufSize, 1);
     };
-    recv_timeout_ = recv_timeout_tmp;
 }
 
 bool RawHIDDevice::sendData(void *buf)
