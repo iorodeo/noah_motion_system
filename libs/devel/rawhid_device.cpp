@@ -15,6 +15,7 @@ limitations under the License.
 */
 #include "rawhid_device.hpp"
 #include <iostream>
+#include <chrono>
 
 RawHIDDevice::RawHIDDevice(int vid, int pid, int usage_page, int usage)
 {
@@ -140,8 +141,8 @@ bool RawHIDDevice::recvData(void *buf)
         rval = false;
     }
     return rval;
-
 }
+
 
 bool RawHIDDevice::recvData(std::vector<char> &buf)
 {

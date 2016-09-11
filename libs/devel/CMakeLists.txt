@@ -10,7 +10,9 @@ project(devel)
 
 # Add constants file from firmware
 file(GLOB firmware_constants_SOURCE  ${devel_SOURCE_DIR}/../../firmware/noah_controller/constants.cpp)
-include_directories(${devel_SOURCE_DIR}/../../firmware/noah_controller/)
+
+#include_directories(${devel_SOURCE_DIR}/../../firmware/noah_controller/)
+include_directories(${devel_SOURCE_DIR}/../../firmware/noah_controller/ /usr/include/hdf5/serial/)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 add_library(
@@ -25,6 +27,8 @@ add_library(
     motion_controller.cpp
     motion_config.cpp
     )
+
+link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/")
 target_link_libraries(motion usb armadillo hdf5_cpp hdf5)
 
 add_executable(devel_test main.cpp)
