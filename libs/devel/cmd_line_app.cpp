@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     std::map<std::string,docopt::value>  arg_map =  get_arg_map(argc, argv); 
 
-    if (false) { print_arg_map(arg_map); } // DEBUG
+    if (true) { print_arg_map(arg_map); } // DEBUG
 
     // Setup motion controller
     motion::Controller controller;
@@ -256,9 +256,9 @@ void cmd_move_to(motion::Controller &controller, std::map<std::string,docopt::va
 
 void cmd_move_to_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
+    RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
     {
-        RtnStatus rtn_status;
         motion::Axis axis;
         
         rtn_status = get_axis_from_arg_map(arg_map,axis);
@@ -267,17 +267,29 @@ void cmd_move_to_ind(motion::Controller &controller, std::map<std::string,docopt
             std::cout << rtn_status.error_msg() << std::endl;
             return;
         }
-        int32_t value = int32_t(arg_map["<value>"].asLong());
-        controller.jog_position(axis,value);
+        int32_t value = 0;
+        rtn_status = get_docopt_value_as_int32(arg_map["<value>"],value);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+        }
+        controller.move_to_position(axis,value);
     }
     else
     {
-        // TODO finish function
         std::vector<int32_t> ind_vec;
         for (auto arg_str : AxisValueArgStringList)
         {
-
+            int32_t value = 0; 
+            rtn_status = get_docopt_value_as_int32(arg_map[arg_str],value);
+            if (!rtn_status.success())
+            {
+                std::cout << rtn_status.error_msg() << std::endl;
+                return;
+            }
+            ind_vec.push_back(value);
         }
+        controller.move_to_position(ind_vec);
     }
 }
 
@@ -318,6 +330,46 @@ void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value>
             pos_vec.push_back(value);
         }
         controller.jog_position(pos_vec);
+    }
+}
+
+
+void cmd_jog_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+{
+    RtnStatus rtn_status;
+    if (arg_map["<axis>"].isString())
+    {
+        motion::Axis axis;
+        
+        rtn_status = get_axis_from_arg_map(arg_map,axis);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+            return;
+        }
+        int32_t value = 0;
+        rtn_status = get_docopt_value_as_int32(arg_map["<value>"],value);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+        }
+        controller.jog_position(axis,value);
+    }
+    else
+    {
+        std::vector<int32_t> ind_vec;
+        for (auto arg_str : AxisValueArgStringList)
+        {
+            int32_t value = 0; 
+            rtn_status = get_docopt_value_as_int32(arg_map[arg_str],value);
+            if (!rtn_status.success())
+            {
+                std::cout << rtn_status.error_msg() << std::endl;
+                return;
+            }
+            ind_vec.push_back(value);
+        }
+        controller.jog_position(ind_vec);
     }
 }
 
@@ -423,6 +475,27 @@ RtnStatus get_docopt_value_as_double(docopt::value docopt_value, double &value_d
             rtn_status.set_success(false);
             rtn_status.set_error_msg("error: string to double conversion out of range");
         }
+    }
+    return rtn_status;
+}
+
+
+RtnStatus get_docopt_value_as_int32(docopt::value docopt_value, int32_t  &value_int32)
+{
+    RtnStatus rtn_status;
+    try
+    { 
+        value_int32 = int32_t(docopt_value.asLong());
+    }
+    catch (std::runtime_error  error)
+    {
+        rtn_status.set_success(false);
+        rtn_status.set_error_msg("error: unable to convert string to integer");
+    }
+    catch (std::invalid_argument error)
+    {
+        rtn_status.set_success(false);
+        rtn_status.set_error_msg("error: unable to convert string to int32");
     }
     return rtn_status;
 }

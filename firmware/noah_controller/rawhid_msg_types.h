@@ -1,7 +1,16 @@
 #ifndef RAWHID_MSG_TYPES_H
 #define RAWHID_MSG_TYPES_H
-#include "constants.h"
+
+#ifndef __linux__
 #include "Arduino.h"
+#endif
+
+#include "constants.h"
+
+#ifdef __linux__
+#include <cstdint>
+namespace motion {
+#endif
 
 struct __attribute__((packed)) DevToHostMsg 
 {
@@ -30,6 +39,10 @@ struct __attribute__((packed)) HostToDevMsg
     uint8_t  command;
     uint16_t command_data[8];
 };
+
+#ifdef __linux__
+}
+#endif
 
 #endif
 

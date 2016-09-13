@@ -520,7 +520,7 @@ namespace motion
     {
         RtnStatus rtn_status;
         int rank = 1;
-        hsize_t dims[rank] = {col.size()};
+        hsize_t dims[] = {col.size()};
         try
         {
             H5::DataSpace dataspace(rank,dims);
@@ -545,7 +545,7 @@ namespace motion
     {
         RtnStatus rtn_status;
         int rank = 1;
-        hsize_t dims[rank] = {col.size()};
+        hsize_t dims[] = {col.size()};
         try
         {
             H5::DataSpace dataspace(rank,dims);
@@ -569,7 +569,7 @@ namespace motion
     {
         RtnStatus rtn_status;
         int rank = 1;
-        hsize_t dims[rank] = {col.size()};
+        hsize_t dims[] = {col.size()};
 
         try
         {
@@ -598,7 +598,7 @@ namespace motion
         // ----------------------------------------------------------------------------------------------------------
         RtnStatus rtn_status;
         int rank = 2;
-        hsize_t dims[rank] = {mat_t.n_cols, mat_t.n_rows};
+        hsize_t dims[] = {mat_t.n_cols, mat_t.n_rows};
 
         try
         {

@@ -29,6 +29,7 @@ mctl  - Motion Controller
       mctl jog <axis> <value> 
       mctl jog <X> <Y> <Z> <A> <B>
       mctl jog-ind <axis> <value>
+      mctl jog-ind <X> <Y> <Z> <A> <B>
       mctl outscan <filename> 
       mctl get-position 
       mctl get-position-ind
@@ -79,7 +80,7 @@ void cmd_move_to_ind(motion::Controller &controller, std::map<std::string,docopt
 
 void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-//void cmd_jog_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_jog_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
 void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
@@ -95,6 +96,8 @@ std::map<std::string,docopt::value>  get_arg_map(int argc, char *argv[]);
 void print_arg_map(std::map<std::string,docopt::value> arg_map);
 
 RtnStatus get_docopt_value_as_double(docopt::value docopt_value, double &value_dbl);
+
+RtnStatus get_docopt_value_as_int32(docopt::value docopt_value, int32_t  &value_int32);
 
 RtnStatus get_axis_from_arg_map(std::map<std::string,docopt::value> arg_map, motion::Axis &axis);
 
@@ -117,6 +120,7 @@ CmdStringToFuncMap =
     {"move-to", &cmd_move_to},
     {"move-to-ind", &cmd_move_to_ind},
     {"jog", &cmd_jog},
+    {"jog-ind", &cmd_jog_ind},
     {"outscan", &cmd_outscan},
     {"status", &cmd_status},
     {"help", &cmd_help},
