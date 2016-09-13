@@ -31,7 +31,7 @@ add_library(
 link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/")
 target_link_libraries(motion usb armadillo hdf5_cpp hdf5)
 
-add_executable(devel_test main.cpp)
+add_executable(devel_test devel_test.cpp)
 target_link_libraries(devel_test motion)
 
 add_executable(mctl cmd_line_app.cpp)
