@@ -124,13 +124,11 @@ namespace motion
 
     std::map<Axis,double> DefaultHomingBackoffMap =
     {
-        {Axis_X, 0.005,},
+        {Axis_X, 0.005},
         {Axis_Y, 0.005},
         {Axis_Z, 0.005},
         {Axis_A, 5.0},
         {Axis_B, 5.0},
     };
-
-
 
 }

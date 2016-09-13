@@ -1,121 +1,18 @@
-#include "docopt.h"
-#include "motion_controller.hpp"
+#include "cmd_line_app.hpp"
 
-#include <map>
-#include <string>
 #include <sstream>
 #include <iostream>
 #include <iomanip>
 #include <utility>
+#include <exception>
 #include <functional>
-
-
-const int DisplayPositionPrecision = 4;
-
-static const char USAGE[] =
-R"(mctl 
-
-    Usage:
-      mctl home AXIS 
-      mctl is-homed AXIS
-      mctl set-homed AXIS
-      mctl get-mode  
-      mctl set-mode-ready
-      mctl set-mode-disabled
-      mctl move-to AXIS <value> 
-      mctl move-to <X> <Y> <Z> <A> <B>
-      mctl move-to-ind AXIS <value>
-      mctl move-to-ind <X> <Y> <Z> <A> <B>
-      mctl jog AXIS <value> 
-      mctl jog <X> <Y> <Z> <A> <B>
-      mctl jog-ind AXIS <value>
-      mctl outscan FILENAME 
-      mctl get-position 
-      mctl get-position-ind
-      mctl get-config
-      mctl status
-      mctl help COMMAND 
-      mctl (-h | --help)
-      mctl (-v | --version)
-
-    Options:
-      -h --help     Show this screen.
-      -v --version  Show version.
-)";
-
-
-std::map<std::string, motion::Axis> StringToAxisMap = 
-{
-    {"x", motion::Axis_X},
-    {"y", motion::Axis_Y},
-    {"z", motion::Axis_Z},
-    {"a", motion::Axis_A},
-    {"b", motion::Axis_B},
-};
-
-std::vector<std::string> AxisValueArgStringList = {"<X>", "<Y>", "<Z>", "<A>", "<B>"};
-
-std::map<std::string,docopt::value>  get_arg_map(int argc, char *argv[]); 
-
-void print_arg_map(std::map<std::string,docopt::value> arg_map);
-
-void cmd_home(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_is_homed(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_set_homed(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_get_mode(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_set_mode_ready(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_set_mode_disabled(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_get_position(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_get_position_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_move_to(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-//void cmd_move_to_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-//void cmd_jog_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_status(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-void cmd_help(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
-
-double get_docopt_value_as_double(docopt::value docopt_value);
-
-
-std::map<std::string,std::function<void(motion::Controller&,std::map<std::string,docopt::value>)>> CmdStringToFuncMap = 
-{
-    {"home", &cmd_home},
-    {"is-homed", &cmd_is_homed},
-    {"set-homed", &cmd_set_homed},
-    {"get-mode", &cmd_get_mode},
-    {"set-mode-ready",   &cmd_set_mode_ready},
-    {"set-mode-disabled", &cmd_set_mode_disabled},
-    {"get-position", &cmd_get_position},
-    {"get-position-ind", &cmd_get_position_ind},
-    {"move-to", &cmd_move_to},
-    {"jog", &cmd_jog},
-    {"outscan", &cmd_outscan},
-    {"status", &cmd_status},
-    {"help", &cmd_help},
-};
 
 
 int main(int argc, char *argv[])
 {
     std::map<std::string,docopt::value>  arg_map =  get_arg_map(argc, argv); 
 
-    // DEBUG -display argument map
-    if (false) { print_arg_map(arg_map); }
+    if (false) { print_arg_map(arg_map); } // DEBUG
 
     // Setup motion controller
     motion::Controller controller;
@@ -131,59 +28,28 @@ int main(int argc, char *argv[])
             if (arg_map[kv.first].asBool())
             {
                 kv.second(controller,arg_map);
+                break;
             }
         }
         else
         {
-            std::cout << "error: unknown command string" << std::endl;
+            std::cout << "error: unknown command string ";
+            std::cout << kv.first << std::endl;
         }
     }
-
     controller.close();
     return 0;
 }
 
 
-std::map<std::string,docopt::value>  get_arg_map(int argc, char *argv[]) 
-{
-    // Replace '-' before numbers with 'n' and parse command line arguments
-    // This is to prevent docopt parser from thinking negative numbers are 
-    // options. 
-    for (int i=0;i<argc;i++)
-    {
-        if (strlen(argv[i]) > 2)
-        {
-            if ((argv[i][0] == '-') && std::isdigit(argv[i][1]))
-            {
-                argv[i][0] = 'n';
-            }
-        }
-    }
-    // Parse command line arguments
-    std::map<std::string,docopt::value> arg_map = docopt::docopt(USAGE,{argv+1,argv+argc},true,"mctl 0.1"); 
-    return arg_map;
-}
 
-
-void print_arg_map(std::map<std::string,docopt::value> arg_map)
-{
-    std::cout << std::endl;
-    std::cout << "arg_map" << std::endl;
-    std::cout << "----------------------------------------" << std::endl;
-    for(auto const& arg : arg_map) {
-        std::cout << arg.first << ": " << arg.second << std::endl;
-    }
-    std::cout << "----------------------------------------" << std::endl;
-    std::cout << std::endl;
-}
-
-
+// Command functions
+// ------------------------------------------------------------------------------------------------
 void cmd_home(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    // Get axis string and convert to lower cast
-    std::string axis_str = arg_map["AXIS"].asString();
-    std::transform(axis_str.begin(), axis_str.end(),axis_str.begin(),::tolower);
-    if (StringToAxisMap.count(axis_str) != 0)
+    std::string axis_str("");
+    RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
+    if (rtn_status.success())
     {
         motion::Axis axis = StringToAxisMap[axis_str];
         controller.home(axis);
@@ -212,17 +78,15 @@ void cmd_home(motion::Controller &controller, std::map<std::string,docopt::value
 
 void cmd_is_homed(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    // Get axis string and convert to lower cast
-    std::string axis_str = arg_map["AXIS"].asString();
-    std::transform(axis_str.begin(), axis_str.end(),axis_str.begin(),::tolower);
-    
-    if (StringToAxisMap.count(axis_str) != 0)
+    std::string axis_str("");
+    RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
+    if (rtn_status.success())
     {
         bool is_homed = false;
         motion::Axis axis = StringToAxisMap[axis_str];
         controller.is_homed(axis,is_homed);
         std::cout << std::boolalpha;
-        std::cout << "axis " << axis_str << " homed = " << is_homed <<  std::endl;
+        std::cout << axis_str << " homed = " << is_homed <<  std::endl;
         std::cout << std::noboolalpha;
     }
     else
@@ -236,7 +100,7 @@ void cmd_is_homed(motion::Controller &controller, std::map<std::string,docopt::v
                 std::string axis_str = controller.axis_name(axis);
                 controller.is_homed(axis,is_homed);
                 std::cout << std::boolalpha;
-                std::cout << "axis " << axis_str << " homed = " << is_homed <<  std::endl;
+                std::cout << axis_str << " homed = " << is_homed <<  std::endl;
                 std::cout << std::noboolalpha;
             }
         }
@@ -246,11 +110,10 @@ void cmd_is_homed(motion::Controller &controller, std::map<std::string,docopt::v
 
 void cmd_set_homed(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    // Get axis string and convert to lower cast
-    std::string axis_str = arg_map["AXIS"].asString();
-    std::transform(axis_str.begin(), axis_str.end(),axis_str.begin(),::tolower);
+    std::string axis_str("");
+    RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
 
-    if (StringToAxisMap.count(axis_str) != 0)
+    if (rtn_status.success())
     {
         std::cout << "setting home = true for " << axis_str << " axis" << std::endl;
         motion::Axis axis = StringToAxisMap[axis_str];
@@ -353,20 +216,23 @@ void cmd_get_position_ind(motion::Controller &controller, std::map<std::string,d
 
 void cmd_move_to(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    if (arg_map["AXIS"].isString())
+    RtnStatus rtn_status;
+    if (arg_map["<axis>"].isString())
     {
-        // Get axis string and convert to lower cast
-        std::string axis_str = arg_map["AXIS"].asString();
-        std::transform(axis_str.begin(), axis_str.end(),axis_str.begin(),::tolower);
-
-        // Get motion::Axis and position value
-        if (StringToAxisMap.count(axis_str) == 0)
+        motion::Axis axis;
+        rtn_status = get_axis_from_arg_map(arg_map,axis);
+        if (!rtn_status.success())
         {
-            std::cout << "error: axis name not recognized" << std::endl;
+            std::cout << rtn_status.error_msg() << std::endl;
             return;
         }
-        motion::Axis axis = StringToAxisMap[axis_str];
-        double value = get_docopt_value_as_double(arg_map["<value>"]);
+        double value = 0.0; 
+        rtn_status = get_docopt_value_as_double(arg_map["<value>"],value);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+            return;
+        }
         controller.move_to_position(axis,value);
     }
     else
@@ -374,7 +240,13 @@ void cmd_move_to(motion::Controller &controller, std::map<std::string,docopt::va
         std::vector<double> pos_vec;
         for (auto arg_str : AxisValueArgStringList)
         {
-            double value = get_docopt_value_as_double(arg_map[arg_str]);
+            double value = 0.0; 
+            rtn_status = get_docopt_value_as_double(arg_map[arg_str],value);
+            if (!rtn_status.success())
+            {
+                std::cout << rtn_status.error_msg() << std::endl;
+                return;
+            }
             pos_vec.push_back(value);
         }
         controller.move_to_position(pos_vec);
@@ -382,23 +254,53 @@ void cmd_move_to(motion::Controller &controller, std::map<std::string,docopt::va
 }
 
 
-void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_move_to_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    if (arg_map["AXIS"].isString())
+    if (arg_map["<axis>"].isString())
     {
-        // Get axis string and convert to lower cast
-        std::string axis_str = arg_map["AXIS"].asString();
-        std::transform(axis_str.begin(), axis_str.end(),axis_str.begin(),::tolower);
-
-        // Get motion::Axis and jog value
-        if (StringToAxisMap.count(axis_str) == 0)
+        RtnStatus rtn_status;
+        motion::Axis axis;
+        
+        rtn_status = get_axis_from_arg_map(arg_map,axis);
+        if (!rtn_status.success())
         {
-            std::cout << "error: axis name not recognized" << std::endl;
+            std::cout << rtn_status.error_msg() << std::endl;
             return;
         }
-        motion::Axis axis = StringToAxisMap[axis_str];
-        double value = get_docopt_value_as_double(arg_map["<value>"]);
+        int32_t value = int32_t(arg_map["<value>"].asLong());
+        controller.jog_position(axis,value);
+    }
+    else
+    {
+        // TODO finish function
+        std::vector<int32_t> ind_vec;
+        for (auto arg_str : AxisValueArgStringList)
+        {
 
+        }
+    }
+}
+
+
+void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+{
+    RtnStatus rtn_status;
+    if (arg_map["<axis>"].isString())
+    {
+        motion::Axis axis;
+        rtn_status = get_axis_from_arg_map(arg_map,axis);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+            return;
+        }
+        double value = 0.0; 
+        rtn_status = get_docopt_value_as_double(arg_map["<value>"],value);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+            return;
+        }
         controller.jog_position(axis,value);
     }
     else
@@ -406,7 +308,13 @@ void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value>
         std::vector<double> pos_vec;
         for (auto arg_str : AxisValueArgStringList)
         {
-            double value = get_docopt_value_as_double(arg_map[arg_str]);
+            double value = 0.0; 
+            rtn_status = get_docopt_value_as_double(arg_map[arg_str],value);
+            if (!rtn_status.success())
+            {
+                std::cout << rtn_status.error_msg() << std::endl;
+                return;
+            }
             pos_vec.push_back(value);
         }
         controller.jog_position(pos_vec);
@@ -416,9 +324,9 @@ void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value>
 
 void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    if (arg_map["FILENAME"].isString())
+    if (arg_map["<filename>"].isString())
     {
-        std::string filename = arg_map["FILENAME"].asString();
+        std::string filename = arg_map["<filename>"].asString();
         std::cout << "outscanning " << filename << std::endl;
 
         motion::OutscanData data;
@@ -426,14 +334,14 @@ void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::va
     }
     else
     {
-        std::cout << "error: FILENAME must be string" << std::endl;
+        std::cout << "error: <filename> must be string" << std::endl;
     }
 }
 
 
 void cmd_status(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    arg_map["AXIS"] = docopt::value(std::string("all"));
+    arg_map["<axis>"] = docopt::value(std::string("all"));
     std::cout << std::endl;
     std::cout << "               Motion Controller Status               " << std::endl;
     std::cout << "======================================================" << std::endl;
@@ -452,9 +360,48 @@ void cmd_help(motion::Controller &controller, std::map<std::string,docopt::value
     std::cout << "help command" << std::endl;
 }
 
-double get_docopt_value_as_double(docopt::value docopt_value)
+
+// Utility functions
+// ------------------------------------------------------------------------------------------------
+
+std::map<std::string,docopt::value>  get_arg_map(int argc, char *argv[]) 
 {
-    double value = 0.0;
+    // Replace '-' before numbers with 'n' and parse command line arguments
+    // This is to prevent docopt parser from thinking negative numbers are 
+    // options. 
+    for (int i=0;i<argc;i++)
+    {
+        if (strlen(argv[i]) > 2)
+        {
+            if ((argv[i][0] == '-') && std::isdigit(argv[i][1]))
+            {
+                argv[i][0] = 'n';
+            }
+        }
+    }
+    // Parse command line arguments
+    std::map<std::string,docopt::value> arg_map = docopt::docopt(USAGE,{argv+1,argv+argc},true,"mctl 0.1"); 
+    return arg_map;
+}
+
+
+void print_arg_map(std::map<std::string,docopt::value> arg_map)
+{
+    std::cout << std::endl;
+    std::cout << "arg_map" << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    for(auto const& arg : arg_map) {
+        std::cout << arg.first << ": " << arg.second << std::endl;
+    }
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << std::endl;
+}
+
+
+RtnStatus get_docopt_value_as_double(docopt::value docopt_value, double &value_dbl)
+{
+    RtnStatus rtn_status;
+
     if (docopt_value.isString())
     {
         std::string value_str = docopt_value.asString();
@@ -462,7 +409,57 @@ double get_docopt_value_as_double(docopt::value docopt_value)
         {
             value_str[0] = '-';
         }
-        value = std::stod(value_str);
+        try
+        {
+            value_dbl = std::stod(value_str);
+        }
+        catch (std::invalid_argument error)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: unable to convert string to double");
+        }
+        catch (std::out_of_range error)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: string to double conversion out of range");
+        }
     }
-    return  value;
+    return rtn_status;
 }
+
+
+RtnStatus get_axis_str_from_arg_map(std::map<std::string,docopt::value> arg_map, std::string &axis_str)
+{
+    RtnStatus rtn_status;
+    if (arg_map["<axis>"].isString())
+    {
+        axis_str = arg_map["<axis>"].asString();
+        std::transform(axis_str.begin(), axis_str.end(),axis_str.begin(),::tolower);
+
+        if (StringToAxisMap.count(axis_str) == 0)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: axis name not recognized");
+        }
+    }
+    else
+    {
+        rtn_status.set_success(false);
+        rtn_status.set_error_msg("error: <axis> argument must be string");
+    }
+    return rtn_status;
+}
+
+
+RtnStatus get_axis_from_arg_map(std::map<std::string,docopt::value> arg_map, motion::Axis &axis)
+{
+    std::string axis_str;
+    RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
+    if (rtn_status.success())
+    {
+        axis = StringToAxisMap[axis_str];
+    }
+    return rtn_status;
+}
+
+
