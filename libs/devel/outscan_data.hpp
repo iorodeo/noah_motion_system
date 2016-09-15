@@ -3,7 +3,7 @@
 
 #include "rtn_status.hpp"
 #include "rawhid_msg_types.h"
-#include "motion_config.hpp"
+#include "configuration.hpp"
 #include <string>
 #include <deque>
 #include <armadillo>

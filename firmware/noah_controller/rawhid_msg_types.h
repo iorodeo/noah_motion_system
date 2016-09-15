@@ -5,7 +5,7 @@
 #include "Arduino.h"
 #endif
 
-#include "constants.h"
+#include "dev_constants.h"
 
 #ifdef __linux__
 #include <cstdint>

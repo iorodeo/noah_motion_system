@@ -1,11 +1,11 @@
-#ifndef MOTION_CONTROLLER_H
-#define MOTION_CONTROLLER_H
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
 #include "rawhid_device.hpp"
 #include "rawhid_msg_types.h"
-#include "motion_constants.hpp"
-#include "motion_config.hpp"
 #include "rtn_status.hpp"
+#include "constants.hpp"
+#include "configuration.hpp"
 #include "outscan_data.hpp"
 
 #include <string>

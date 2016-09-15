@@ -1,5 +1,5 @@
 #include <iostream>
-#include "motion_controller.hpp"
+#include "controller.hpp"
 
 int main(int argc, char *argv[])
 {

@@ -1,7 +1,7 @@
 #ifndef CMD_LINE_APP_HPP
 #define CMD_LINE_APP_HPP
 
-#include "motion_controller.hpp"
+#include "controller.hpp"
 #include "rtn_status.hpp"
 #include "docopt.h"
 #include <map>

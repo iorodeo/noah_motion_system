@@ -1,7 +1,7 @@
 #ifndef SYSTEM_STATE_H
 #define SYSTEM_STATE_H
 #include "Arduino.h"
-#include "constants.h"
+#include "dev_constants.h"
 #include "rawhid_msg_types.h"
 #include "stepper.h"
 #include "trigger.h"

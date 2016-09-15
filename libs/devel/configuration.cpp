@@ -1,4 +1,4 @@
-#include "motion_config.hpp"
+#include "configuration.hpp"
 #include <cmath>
 
 namespace motion

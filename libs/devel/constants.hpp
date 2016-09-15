@@ -1,10 +1,10 @@
-#ifndef MOTION_CONSTANTS_HPP
-#define MOTION_CONSTANTS_HPP
+#ifndef CONSTANTS_HPP
+#define CONSTANTS_HPP
 #include <cstdint>
 #include <list>
 #include <map>
 
-#include "constants.h"
+#include "dev_constants.h"
 
 
 namespace motion

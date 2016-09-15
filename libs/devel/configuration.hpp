@@ -1,7 +1,7 @@
-#ifndef MOTION_CONFIG_HPP
-#define MOTION_CONFIG_HPP
+#ifndef CONFIGURATION_HPP
+#define CONFIGURATION_HPP
 
-#include "motion_constants.hpp"
+#include "constants.hpp"
 
 #include <map>
 #include <vector>

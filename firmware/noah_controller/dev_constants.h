@@ -1,5 +1,5 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef DEV_CONSTANTS_H
+#define DEV_CONSTANTS_H
 
 #ifndef __linux__
 #include "Arduino.h"
