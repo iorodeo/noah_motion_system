@@ -30,7 +30,7 @@ mctl  - Motion Controller
       mctl jog <X> <Y> <Z> <A> <B>
       mctl jog-ind <axis> <value>
       mctl jog-ind <X> <Y> <Z> <A> <B>
-      mctl outscan <filename> 
+      mctl outscan <input_file> [-o <output_file>] 
       mctl get-position 
       mctl get-position-ind
       mctl get-config
@@ -42,6 +42,7 @@ mctl  - Motion Controller
     Options:
       -h --help     Show this screen.
       -v --version  Show version.
+      -o <output_file>     Specify output file [default: outscan_data.h5]
 )";
 
 

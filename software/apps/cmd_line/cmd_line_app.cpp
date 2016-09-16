@@ -376,9 +376,9 @@ void cmd_jog_ind(motion::Controller &controller, std::map<std::string,docopt::va
 
 void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    if (arg_map["<filename>"].isString())
+    if (arg_map["<input_file>"].isString())
     {
-        std::string filename = arg_map["<filename>"].asString();
+        std::string filename = arg_map["<input_file>"].asString();
         std::cout << "outscanning " << filename << std::endl;
 
         motion::OutscanData data;
