@@ -1,26 +1,30 @@
 #include <iostream>
 #include "controller.hpp"
+#include "ft_sensor.hpp"
 
 int main(int argc, char *argv[])
 {
-    motion::Controller controller;
+    motion::FTSensor ft_sensor;
+    ft_sensor.set_calibration("FT8652.cal");
 
-    controller.set_exit_on_error(true);
-    controller.open();
-    controller.set_mode_ready();
+    //motion::Controller controller;
 
-    for (auto num : motion::StepperList)
-    { 
-        controller.set_homed_true(num);
-    }
-    controller.set_display_position_on_move(true);
+    //controller.set_exit_on_error(true);
+    //controller.open();
+    //controller.set_mode_ready();
 
-    motion::OutscanData data;
-    controller.outscan("test_trajectory.txt", data);
+    //for (auto num : motion::StepperList)
+    //{ 
+    //    controller.set_homed_true(num);
+    //}
+    //controller.set_display_position_on_move(true);
 
-    data.save("test_data.h5");
+    //motion::OutscanData data;
+    //controller.outscan("test_trajectory.txt", data);
 
-    controller.close();
+    //data.save("test_data.h5");
+
+    //controller.close();
     return 0;
 }
 
