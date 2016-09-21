@@ -21,7 +21,7 @@ add_library(
     configuration.cpp
     outscan_data.cpp
     ft_sensor_cal.cpp
-    ft_tool_transform.hpp
+    ft_tool_transform.cpp
     )
 
 link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/") # for rpi

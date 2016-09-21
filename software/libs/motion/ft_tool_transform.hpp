@@ -1,6 +1,7 @@
 #ifndef FT_TOOL_TRANSFORM_HPP
 #define FT_TOOL_TRANSFORM_HPP
 #include <vector>
+#include <string>
 
 namespace motion
 {
@@ -34,12 +35,12 @@ namespace motion
             void set_position_units(std::string units);
             void set_rotation_units(std::string units);
 
-            void dx();
-            void dy();
-            void dz();
-            void ax();
-            void ay();
-            void az();
+            double dx();
+            double dy();
+            double dz();
+            double ax();
+            double ay();
+            double az();
             std::string position_units();
             std::string rotation_units();
 
@@ -60,7 +61,7 @@ namespace motion
     template<typename T> 
     std::vector<T> FT_ToolTransform::as_vector()
     {
-        std::vector<T> vec;
+        std::vector<T> vec = {T(dx_),T(dy_),T(dz_),T(ax_),T(ay_),T(az_)};
         return vec;
     }
 }
