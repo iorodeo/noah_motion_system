@@ -8,10 +8,7 @@ namespace motion
     class FT_ToolTransform
     {
         public:
-
-            static const std::string DefaultPositionUnits;
-            static const std::string DefaultRotationUnits;
-
+            
             FT_ToolTransform(
                     double dx = 0.0, 
                     double dy = 0.0, 
@@ -19,8 +16,8 @@ namespace motion
                     double ax = 0.0, 
                     double ay = 0.0, 
                     double az = 0.0,
-                    std::string position_units = DefaultPositionUnits,
-                    std::string rotation_units = DefaultRotationUnits
+                    std::string position_units = std::string("m"),
+                    std::string rotation_units = std::string("degrees")
                     );
 
             template<typename T> 
@@ -43,6 +40,8 @@ namespace motion
             double az();
             std::string position_units();
             std::string rotation_units();
+            std::vector<char> position_units_vec();
+            std::vector<char> rotation_units_vec();
 
         protected:
 

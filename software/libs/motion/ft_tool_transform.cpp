@@ -2,8 +2,6 @@
 
 namespace motion
 {
-    const std::string FT_ToolTransform::DefaultPositionUnits("m");
-    const std::string FT_ToolTransform::DefaultRotationUnits("degrees");
 
     FT_ToolTransform::FT_ToolTransform( 
             double dx, 
@@ -120,6 +118,20 @@ namespace motion
     std::string FT_ToolTransform::rotation_units()
     {
         return rotation_units_;
+    }
+
+    std::vector<char> FT_ToolTransform::position_units_vec()
+    {
+        std::vector<char> units_vec(position_units_.length()+1,'\0');
+        std::copy(position_units_.begin(), position_units_.end(), units_vec.begin());
+        return units_vec;
+    }
+
+    std::vector<char> FT_ToolTransform::rotation_units_vec()
+    {
+        std::vector<char> units_vec(rotation_units_.length()+1,'\0');
+        std::copy(rotation_units_.begin(), rotation_units_.end(), units_vec.begin());
+        return units_vec;
     }
 
 } // namespace motion

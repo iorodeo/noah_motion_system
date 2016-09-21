@@ -6,11 +6,9 @@
 
 int main(int argc, char *argv[])
 {
-    motion::FT_SensorCal ft_sensor_cal;
-    ft_sensor_cal.set_from_file("FT8652.cal");
 
-    motion::FT_ToolTransform trans;
-    //std::vector<double> vec = trans.as_vector<double>();
+    motion::FT_SensorCal ft_sensor_cal;
+    motion::RtnStatus rtn_status = ft_sensor_cal.set_from_file("FT8652.cal");
 
 
     //motion::Controller controller;

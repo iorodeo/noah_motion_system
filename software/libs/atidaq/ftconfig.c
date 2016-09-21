@@ -107,7 +107,7 @@ short SetTempComp(Calibration *cal, int TCEnabled) {
 } // SetTempComp();
 
 Calibration *createCalibration(char *CalFilePath,unsigned short index) {
-    printf("creating calibration\n");
+    //printf("creating calibration\n");
 // This function creates and populate a Calibration structure from a file.
 	Calibration *cal;
 	DOM_DocumentLS *doc;            // contains DOM document of calibration file
@@ -255,7 +255,7 @@ Calibration *createCalibration(char *CalFilePath,unsigned short index) {
 } // createCalibration();
 
 void destroyCalibration(Calibration *cal) {
-    printf("deleting calibration\n");
+    //printf("deleting calibration\n");
 // frees all memory allocated for a Calibration structure
 	int i;
 	if (cal==NULL) return;
