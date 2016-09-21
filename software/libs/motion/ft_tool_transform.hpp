@@ -20,6 +20,12 @@ namespace motion
                     std::string rotation_units = std::string("degrees")
                     );
 
+            FT_ToolTransform(
+                    std::vector<double> ttvec,
+                    std::string position_units = std::string("m"),
+                    std::string rotation_units = std::string("degrees")
+                    );
+
             template<typename T> 
             std::vector<T> as_vector();
 

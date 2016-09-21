@@ -25,6 +25,31 @@ namespace motion
     }
 
 
+    FT_ToolTransform::FT_ToolTransform(std::vector<double> ttvec, std::string position_units, std::string rotation_units)
+    {
+        if (ttvec.size() == 6)
+        {
+            dx_ = ttvec[0];
+            dy_ = ttvec[1];  
+            dz_ = ttvec[2]; 
+            ax_ = ttvec[3]; 
+            ay_ = ttvec[4]; 
+            az_ = ttvec[5]; 
+        }
+        else
+        {
+            dx_ = 0.0;
+            dy_ = 0.0;
+            dz_ = 0.0;
+            ax_ = 0.0;
+            ay_ = 0.0;
+            az_ = 0.0;
+        }
+        position_units_ = position_units;
+        rotation_units_ = rotation_units;
+    }
+
+
     void FT_ToolTransform::set_dx(double value)
     {
         dx_ = value;

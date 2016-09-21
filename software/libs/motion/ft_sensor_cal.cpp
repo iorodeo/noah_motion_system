@@ -32,36 +32,33 @@ namespace motion
             rtn_status.set_error_msg("error: unable to create calibration");
             return rtn_status;
         }
-        std::cout << "1 rtn_status.success() = " << (rtn_status.success()) << std::endl;
 
         rtn_status = set_force_units(DefaultForceUnits);
-        std::cout << "2 rtn_status.success() = " << (rtn_status.success()) << std::endl;
         if (!rtn_status.success())
         {
             return rtn_status;
         }
 
         rtn_status = set_torque_units(DefaultTorqueUnits);
-        std::cout << "3 rtn_status.success() = " << (rtn_status.success()) << std::endl;
         if (!rtn_status.success())
         {
             return rtn_status;
         }
 
         rtn_status = set_tool_transform(DefaultToolTransform);
-        std::cout << "4 rtn_status.success() = " << (rtn_status.success()) << std::endl;
         if (!rtn_status.success())
         {
             return rtn_status;
         }
 
         rtn_status = set_temperature_comp(DefaultTemperatureComp);
-        std::cout << "5 rtn_status.success() = " << (rtn_status.success()) << std::endl;
         if (!rtn_status.success())
         {
             return rtn_status;
         }
 
+        std::vector<double> bias_vec = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        rtn_status = set_bias(bias_vec);
         
         filename_ = filename;
         return rtn_status;
@@ -104,10 +101,11 @@ namespace motion
         }
         std::vector<float> trans_vec = trans.as_vector<float>();
         std::vector<char> pos_units_vec = trans.position_units_vec();
-        std::vector<char> rot_units_vec = trans.position_units_vec();
+        std::vector<char> rot_units_vec = trans.rotation_units_vec();
         rtn_status = check_atidaq_rtn(atidaq::SetToolTransform(cal_.get(),trans_vec.data(),pos_units_vec.data(),rot_units_vec.data())); 
         return rtn_status;
     }
+
 
     RtnStatus FT_SensorCal::set_temperature_comp(bool value)
     {
@@ -120,6 +118,98 @@ namespace motion
         return rtn_status;
     }
 
+
+    RtnStatus FT_SensorCal::set_bias(double fx, double fy, double fz, double tx, double ty, double tz)
+    {
+        RtnStatus rtn_status;
+        std::vector<double> bias_vec = {fx, fy, fz, tx, ty, tz};
+        return set_bias(bias_vec);
+    }
+
+
+    RtnStatus FT_SensorCal::set_bias(std::vector<double> bias_vec)
+    {
+        RtnStatus rtn_status;
+        if (!is_initialized(rtn_status))
+        {
+            return rtn_status;
+        }
+        if (bias_vec.size() != 6)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: bias vector size incorrect");
+            return rtn_status;
+        }
+        std::vector<float> bias_vec_flt(bias_vec.begin(), bias_vec.end());
+        atidaq::Bias(cal_.get(),bias_vec_flt.data());
+        return rtn_status;
+    }
+
+
+    RtnStatus FT_SensorCal::set_bias(arma::Row<double> bias_vec)
+    {
+        RtnStatus rtn_status;
+        std::vector<double> bias_vec_std(bias_vec.begin(), bias_vec.end());
+        return set_bias(bias_vec_std);
+    }
+
+
+    RtnStatus FT_SensorCal::get_force_units(std::string &units)
+    {
+        RtnStatus rtn_status;
+        if (!is_initialized())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: tool transform in un-initialized");
+            units = std::string("");
+        }
+        else
+        {
+            units = std::string(cal_.get()->cfg.ForceUnits);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus FT_SensorCal::get_torque_units(std::string &units)
+    {
+        RtnStatus rtn_status;
+        if (!is_initialized())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: tool transform in un-initialized");
+            units = std::string("");
+        }
+        else
+        {
+            units = std::string(cal_.get()->cfg.TorqueUnits);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus FT_SensorCal::get_tool_transform(FT_ToolTransform &trans)
+    {
+        RtnStatus rtn_status;
+        if (!is_initialized())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: tool transform in un-initialized");
+        }
+        else
+        {
+            atidaq::Transform atidaq_transform = cal_.get() -> cfg.UserTransform;
+            std::vector<double> ttvec(6);
+            for (int i=0; i<ttvec.size(); i++)
+            {
+                ttvec[i] = double(atidaq_transform.TT[i]);
+            }
+            std::string position_units = atidaq_transform.DistUnits;
+            std::string rotation_units = atidaq_transform.AngleUnits;
+            trans = FT_ToolTransform(ttvec,position_units,rotation_units);
+        }
+        return rtn_status;
+    }
 
 
     // FT_SensorCal protected methods

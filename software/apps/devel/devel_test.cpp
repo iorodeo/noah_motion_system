@@ -9,6 +9,21 @@ int main(int argc, char *argv[])
 
     motion::FT_SensorCal ft_sensor_cal;
     motion::RtnStatus rtn_status = ft_sensor_cal.set_from_file("FT8652.cal");
+    std::cout << "success      = " << (rtn_status.success()) << std::endl;
+
+    std::string force_units;
+    ft_sensor_cal.get_force_units(force_units);
+
+    std::string torque_units;
+    ft_sensor_cal.get_torque_units(torque_units);
+
+    motion::FT_ToolTransform trans;
+    ft_sensor_cal.get_tool_transform(trans);
+
+    std::cout << "force units  = " << force_units << std::endl;
+    std::cout << "torque units = " << torque_units << std::endl;
+    std::cout << "trans position units = " << (trans.position_units()) << std::endl;
+    std::cout << "trans rotation units = " << (trans.rotation_units()) << std::endl;
 
 
     //motion::Controller controller;
