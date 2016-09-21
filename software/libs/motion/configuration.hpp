@@ -2,6 +2,7 @@
 #define CONFIGURATION_HPP
 
 #include "constants.hpp"
+#include "ft_sensor_cal.hpp"
 
 #include <map>
 #include <vector>
@@ -80,6 +81,9 @@ namespace motion
             std::map<Axis,Unit> axis_to_unit_map_;
             std::map<Axis,double> axis_to_unit_conversion_map_; 
             std::map<Axis,double> homing_backoff_map_;
+
+            FT_SensorCal ft_sensor_cal_;
+            
 
             int32_t gain_;
             int outscan_start_delay_;

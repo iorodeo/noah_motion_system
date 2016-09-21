@@ -1,11 +1,12 @@
 #include <iostream>
 #include "controller.hpp"
-#include "ft_sensor.hpp"
+#include "configuration.hpp"
+#include "ft_sensor_cal.hpp"
 
 int main(int argc, char *argv[])
 {
-    motion::FTSensor ft_sensor;
-    ft_sensor.set_calibration("FT8652.cal");
+    motion::FT_SensorCal ft_sensor_cal;
+    ft_sensor_cal.set_from_file("FT8652.cal");
 
     //motion::Controller controller;
 

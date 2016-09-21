@@ -19,6 +19,8 @@ namespace motion
         analog_input_offset_ = DefaultAnalogInputOffset;
         analog_input_unit_ = DefaultAnalogInputUnit; 
 
+        ft_sensor_cal_.set_from_file("FT8652.cal");
+
     }
 
     // Configuration protected methods
