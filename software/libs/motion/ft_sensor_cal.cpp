@@ -1,5 +1,6 @@
 #include "ft_sensor_cal.hpp"
 #include <iostream>
+#include <sstream>
 
 namespace motion
 {
@@ -11,6 +12,7 @@ namespace motion
     const std::string FT_SensorCal::DefaultTorqueUnits("N-m"); 
     const FT_ToolTransform FT_SensorCal::DefaultToolTransform = FT_ToolTransform();
     const bool FT_SensorCal::DefaultTemperatureComp = false;
+    const int FT_SensorCal::FT_VectorSize = 6;
 
     // FT_SensorCal public methods
     // --------------------------------------------------------------------------------------------
@@ -134,7 +136,7 @@ namespace motion
         {
             return rtn_status;
         }
-        if (bias_vec.size() != 6)
+        if (bias_vec.size() != FT_VectorSize)
         {
             rtn_status.set_success(false);
             rtn_status.set_error_msg("error: bias vector size incorrect");
@@ -199,7 +201,7 @@ namespace motion
         else
         {
             atidaq::Transform atidaq_transform = cal_.get() -> cfg.UserTransform;
-            std::vector<double> ttvec(6);
+            std::vector<double> ttvec(FT_VectorSize);
             for (int i=0; i<ttvec.size(); i++)
             {
                 ttvec[i] = double(atidaq_transform.TT[i]);
@@ -211,6 +213,75 @@ namespace motion
         return rtn_status;
     }
 
+
+    RtnStatus FT_SensorCal::convert(std::vector<double> ain_vec, std::vector<double> &ft_vec)
+    {
+        RtnStatus rtn_status;
+        if (ain_vec.size()!= FT_VectorSize)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: analog input vector size incorrect");
+        }
+        else
+        {
+            std::vector<float> ain_float_vec(ain_vec.begin(), ain_vec.end());
+            std::vector<float> ft_float_vec(FT_VectorSize);
+            atidaq::ConvertToFT(cal_.get(), ain_float_vec.data(), ft_float_vec.data());
+            ft_vec = std::vector<double>(ft_float_vec.begin(), ft_float_vec.end()); 
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus FT_SensorCal::convert(arma::Row<double> ain_vec, arma::Row<double> &ft_vec)
+    {
+        RtnStatus rtn_status;
+        if (ain_vec.size() != FT_VectorSize)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: analog input vector size incorrect");
+        }
+        else
+        {
+            arma::Row<float> ain_float_vec = arma::conv_to<arma::Row<float>>::from(ain_vec);
+            arma::Row<float> ft_float_vec(FT_VectorSize,arma::fill::zeros);
+            atidaq::ConvertToFT(cal_.get(),ain_float_vec.memptr(),ft_float_vec.memptr());
+            ft_vec = arma::conv_to<arma::Row<double>>::from(ft_float_vec);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus FT_SensorCal::convert(arma::Mat<double> ain_mat, arma::Mat<double> &ft_mat)
+    {
+        RtnStatus rtn_status;
+        if (ain_mat.n_cols != FT_VectorSize)
+        {
+            std::stringstream ss;
+            ss << "error: analog input matrix must have n_cols == " << FT_VectorSize;
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(ss.str());
+        }
+        else
+        {
+            if ((ft_mat.n_cols != ain_mat.n_cols) || (ft_mat.n_rows != ain_mat.n_rows))
+            {
+                ft_mat.resize(ain_mat.n_rows, ain_mat.n_cols);
+            }
+            for (int i=0; i<ain_mat.n_rows; i++)
+            {
+                arma::Row<double> ain_row = ain_mat.row(i);
+                arma::Row<double> ft_row;
+                rtn_status = convert(ain_row,ft_row);
+                if (!rtn_status.success())
+                {
+                    break;
+                }
+                ft_mat.row(i) = ft_row;
+            }
+        }
+        return rtn_status;
+    }
 
     // FT_SensorCal protected methods
     // --------------------------------------------------------------------------------------------

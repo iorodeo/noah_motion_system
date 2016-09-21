@@ -16,7 +16,6 @@ namespace atidaq
     }
 }
 
-
 namespace motion
 {
 
@@ -28,6 +27,7 @@ namespace motion
             static const std::string DefaultTorqueUnits; 
             static const FT_ToolTransform DefaultToolTransform;
             static const bool DefaultTemperatureComp;
+            static const int FT_VectorSize;
 
             FT_SensorCal();
             RtnStatus set_from_file(std::string filename); 
@@ -36,13 +36,17 @@ namespace motion
             RtnStatus set_tool_transform(FT_ToolTransform trans);
             RtnStatus set_temperature_comp(bool value);
 
-            RtnStatus set_bias(double fx, double fy, double fz, double tx, double ty, double tz);
             RtnStatus set_bias(std::vector<double> bias_vec);
             RtnStatus set_bias(arma::Row<double> bias_vec);
+            RtnStatus set_bias(double fx, double fy, double fz, double tx, double ty, double tz);
 
             RtnStatus get_force_units(std::string &units);
             RtnStatus get_torque_units(std::string &units);
             RtnStatus get_tool_transform(FT_ToolTransform &tran);
+
+            RtnStatus convert(std::vector<double> ain_vec, std::vector<double> &ft_vec);
+            RtnStatus convert(arma::Row<double> ain_vec, arma::Row<double> &ft_vec);
+            RtnStatus convert(arma::Mat<double> ain_mat, arma::Mat<double> &ft_mat);
 
         protected:
 
