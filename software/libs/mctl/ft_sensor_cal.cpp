@@ -33,7 +33,7 @@ namespace mctl
     { }
 
 
-    RtnStatus FT_SensorCal::set_from_file(std::string filename)
+    RtnStatus FT_SensorCal::load(std::string filename)
     {
         RtnStatus rtn_status;
 

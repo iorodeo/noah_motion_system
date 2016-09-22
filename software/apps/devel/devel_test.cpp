@@ -1,18 +1,41 @@
-#include <iostream>
 #include "controller.hpp"
-#include "configuration.hpp"
-#include "ft_sensor_cal.hpp"
-#include "ft_tool_transform.hpp"
+#include "json.hpp"
+
+#include <iostream>
+#include <fstream>
+
+using json = nlohmann::json;
 
 int main(int argc, char *argv[])
 {
+    mctl::Configuration config;
+    config.load();
 
-    mctl::FT_SensorCal ft_sensor_cal;
-    mctl::RtnStatus rtn_status = ft_sensor_cal.set_from_file("FT8652.cal");
+    //json json_config;
+    //std::ifstream config_file("temp.json", std::ifstream::in);
 
-    ft_sensor_cal.print_info_string();
+    //if (config_file.is_open())
+    //{
+    //    config_file >> json_config;
 
+    //}
+    //else
+    //{
+    //    std::cout << "couldn't open json file" << std::endl;
+    //    return 0;
+    //}
+    //
+    //if (!json_config.is_object())
+    //{
+    //    std::cout << "error: top level config file must be object" << std::endl;
+    //    return 0;
+    //}
 
+    //if (json_config.count("ft_calibration"))
+    //{
+    //    std::cout << json_config["ft_calibration"] << std::endl;
+
+    //}
 
 
 

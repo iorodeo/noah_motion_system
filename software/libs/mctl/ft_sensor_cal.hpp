@@ -32,7 +32,7 @@ namespace mctl
             static const int DisplayMatrixColumnWidth;
 
             FT_SensorCal();
-            RtnStatus set_from_file(std::string filename); 
+            RtnStatus load(std::string filename); 
             RtnStatus set_force_units(std::string units);
             RtnStatus set_torque_units(std::string units);
             RtnStatus set_tool_transform(FT_ToolTransform trans);

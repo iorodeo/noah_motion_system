@@ -1,5 +1,9 @@
 #include "configuration.hpp"
+#include "json.hpp"
 #include <cmath>
+#include <cstdlib>
+
+using json = nlohmann::json;
 
 namespace mctl
 {
@@ -19,12 +23,20 @@ namespace mctl
         analog_input_offset_ = DefaultAnalogInputOffset;
         analog_input_unit_ = DefaultAnalogInputUnit; 
 
-        ft_sensor_cal_.set_from_file("FT8652.cal");
-
     }
 
 
-    RtnStatus Configuration::set_from_file(std::string filename)
+    RtnStatus Configuration::load()
+    {
+        RtnStatus rtn_status;
+        std::string home_dir(std::getenv("HOME"));
+        std::cout << home_dir << std::endl;
+
+        return rtn_status;
+    }
+
+
+    RtnStatus Configuration::load(std::string filename)
     {
         RtnStatus rtn_status;
 

@@ -14,9 +14,11 @@ namespace mctl
     class Configuration
     {
         public:
+
             Configuration();
 
-            RtnStatus set_from_file(std::string filename);
+            RtnStatus load(); // Loads default in .mctl dir
+            RtnStatus load(std::string filename);
 
             bool homing_enabled(Axis axis);
             void set_homing_enabled(Axis axis, bool value);
