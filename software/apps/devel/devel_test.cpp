@@ -10,9 +10,8 @@ int main(int argc, char *argv[])
     motion::FT_SensorCal ft_sensor_cal;
     motion::RtnStatus rtn_status = ft_sensor_cal.set_from_file("FT8652.cal");
 
-    std::string info;
-    ft_sensor_cal.get_info_string(info);
-    std::cout << info;
+    ft_sensor_cal.print_info_string();
+
 
 
 

@@ -223,6 +223,18 @@ namespace motion
     }
 
 
+    RtnStatus FT_SensorCal::get_filename(std::string &filename)
+    {
+        RtnStatus rtn_status;
+        if (!is_initialized(rtn_status))
+        {
+            return rtn_status;
+        }
+        filename = filename_;
+        return rtn_status;
+    }
+
+
     RtnStatus FT_SensorCal::get_info_string(std::string &info)
     {
         RtnStatus rtn_status;
@@ -338,19 +350,19 @@ namespace motion
         return rtn_status;
     }
 
-
-    RtnStatus FT_SensorCal::get_filename(std::string &filename)
+    void FT_SensorCal::print_info_string()
     {
-        RtnStatus rtn_status;
-        if (!is_initialized(rtn_status))
+        std::string info;
+        RtnStatus rtn_status = get_info_string(info);
+        if (rtn_status.success())
         {
-            return rtn_status;
+            std::cout << std::endl << info << std::endl;
         }
-        filename = filename_;
-        return rtn_status;
+        else
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+        }
     }
-
-
 
     RtnStatus FT_SensorCal::convert(std::vector<double> ain_vec, std::vector<double> &ft_vec)
     {
