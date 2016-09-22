@@ -1,5 +1,6 @@
 #include "controller.hpp"
 #define _USE_MATH_DEFINES
+#include "rawhid_msg_types.h"
 #include <cmath>
 #include <csignal>
 #include <iostream>
@@ -8,6 +9,7 @@
 #include <thread>
 #include <algorithm>
 #include <iomanip>
+
 
 
 namespace motion

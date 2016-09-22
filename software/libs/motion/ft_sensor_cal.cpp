@@ -3,8 +3,17 @@
 #include <sstream>
 #include <iomanip>
 
+namespace atidaq
+{
+    extern "C" 
+    { 
+        #include "ftconfig.h" 
+    }
+}
+
 namespace motion
 {
+
     // Untility functions
     std::vector<char> string_to_vector(std::string in_str);
 
@@ -15,7 +24,7 @@ namespace motion
     const bool FT_SensorCal::DefaultTemperatureComp = false;
     const int FT_SensorCal::FT_VectorSize = 6;
     const int FT_SensorCal::DisplayFloatPrecision = 5;
-    const int FT_SensorCal::DisplayMatrixColumnWidth = FT_SensorCal::DisplayFloatPrecision+10;
+    const int FT_SensorCal::DisplayMatrixColumnWidth = FT_SensorCal::DisplayFloatPrecision+7;
 
     // FT_SensorCal public methods
     // --------------------------------------------------------------------------------------------
@@ -233,11 +242,26 @@ namespace motion
         ss << "family             " << cal_.get() -> Family << std::endl;
         ss << "number channels:   " << cal_.get() -> rt.NumChannels << std::endl;
         ss << "number axes:       " << cal_.get() -> rt.NumAxes << std::endl;
-        ss << "force units:       " << (cal_.get() -> cfg).ForceUnits << std::endl;
-        ss << "torque units:      " << (cal_.get() -> cfg).TorqueUnits << std::endl;
+        ss << "force units:       " << cal_.get() -> cfg.ForceUnits << std::endl;
+        ss << "torque units:      " << cal_.get() -> cfg.TorqueUnits << std::endl;
         ss << "temperature comp:  " << (cal_.get() -> TempCompAvailable ? "Yes" : "No") << std::endl;;
-        ss << std::endl;
+        ss << "filename:          " << filename_ << std::endl;
 
+        ss << std::endl;
+        ss << "calibration matrix" << std::endl;
+        for (int i=0; i<cal_.get()->rt.NumAxes; i++)
+        {
+            std::string axis_name = cal_.get() -> AxisNames[i];
+            ss << axis_name << ": ";
+            for (int j=0; j<cal_.get()->rt.NumAxes;j++)
+            {
+                ss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
+                ss << cal_.get() -> rt.working_matrix[i][j] << " ";
+            }
+            ss << std::endl;
+        }
+
+        ss << std::endl;
         ss << "rated loads" << std::endl;
         for (int i=0; i<cal_.get()->rt.NumAxes; i++)
         {
@@ -254,72 +278,78 @@ namespace motion
             float max_load = cal_.get() -> MaxLoads[i];
             ss << axis_name << ": " << max_load << " " << units << std::endl;
         }
-        ss << std::endl;
 
-        ss << "calibration matrix" << std::endl;
-        //for (int i=0; i<cal_.get()->rt.NumChannels-1; i++)
-        //{
-        //    ss << std::setw(DisplayMatrixColumnWidth);
-        //    ss << "G" << i;
-        //}
-        //ss << std::endl;
-        for (int i=0; i<cal_.get()->rt.NumChannels-1; i++)
+
+        if (cal_.get() -> TempCompAvailable) 
         {
-            std::string axis_name = cal_.get() -> AxisNames[i];
-            ss << axis_name << ": ";
-            for (int j=0; j<cal_.get()->rt.NumChannels-1;j++)
+            ss << std::endl;
+            ss << "temperature compensation bias slopes: " << std::endl;;
+            for (int i=0; i<(cal_.get()->rt.NumAxes); i++)
             {
                 ss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
-                ss << cal_.get() -> rt.working_matrix[i][j] << " ";
+                ss << (cal_.get()->rt.bias_slopes[i]) << " ";
+            }
+            ss << std::endl;
+            ss << "temperature compensation gain slopes: " << std::endl;;
+            for (int i=0; i<(cal_.get()->rt.NumAxes); i++)
+            {
+                ss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
+                ss << (cal_.get()->rt.gain_slopes[i]) << " ";
             }
             ss << std::endl;
         }
 
+        ss << std::endl;
+        ss << "bias vector: " << std::endl; 
+        for (int i=0; i<(cal_.get()->rt.NumAxes); i++)
+        {
+            std::string units;
+            if (cal_.get() -> AxisNames[i][0] == 'F')
+            {
+                units = std::string(cal_.get() -> cfg.ForceUnits);
+            }
+            else
+            {
+                units = std::string(cal_.get() -> cfg.TorqueUnits);
+            }
+            std::string axis_name(cal_.get() -> AxisNames[i]);
+            float bias = cal_.get() -> rt.bias_vector[i];
+            ss << axis_name << ": " << bias << " " << units << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "tool transform" << std::endl;
+        for (int i=0; i<cal_.get()->rt.NumAxes; i++)
+        {
+            std::string units;
+            if (cal_.get() -> AxisNames[i][0] == 'F')
+            {
+                units = std::string(cal_.get() -> cfg.UserTransform.DistUnits);
+            }
+            else
+            {
+                units = std::string(cal_.get() -> cfg.UserTransform.AngleUnits);
+            }
+            std::string axis_name(cal_.get() -> AxisNames[i]);
+            float ttval= cal_.get() -> cfg.UserTransform.TT[i];
+            ss << axis_name << ": " << ttval << " " << units << std::endl;
+        }
         info = ss.str();
         return rtn_status;
     }
 
 
-    //// print working calibration matrix
-    //printf("\nWorking Calibration Matrix\n");
-    //printf("     ");
-    //for (i=0;i<cal->rt.NumChannels-1;i++)
-    //    printf("G%i            ",i);
-    //printf("\n");
-    //for (i=0;i<cal->rt.NumAxes;i++) {
-    //    printf("%s: ",cal->AxisNames[i]);
-    //    for (j=0;j<cal->rt.NumChannels-1;j++)
-    //        printf("%13.5e ",cal->rt.working_matrix[i][j]);
-    //    printf("\n");
-    //}
+    RtnStatus FT_SensorCal::get_filename(std::string &filename)
+    {
+        RtnStatus rtn_status;
+        if (!is_initialized(rtn_status))
+        {
+            return rtn_status;
+        }
+        filename = filename_;
+        return rtn_status;
+    }
 
-    //// print temperature compensation information, if available
-    //if (cal->TempCompAvailable) {
-    //    printf("\nTemperature Compensation Information\n");
-    //    printf("BS: ");
-    //    for (i=0;i<cal->rt.NumChannels-1;i++) {
-    //        printf("%13.5e ",cal->rt.bias_slopes[i]);
-    //    }
-    //    printf("\nGS: ");
-    //    for (i=0;i<cal->rt.NumChannels-1;i++) {
-    //        printf("%13.5e ",cal->rt.gain_slopes[i]);
-    //    }
-    //    printf("\nTherm: %f\n",cal->rt.thermistor);
-    //}
-
-    //// Print bias vector
-    //printf("\nBias vector\n");
-    //for (i=0;i<cal->rt.NumChannels-1;i++) {
-    //    printf("%13.5e ",cal->rt.bias_vector[i]);
-    //}
-    //printf("\n");
-
-    //// Print user transform
-    //printf("\nTool transform\n");
-    //for (i=0;i<6;i++){
-    //    printf("%13.5e ",cal->cfg.UserTransform.TT[i]);
-    //}
-    //printf("\n");
 
 
     RtnStatus FT_SensorCal::convert(std::vector<double> ain_vec, std::vector<double> &ft_vec)

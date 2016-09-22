@@ -12,7 +12,7 @@ namespace atidaq
 {
     extern "C" 
     { 
-        #include "ftconfig.h" 
+        struct Calibration;
     }
 }
 
@@ -46,6 +46,7 @@ namespace motion
             RtnStatus get_torque_units(std::string &units);
             RtnStatus get_tool_transform(FT_ToolTransform &tran);
             RtnStatus get_info_string(std::string &info);
+            RtnStatus get_filename(std::string &filename);
 
             RtnStatus convert(std::vector<double> ain_vec, std::vector<double> &ft_vec);
             RtnStatus convert(arma::Row<double> ain_vec, arma::Row<double> &ft_vec);

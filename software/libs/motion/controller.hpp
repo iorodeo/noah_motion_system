@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 
 #include "rawhid_device.hpp"
-#include "rawhid_msg_types.h"
 #include "rtn_status.hpp"
 #include "constants.hpp"
 #include "configuration.hpp"
@@ -15,6 +14,9 @@
 
 namespace motion
 {
+
+    struct DevToHostMsg;
+    struct HostToDevMsg;
 
     class Controller
     {
