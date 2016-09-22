@@ -9,7 +9,7 @@
 
 #ifdef __linux__
 #include <cstdint>
-namespace motion {
+namespace mctl {
 #endif
 
 struct __attribute__((packed)) DevToHostMsg 

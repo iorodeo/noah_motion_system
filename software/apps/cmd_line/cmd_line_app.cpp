@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
 
     if (true) { print_arg_map(arg_map); } // DEBUG
 
-    // Setup motion controller
-    motion::Controller controller;
+    // Setup mctl controller
+    mctl::Controller controller;
     controller.set_exit_on_error(true);
     controller.set_display_position_on_move(true);
     controller.open();
@@ -45,13 +45,13 @@ int main(int argc, char *argv[])
 
 // Command functions
 // ------------------------------------------------------------------------------------------------
-void cmd_home(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_home(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     std::string axis_str("");
     RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
     if (rtn_status.success())
     {
-        motion::Axis axis = StringToAxisMap[axis_str];
+        mctl::Axis axis = StringToAxisMap[axis_str];
         controller.home(axis);
     }
     else
@@ -59,7 +59,7 @@ void cmd_home(motion::Controller &controller, std::map<std::string,docopt::value
         if (axis_str.compare(std::string("all")) == 0)
         {
             std::cout << "setting home=true for all axes" << std::endl;
-            for (motion::Axis axis : motion::StepperList)
+            for (mctl::Axis axis : mctl::StepperList)
             {
                 std::cout << std::endl;
                 std::cout << "homing " << controller.axis_name(axis) << std::cout;
@@ -76,14 +76,14 @@ void cmd_home(motion::Controller &controller, std::map<std::string,docopt::value
 }
 
 
-void cmd_is_homed(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_is_homed(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     std::string axis_str("");
     RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
     if (rtn_status.success())
     {
         bool is_homed = false;
-        motion::Axis axis = StringToAxisMap[axis_str];
+        mctl::Axis axis = StringToAxisMap[axis_str];
         controller.is_homed(axis,is_homed);
         std::cout << std::boolalpha;
         std::cout << axis_str << " homed = " << is_homed <<  std::endl;
@@ -93,10 +93,10 @@ void cmd_is_homed(motion::Controller &controller, std::map<std::string,docopt::v
     {
         if (axis_str.compare(std::string("all")) == 0)
         {
-            for (const auto num : motion::StepperList)
+            for (const auto num : mctl::StepperList)
             {
                 bool is_homed = false;
-                motion::Axis axis = motion::Axis(num);
+                mctl::Axis axis = mctl::Axis(num);
                 std::string axis_str = controller.axis_name(axis);
                 controller.is_homed(axis,is_homed);
                 std::cout << std::boolalpha;
@@ -108,7 +108,7 @@ void cmd_is_homed(motion::Controller &controller, std::map<std::string,docopt::v
 }
 
 
-void cmd_set_homed(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_set_homed(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     std::string axis_str("");
     RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
@@ -116,7 +116,7 @@ void cmd_set_homed(motion::Controller &controller, std::map<std::string,docopt::
     if (rtn_status.success())
     {
         std::cout << "setting home = true for " << axis_str << " axis" << std::endl;
-        motion::Axis axis = StringToAxisMap[axis_str];
+        mctl::Axis axis = StringToAxisMap[axis_str];
         controller.set_homed_true(axis);
     }
     else
@@ -124,7 +124,7 @@ void cmd_set_homed(motion::Controller &controller, std::map<std::string,docopt::
         if (axis_str.compare(std::string("all")) == 0)
         {
             std::cout << "setting home=true for all axes" << std::endl;
-            for (motion::Axis ax : motion::StepperList)
+            for (mctl::Axis ax : mctl::StepperList)
             {
                 controller.set_homed_true(ax);
             }
@@ -138,7 +138,7 @@ void cmd_set_homed(motion::Controller &controller, std::map<std::string,docopt::
 }
 
 
-void cmd_get_mode(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_get_mode(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     std::string mode_str;
     controller.mode(mode_str);
@@ -146,27 +146,27 @@ void cmd_get_mode(motion::Controller &controller, std::map<std::string,docopt::v
 }
 
 
-void cmd_set_mode_ready(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_set_mode_ready(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     controller.set_mode_ready();
     std::cout << "setting mode to ready" << std::endl;
 }
 
 
-void cmd_set_mode_disabled(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_set_mode_disabled(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     controller.set_mode_disabled();
     std::cout << "setting mode to disabled" << std::endl;
 }
 
 
-void cmd_get_position(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_get_position(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     std::vector<double> pos_vec;
     controller.position(pos_vec);
 
     std::vector<std::string> axis_string_list;
-    for (auto ax : motion::StepperList)
+    for (auto ax : mctl::StepperList)
     {
         std::stringstream ss;
         ss << std::left << controller.axis_name(ax) << " (" << controller.axis_unit_string(ax) << ")";
@@ -180,7 +180,7 @@ void cmd_get_position(motion::Controller &controller, std::map<std::string,docop
     std::cout << std::setprecision(DisplayPositionPrecision);
     std::cout << std::fixed;
 
-    for (int i=0; i<motion::NumStepper; i++)
+    for (int i=0; i<mctl::NumStepper; i++)
     {
         std::cout << std::left << std::setw(axis_string_list[i].size()) << pos_vec[i]; 
     }
@@ -189,13 +189,13 @@ void cmd_get_position(motion::Controller &controller, std::map<std::string,docop
 }
 
 
-void cmd_get_position_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_get_position_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     std::vector<int32_t> pos_vec;
     controller.position(pos_vec);
 
     std::vector<std::string> axis_string_list;
-    for (auto ax : motion::StepperList)
+    for (auto ax : mctl::StepperList)
     {
         std::string pos_str = std::to_string(pos_vec[ax]);
         std::stringstream ss;
@@ -205,7 +205,7 @@ void cmd_get_position_ind(motion::Controller &controller, std::map<std::string,d
     }
     std::cout << std::endl;
 
-    for (int i=0; i<motion::NumStepper; i++)
+    for (int i=0; i<mctl::NumStepper; i++)
     {
         std::cout << std::right << std::setw(axis_string_list[i].size()) << pos_vec[i]; 
         std::cout << "    ";
@@ -214,12 +214,12 @@ void cmd_get_position_ind(motion::Controller &controller, std::map<std::string,d
 }
 
 
-void cmd_move_to(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_move_to(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
     {
-        motion::Axis axis;
+        mctl::Axis axis;
         rtn_status = get_axis_from_arg_map(arg_map,axis);
         if (!rtn_status.success())
         {
@@ -254,12 +254,12 @@ void cmd_move_to(motion::Controller &controller, std::map<std::string,docopt::va
 }
 
 
-void cmd_move_to_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_move_to_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
     {
-        motion::Axis axis;
+        mctl::Axis axis;
         
         rtn_status = get_axis_from_arg_map(arg_map,axis);
         if (!rtn_status.success())
@@ -294,12 +294,12 @@ void cmd_move_to_ind(motion::Controller &controller, std::map<std::string,docopt
 }
 
 
-void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_jog(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
     {
-        motion::Axis axis;
+        mctl::Axis axis;
         rtn_status = get_axis_from_arg_map(arg_map,axis);
         if (!rtn_status.success())
         {
@@ -334,12 +334,12 @@ void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value>
 }
 
 
-void cmd_jog_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_jog_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
     {
-        motion::Axis axis;
+        mctl::Axis axis;
         
         rtn_status = get_axis_from_arg_map(arg_map,axis);
         if (!rtn_status.success())
@@ -374,14 +374,14 @@ void cmd_jog_ind(motion::Controller &controller, std::map<std::string,docopt::va
 }
 
 
-void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_outscan(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     if (arg_map["<input_file>"].isString())
     {
         std::string filename = arg_map["<input_file>"].asString();
         std::cout << "outscanning " << filename << std::endl;
 
-        motion::OutscanData data;
+        mctl::OutscanData data;
         controller.outscan(filename,data);
     }
     else
@@ -391,7 +391,7 @@ void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::va
 }
 
 
-void cmd_status(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_status(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     arg_map["<axis>"] = docopt::value(std::string("all"));
     std::cout << std::endl;
@@ -407,7 +407,7 @@ void cmd_status(motion::Controller &controller, std::map<std::string,docopt::val
 }
 
 
-void cmd_help(motion::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_help(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
     std::cout << "help command" << std::endl;
 }
@@ -524,7 +524,7 @@ RtnStatus get_axis_str_from_arg_map(std::map<std::string,docopt::value> arg_map,
 }
 
 
-RtnStatus get_axis_from_arg_map(std::map<std::string,docopt::value> arg_map, motion::Axis &axis)
+RtnStatus get_axis_from_arg_map(std::map<std::string,docopt::value> arg_map, mctl::Axis &axis)
 {
     std::string axis_str;
     RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);

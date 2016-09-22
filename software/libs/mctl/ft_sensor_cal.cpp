@@ -11,7 +11,7 @@ namespace atidaq
     }
 }
 
-namespace motion
+namespace mctl
 {
 
     // Untility functions

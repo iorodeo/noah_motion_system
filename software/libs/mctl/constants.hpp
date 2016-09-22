@@ -7,7 +7,7 @@
 #include "dev_constants.h"
 
 
-namespace motion
+namespace mctl
 {
     using namespace constants;
 
@@ -57,6 +57,10 @@ namespace motion
     extern std::map<Axis,double> DefaultAxisToUnitConversionMap;
     extern std::map<Axis,bool> DefaultHomingEnabledMap;
     extern std::map<Axis,double> DefaultHomingBackoffMap;
+
+    // Files and Directories
+    extern const std::string DefaultConfigurationDir;
+    extern const std::string DefaultConfigurationFile;
 
 }
 

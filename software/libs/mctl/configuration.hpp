@@ -3,17 +3,20 @@
 
 #include "constants.hpp"
 #include "ft_sensor_cal.hpp"
+#include "rtn_status.hpp"
 
 #include <map>
 #include <vector>
 #include <armadillo>
 
-namespace motion
+namespace mctl
 {
     class Configuration
     {
         public:
             Configuration();
+
+            RtnStatus set_from_file(std::string filename);
 
             bool homing_enabled(Axis axis);
             void set_homing_enabled(Axis axis, bool value);

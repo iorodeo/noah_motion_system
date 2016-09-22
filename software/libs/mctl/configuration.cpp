@@ -1,7 +1,7 @@
 #include "configuration.hpp"
 #include <cmath>
 
-namespace motion
+namespace mctl
 {
     // Configuration public methods
     // ----------------------------------------------------------------------------------
@@ -21,6 +21,14 @@ namespace motion
 
         ft_sensor_cal_.set_from_file("FT8652.cal");
 
+    }
+
+
+    RtnStatus Configuration::set_from_file(std::string filename)
+    {
+        RtnStatus rtn_status;
+
+        return rtn_status;
     }
 
     // Configuration protected methods

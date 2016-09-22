@@ -7,7 +7,7 @@
 #include <map>
 #include <string>
 
-using motion::RtnStatus;
+using mctl::RtnStatus;
 
 const int DisplayPositionPrecision = 4;
 
@@ -46,48 +46,48 @@ mctl  - Motion Controller
 )";
 
 
-std::map<std::string, motion::Axis> StringToAxisMap = 
+std::map<std::string, mctl::Axis> StringToAxisMap = 
 {
-    {"x", motion::Axis_X},
-    {"y", motion::Axis_Y},
-    {"z", motion::Axis_Z},
-    {"a", motion::Axis_A},
-    {"b", motion::Axis_B},
+    {"x", mctl::Axis_X},
+    {"y", mctl::Axis_Y},
+    {"z", mctl::Axis_Z},
+    {"a", mctl::Axis_A},
+    {"b", mctl::Axis_B},
 };
 
 std::vector<std::string> AxisValueArgStringList = {"<X>", "<Y>", "<Z>", "<A>", "<B>"};
 
 // Command functions
 // -----------------------------------------------------------------------------------------------
-void cmd_home(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_home(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_is_homed(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_is_homed(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_set_homed(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_set_homed(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_get_mode(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_get_mode(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_set_mode_ready(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_set_mode_ready(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_set_mode_disabled(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_set_mode_disabled(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_get_position(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_get_position(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_get_position_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_get_position_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_move_to(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_move_to(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_move_to_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_move_to_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_jog(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_jog(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_jog_ind(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_jog_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_outscan(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_outscan(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_status(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_status(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
-void cmd_help(motion::Controller &controller, std::map<std::string,docopt::value> arg_map);
+void cmd_help(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
 
 // Utility functions
@@ -100,14 +100,14 @@ RtnStatus get_docopt_value_as_double(docopt::value docopt_value, double &value_d
 
 RtnStatus get_docopt_value_as_int32(docopt::value docopt_value, int32_t  &value_int32);
 
-RtnStatus get_axis_from_arg_map(std::map<std::string,docopt::value> arg_map, motion::Axis &axis);
+RtnStatus get_axis_from_arg_map(std::map<std::string,docopt::value> arg_map, mctl::Axis &axis);
 
 RtnStatus get_axis_str_from_arg_map(std::map<std::string,docopt::value> arg_map, std::string &axis_str);
 
 
 // Command Map: command string ->  command function 
 //-----------------------------------------------------------------------------------------------------
-std::map<std::string,std::function<void(motion::Controller&,std::map<std::string,docopt::value>)>> 
+std::map<std::string,std::function<void(mctl::Controller&,std::map<std::string,docopt::value>)>> 
 CmdStringToFuncMap = 
 {
     {"home", &cmd_home},

@@ -1,6 +1,6 @@
 #include "controller.hpp"
-#define _USE_MATH_DEFINES
 #include "rawhid_msg_types.h"
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <csignal>
 #include <iostream>
@@ -10,9 +10,7 @@
 #include <algorithm>
 #include <iomanip>
 
-
-
-namespace motion
+namespace mctl 
 {
 
     // SIGINT handler
@@ -1089,6 +1087,6 @@ namespace motion
         return ind_vec;
     }
 
-} // namespace motion
+} // namespace mctl 
 
 

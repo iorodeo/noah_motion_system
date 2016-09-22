@@ -2,7 +2,7 @@
 #define RTN_STATUS_HPP
 #include <string>
 
-namespace motion
+namespace mctl
 {
     class RtnStatus
     {

@@ -1,10 +1,10 @@
 #include "outscan_data.hpp"
-
+#include "rawhid_msg_types.h"
 #include <algorithm>
 #include <sstream>
 #include <ctime>
 
-namespace motion
+namespace mctl
 {
 
     OutscanData::OutscanData() { }
@@ -665,5 +665,5 @@ namespace motion
     }
     
 
-} // namespace motion
+} // namespace mctl
 

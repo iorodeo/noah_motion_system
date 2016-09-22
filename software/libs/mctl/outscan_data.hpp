@@ -1,16 +1,17 @@
 #ifndef OUTSCAN_DATA_HPP
 #define OUTSCAN_DATA_HPP
-
 #include "rtn_status.hpp"
-#include "rawhid_msg_types.h"
 #include "configuration.hpp"
 #include <string>
 #include <deque>
 #include <armadillo>
 #include <H5Cpp.h>
 
-namespace motion
+namespace mctl
 {
+
+    struct DevToHostMsg;
+    struct HostToDevMsg;
 
     class OutscanData
     {
@@ -177,7 +178,7 @@ namespace motion
 
 
 
-} // namespace motion
+} // namespace mctl
 
 
 

@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-namespace motion
+namespace mctl
 {
     class FT_ToolTransform
     {

@@ -1,6 +1,5 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
-
 #include "rawhid_device.hpp"
 #include "rtn_status.hpp"
 #include "constants.hpp"
@@ -12,9 +11,8 @@
 #include <map>
 #include <armadillo>
 
-namespace motion
+namespace mctl
 {
-
     struct DevToHostMsg;
     struct HostToDevMsg;
 
@@ -125,7 +123,7 @@ namespace motion
     arma::Row<int32_t>   get_index_position_arma(DevToHostMsg msg);
 
 
-} // namespace motion
+} // namespace mctl
 
 // Using class method as callback
 // --------------------------------------------------------------------------------------

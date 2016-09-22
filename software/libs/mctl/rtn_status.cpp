@@ -1,6 +1,6 @@
 #include "rtn_status.hpp"
 
-namespace motion
+namespace mctl
 {
     RtnStatus::RtnStatus(bool success, std::string error_msg)
     {
@@ -43,4 +43,4 @@ namespace motion
         error_msg_ = msg;
     }
 
-} // namespace motion
+} // namespace mctl

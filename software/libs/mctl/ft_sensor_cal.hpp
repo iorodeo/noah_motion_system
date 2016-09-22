@@ -16,7 +16,7 @@ namespace atidaq
     }
 }
 
-namespace motion
+namespace mctl
 {
 
     class FT_SensorCal
@@ -53,7 +53,6 @@ namespace motion
             RtnStatus convert(arma::Row<double> ain_vec, arma::Row<double> &ft_vec);
             RtnStatus convert(arma::Mat<double> ain_mat, arma::Mat<double> &ft_mat);
             
-
         protected:
 
             std::string filename_ = std::string("");

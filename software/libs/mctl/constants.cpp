@@ -1,6 +1,6 @@
 #include "constants.hpp"
 
-namespace motion
+namespace mctl
 {
 
     const int USB_VendorId = 0x16C0;
@@ -130,5 +130,9 @@ namespace motion
         {Axis_A, 5.0},
         {Axis_B, 5.0},
     };
+
+    // Files and Directories
+    extern const std::string DefaultConfigurationDir = std::string(".mctl");
+    const std::string DefaultConfigurationFile = std::string("config.json");
 
 }

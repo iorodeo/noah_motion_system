@@ -1,6 +1,6 @@
 #include "ft_tool_transform.hpp"
 
-namespace motion
+namespace mctl
 {
 
     FT_ToolTransform::FT_ToolTransform( 
@@ -159,4 +159,4 @@ namespace motion
         return units_vec;
     }
 
-} // namespace motion
+} // namespace mctl

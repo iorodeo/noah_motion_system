@@ -1,17 +1,17 @@
-project(motion)
+project(mctl)
 
-file(GLOB firmware_constants_SOURCE  ${motion_SOURCE_DIR}/../../../firmware/noah_controller/dev_constants.cpp)
+file(GLOB firmware_constants_SOURCE  ${mctl_SOURCE_DIR}/../../../firmware/noah_controller/dev_constants.cpp)
 
 include_directories(
-    ${motion_SOURCE_DIR}/../../../firmware/noah_controller/ 
-    ${motion_SOURCE_DIR}/../atidaq/
+    ${mctl_SOURCE_DIR}/../../../firmware/noah_controller/ 
+    ${mctl_SOURCE_DIR}/../atidaq/
     /usr/include/hdf5/serial/
     )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 add_library(
-    motion
+    mctl
     ${firmware_constants_SOURCE}
     hid_LINUX.c
     rtn_status.cpp
@@ -26,5 +26,5 @@ add_library(
 
 link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/") # for rpi
 
-target_link_libraries(motion usb armadillo hdf5_cpp hdf5 docopt)
+target_link_libraries(mctl usb armadillo hdf5_cpp hdf5 docopt)
 
