@@ -42,11 +42,11 @@ namespace motion
 
     std::map<OperatingMode,std::string> OperatingModeToStringMap = 
     {
-        {Mode_Disabled,         std::string("Disabled")},
-        {Mode_Ready,            std::string("Ready")},
-        {Mode_Homing,           std::string("Homing")},
-        {Mode_Positioning,      std::string("Positioning")},
-        {Mode_VelocityControl,  std::string("VelocityControl")}
+        {Mode_Disabled,         std::string("disabled")},
+        {Mode_Ready,            std::string("ready")},
+        {Mode_Homing,           std::string("homing")},
+        {Mode_Positioning,      std::string("positioning")},
+        {Mode_VelocityControl,  std::string("velocity control")}
     };
 
 
