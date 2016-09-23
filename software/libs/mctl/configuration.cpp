@@ -94,9 +94,7 @@ namespace mctl
             config_file_ = std::string("");
         }
         return rtn_status;
-
     }
-
 
 
     RtnStatus Configuration::load(json config_json)
@@ -115,6 +113,32 @@ namespace mctl
         {
             return rtn_status;
         }
+
+        rtn_status = load_min_position(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = load_max_position(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = load_home_position(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = load_max_speed(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = load_max_accel(config_json);
 
         return rtn_status;
     }
@@ -542,6 +566,73 @@ namespace mctl
         return rtn_status;
     }
 
+    RtnStatus Configuration::load_min_position(json config_json)
+    {
+        return load_stepper_values(config_json,"min_position", min_position_map_);
+    }
+
+
+    RtnStatus Configuration::load_max_position(json config_json)
+    {
+        return load_stepper_values(config_json,"max_position",max_position_map_);
+    }
+
+
+    RtnStatus Configuration::load_home_position(json config_json)
+    {
+        return load_stepper_values(config_json,"home_position", home_position_map_);
+    }
+
+
+    RtnStatus Configuration::load_max_speed(json config_json)
+    {
+        return load_stepper_values(config_json,"max_speed", max_speed_map_);
+    }
+
+
+    RtnStatus Configuration::load_max_accel(json config_json)
+    {
+        return load_stepper_values(config_json,"max_accel", max_accel_map_);
+    }
+
+
+    RtnStatus Configuration::load_stepper_values(json config_json, std::string key, std::map<Axis,double> &value_map)
+    {
+        RtnStatus rtn_status;
+        if (!config_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration root must be object");
+            return rtn_status;
+        }
+
+        if (config_json.count(key))
+        {
+            value_map.clear();
+            json key_json = config_json[key];
+            for (auto stepper : StepperList)
+            {
+                std::string stepper_name = AxisToStringMap[stepper];
+                if (key_json.count(stepper_name))
+                {
+                    if (key_json[stepper_name].is_number())
+                    {
+                        double value = key_json[stepper_name];
+                        value_map.emplace(stepper, value);
+                    }
+                    else
+                    {
+                        std::ostringstream oss;
+                        oss << "error: " << stepper_name << " value for " << key << " is not a number";
+                        rtn_status.set_success(false);
+                        rtn_status.set_error_msg(oss.str());
+                        break;
+                    }
+                }
+            }
+        }
+        return rtn_status;
+    }
 
 
     // Utility functions

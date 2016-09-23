@@ -94,6 +94,12 @@ namespace mctl
             std::map<Axis,double> axis_to_unit_conversion_map_; 
             std::map<Axis,double> homing_backoff_map_;
 
+            std::map<Axis,double> min_position_map_;
+            std::map<Axis,double> max_position_map_;
+            std::map<Axis,double> home_position_map_;
+            std::map<Axis,double> max_speed_map_;
+            std::map<Axis,double> max_accel_map_;
+
             FT_SensorCal ft_sensor_cal_;
             
             int32_t gain_;
@@ -104,6 +110,13 @@ namespace mctl
             Unit analog_input_unit_;
 
             RtnStatus load_ft_sensor_cal(json config_json);
+            RtnStatus load_min_position(json config_json);
+            RtnStatus load_max_position(json config_json);
+            RtnStatus load_home_position(json config_json);
+            RtnStatus load_max_speed(json config_json);
+            RtnStatus load_max_accel(json config_json);
+            RtnStatus load_stepper_values(json config_json, std::string key, std::map<Axis,double> &value_map);
+
 
     };
 
