@@ -10,14 +10,7 @@
 int main(int argc, char *argv[])
 {
 
-    mctl::FT_SensorCal cal;
     mctl::RtnStatus rtn_status;
-
-    rtn_status = cal.load(std::string("/home/wbd/.mctl/FT8652.cal"));
-    if (!rtn_status.success())
-    {
-        std::cout << rtn_status.error_msg() << std::endl;
-    }
 
     mctl::Configuration config;
     rtn_status = config.load();

@@ -12,12 +12,13 @@ int main(int argc, char *argv[])
 {
     std::map<std::string,docopt::value>  arg_map =  get_arg_map(argc, argv); 
 
-    if (true) { print_arg_map(arg_map); } // DEBUG
+    if (false) { print_arg_map(arg_map); } // DEBUG
 
     // Setup mctl controller
     mctl::Controller controller;
     controller.set_exit_on_error(true);
     controller.set_display_position_on_move(true);
+    controller.load_config();
     controller.open();
 
     // Run command base on command string
@@ -404,6 +405,24 @@ void cmd_status(mctl::Controller &controller, std::map<std::string,docopt::value
     std::cout << std::endl;
     cmd_get_position(controller, arg_map);
     std::cout << std::endl;
+}
+
+
+void cmd_ft_info(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+{
+    mctl::Configuration config = controller.config();
+
+    if (config.have_ft_sensor_cal())
+    {
+        std::string cal_info = config.ft_sensor_cal_info();
+        std::cout << std::endl;
+        std::cout << "        Force/Torque Sensor Calibration info          " << std::endl;
+        std::cout << "======================================================" << std::endl;
+        std::cout << std::endl;
+        std::cout << cal_info;
+        std::cout << std::endl;
+
+    }
 }
 
 

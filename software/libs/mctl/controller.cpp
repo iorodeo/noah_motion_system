@@ -943,6 +943,32 @@ namespace mctl
         return outscan(std::string(filename),data, quiet);
     }
 
+    RtnStatus Controller::load_config()
+    {
+        Configuration config;
+        RtnStatus rtn_status = config.load();
+        if (rtn_status.success())
+        {
+            set_config(config);
+        }
+        return rtn_status;
+    }
+
+    RtnStatus Controller::load_config(std::string filename)
+    {
+        Configuration config;
+        RtnStatus rtn_status = config.load(filename);
+        if (rtn_status.success())
+        {
+            set_config(config);
+        }
+        return rtn_status;
+    }
+
+    void Controller::set_config(Configuration config)
+    {
+        config_ = config;
+    }
 
     Configuration Controller::config()
     {

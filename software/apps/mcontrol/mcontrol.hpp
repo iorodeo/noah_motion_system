@@ -34,6 +34,7 @@ mctl  - Motion Controller
       mctl get-position 
       mctl get-position-ind
       mctl get-config
+      mctl ft-info
       mctl status
       mctl help <command> 
       mctl (-h | --help)
@@ -87,6 +88,8 @@ void cmd_outscan(mctl::Controller &controller, std::map<std::string,docopt::valu
 
 void cmd_status(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
+void cmd_ft_info(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
+
 void cmd_help(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map);
 
 
@@ -123,6 +126,7 @@ CmdStringToFuncMap =
     {"jog", &cmd_jog},
     {"jog-ind", &cmd_jog_ind},
     {"outscan", &cmd_outscan},
+    {"ft-info", &cmd_ft_info},
     {"status", &cmd_status},
     {"help", &cmd_help},
 };

@@ -433,9 +433,7 @@ namespace mctl
         return rtn_status;
     }
 
-    // FT_SensorCal protected methods
-    // --------------------------------------------------------------------------------------------
-    
+
     bool FT_SensorCal::is_initialized()
     {
         return (cal_ != nullptr);
@@ -452,6 +450,10 @@ namespace mctl
         }
         return rval;
     }
+
+    // FT_SensorCal protected methods
+    // --------------------------------------------------------------------------------------------
+    
 
     RtnStatus FT_SensorCal::check_atidaq_rtn(short rtn_code)
     {

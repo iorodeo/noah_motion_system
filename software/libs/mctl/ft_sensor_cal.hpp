@@ -52,14 +52,15 @@ namespace mctl
             RtnStatus convert(std::vector<double> ain_vec, std::vector<double> &ft_vec);
             RtnStatus convert(arma::Row<double> ain_vec, arma::Row<double> &ft_vec);
             RtnStatus convert(arma::Mat<double> ain_mat, arma::Mat<double> &ft_mat);
+
+            bool is_initialized();
+            bool is_initialized(RtnStatus &rtn_status);
             
         protected:
 
             std::string filename_ = std::string("");
             std::shared_ptr<atidaq::Calibration> cal_ = nullptr;
 
-            bool is_initialized();
-            bool is_initialized(RtnStatus &rtn_status);
             RtnStatus check_atidaq_rtn(short rtn_code);
 
     };

@@ -439,6 +439,23 @@ namespace mctl
     // DEVEL - NOT DONE
     // -------------------------------------------------------------------------
     
+    bool Configuration::have_ft_sensor_cal()
+    {
+        return ft_sensor_cal_.is_initialized();
+    }
+
+    std::string Configuration::ft_sensor_cal_info()
+    {
+        std::string info;
+        RtnStatus rtn_status = ft_sensor_cal_.get_info_string(info);
+        if (!rtn_status.success())
+        {
+            info = std::string("ft_senosr_cal: none");
+        }
+        return info;
+    }
+
+
     std::vector<double> Configuration::get_force_and_torque(std::vector<double> analog_input)
     {
         // PLACE HOLDER - NOT FINISHED

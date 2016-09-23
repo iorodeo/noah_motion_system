@@ -99,9 +99,11 @@ namespace mctl
             RtnStatus outscan(const char filename[], OutscanData &data, bool quiet=false);
 
             // Configuration methods
+            RtnStatus load_config();
+            RtnStatus load_config(std::string filename);
+
+            void set_config(Configuration config);
             Configuration config();
-            //RtnStatus load_config(std::string filename);
-            //RtnStatus set_config(MotionConfig config);
 
         protected:
 
