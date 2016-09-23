@@ -4,10 +4,13 @@
 #include "constants.hpp"
 #include "ft_sensor_cal.hpp"
 #include "rtn_status.hpp"
+#include "json/json.hpp"
 
 #include <map>
 #include <vector>
 #include <armadillo>
+
+using json = nlohmann::json;
 
 namespace mctl
 {
@@ -19,6 +22,7 @@ namespace mctl
 
             RtnStatus load(); // Loads default in .mctl dir
             RtnStatus load(std::string filename);
+            RtnStatus load_from_json(json config_json);
 
             bool homing_enabled(Axis axis);
             void set_homing_enabled(Axis axis, bool value);
@@ -82,6 +86,9 @@ namespace mctl
 
         protected:
 
+            std::string config_dir_;
+            std::string config_file_;
+
             std::map<Axis,bool> homing_enabled_map_;
             std::map<Axis,Unit> axis_to_unit_map_;
             std::map<Axis,double> axis_to_unit_conversion_map_; 
@@ -89,13 +96,14 @@ namespace mctl
 
             FT_SensorCal ft_sensor_cal_;
             
-
             int32_t gain_;
             int outscan_start_delay_;
 
             double analog_input_scale_;
             double analog_input_offset_;
             Unit analog_input_unit_;
+
+
     };
 
     // Utility functions
@@ -103,6 +111,7 @@ namespace mctl
     std::string operating_mode_to_string(OperatingMode mode);
     std::string axis_to_string(Axis axis);
     std::string unit_to_string(Unit unit);
+    std::string filesep();
 
 }
 

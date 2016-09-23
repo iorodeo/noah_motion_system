@@ -1,9 +1,9 @@
 #include "configuration.hpp"
-#include "json.hpp"
+#include "filesystem/path.h"
 #include <cmath>
 #include <cstdlib>
-
-using json = nlohmann::json;
+#include <sstream>
+#include <fstream>
 
 namespace mctl
 {
@@ -23,16 +23,19 @@ namespace mctl
         analog_input_offset_ = DefaultAnalogInputOffset;
         analog_input_unit_ = DefaultAnalogInputUnit; 
 
+        std::string config_dir_ = std::string("");
+        std::string config_file_ = std::string("");
+
     }
 
 
     RtnStatus Configuration::load()
     {
-        RtnStatus rtn_status;
-        std::string home_dir(std::getenv("HOME"));
-        std::cout << home_dir << std::endl;
-
-        return rtn_status;
+        std::ostringstream path_oss;
+        path_oss << std::getenv("HOME") << filesep() ;
+        path_oss << DefaultConfigurationDir << filesep();
+        path_oss << DefaultConfigurationFile;
+        return load(path_oss.str());
     }
 
 
@@ -40,8 +43,73 @@ namespace mctl
     {
         RtnStatus rtn_status;
 
+        filesystem::path config_path(filename);
+
+        // Check that configuration directory and file exist
+        if (!config_path.parent_path().exists())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: configuration directory does not exist");
+            return rtn_status;
+        }
+
+        if (!config_path.exists())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: configuration file does not exist");
+            return rtn_status;
+
+        }
+
+        // Open configuration file and read json
+        std::ifstream config_ifs(config_path.str(), std::ifstream::in);
+        if (!config_ifs.is_open())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: unable to open configuration file");
+            return rtn_status;
+        }
+
+        json config_json;
+        try
+        {
+            config_ifs >> config_json;
+        }
+        catch (std::invalid_argument &err)
+        {
+            std::ostringstream oss;
+            oss << "error: unable to load configuration, " << err.what();
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+            return rtn_status;
+        }
+
+        rtn_status = load_from_json(config_json);
+        if (rtn_status.success())
+        {
+            config_dir_  = config_path.parent_path().str();
+            config_file_ = config_path.str();
+        }
         return rtn_status;
     }
+
+
+
+    RtnStatus Configuration::load_from_json(json config_json)
+    {
+        RtnStatus rtn_status;
+
+        if (!config_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration root must be object");
+            return rtn_status;
+        }
+
+
+        return rtn_status;
+    }
+
 
     // Configuration protected methods
     // ----------------------------------------------------------------------------------
@@ -441,6 +509,7 @@ namespace mctl
     }
 
 
+
     // Utility functions
     // ----------------------------------------------------------------------------------
     std::string operating_mode_to_string(OperatingMode mode)
@@ -480,4 +549,14 @@ namespace mctl
             return std::string("unit not found");
         }
     }
+
+    std::string filesep()
+    {
+#ifdef _WIN32
+        return std::string("\\");
+#else
+        return std::string("/");
+#endif
+    }
+
 }

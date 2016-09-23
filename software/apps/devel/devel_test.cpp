@@ -1,15 +1,19 @@
 #include "controller.hpp"
-#include "json.hpp"
-
+#include "rtn_status.hpp"
 #include <iostream>
 #include <fstream>
+#include "filesystem/path.h"
 
-using json = nlohmann::json;
 
 int main(int argc, char *argv[])
 {
     mctl::Configuration config;
-    config.load();
+    mctl::RtnStatus rtn_status = config.load();
+
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;
+    }
 
     //json json_config;
     //std::ifstream config_file("temp.json", std::ifstream::in);
