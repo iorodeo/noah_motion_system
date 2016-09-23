@@ -38,7 +38,7 @@ namespace mctl
         RtnStatus rtn_status;
 
         // Create calibration structure and load calibration from file
-        std::vector<char> filename_vec(filename.begin(), filename.end());
+        std::vector<char> filename_vec = string_to_vector(filename);
         cal_ = std::shared_ptr<atidaq::Calibration>(atidaq::createCalibration(filename_vec.data(),1), atidaq::destroyCalibration);
         if (cal_ == nullptr)
         {

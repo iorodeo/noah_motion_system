@@ -22,7 +22,7 @@ namespace mctl
 
             RtnStatus load(); // Loads default in .mctl dir
             RtnStatus load(std::string filename);
-            RtnStatus load_from_json(json config_json);
+            RtnStatus load(json config_json);
 
             bool homing_enabled(Axis axis);
             void set_homing_enabled(Axis axis, bool value);
@@ -103,6 +103,7 @@ namespace mctl
             double analog_input_offset_;
             Unit analog_input_unit_;
 
+            RtnStatus load_ft_sensor_cal(json config_json);
 
     };
 

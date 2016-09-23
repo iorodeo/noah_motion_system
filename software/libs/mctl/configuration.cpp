@@ -84,18 +84,22 @@ namespace mctl
             return rtn_status;
         }
 
-        rtn_status = load_from_json(config_json);
-        if (rtn_status.success())
+        config_dir_  = config_path.parent_path().str();
+        config_file_ = config_path.str();
+
+        rtn_status = load(config_json);
+        if (!rtn_status.success())
         {
-            config_dir_  = config_path.parent_path().str();
-            config_file_ = config_path.str();
+            config_dir_ = std::string("");
+            config_file_ = std::string("");
         }
         return rtn_status;
+
     }
 
 
 
-    RtnStatus Configuration::load_from_json(json config_json)
+    RtnStatus Configuration::load(json config_json)
     {
         RtnStatus rtn_status;
 
@@ -106,6 +110,11 @@ namespace mctl
             return rtn_status;
         }
 
+        rtn_status = load_ft_sensor_cal(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
 
         return rtn_status;
     }
@@ -506,6 +515,31 @@ namespace mctl
     void Configuration::set_analog_input_offset(double value)
     {
         analog_input_offset_ = value;
+    }
+
+
+    RtnStatus Configuration::load_ft_sensor_cal(json config_json)
+    {
+        RtnStatus rtn_status;
+
+        if (!config_json.count("ft_calibration"))
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: configuration  does not contain ft_calibration");
+            return rtn_status;
+        }
+        if (!config_json["ft_calibration"].is_string())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: ft_calibration must be string");
+            return rtn_status;
+        }
+
+        std::string ft_calibration_file = config_json["ft_calibration"];
+        std::ostringstream cal_file_oss;
+        cal_file_oss << config_dir_ << filesep() << ft_calibration_file;
+        rtn_status = ft_sensor_cal_.load(cal_file_oss.str());
+        return rtn_status;
     }
 
 
