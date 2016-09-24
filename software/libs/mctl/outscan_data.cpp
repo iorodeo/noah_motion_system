@@ -44,7 +44,10 @@ namespace mctl
 
     arma::Mat<double> OutscanData::force_and_torque()
     {
-        return config_.get_force_and_torque(analog_input());
+        arma::Mat<double> ft_mat;
+        arma::Mat<double> ain_mat = analog_input();
+        RtnStatus rtn_status = config_.get_force_and_torque(ain_mat,ft_mat);
+        return ft_mat;
     }
 
     arma::Col<uint8_t> OutscanData::status()
@@ -70,6 +73,15 @@ namespace mctl
         return col_from_deque<uint16_t>(command_data_);
     }
 
+    Configuration OutscanData::config()
+    {
+        return config_;
+    }
+
+    void OutscanData::set_config(Configuration new_config)
+    {
+        config_ = new_config;
+    }
 
     void OutscanData::update(DevToHostMsg msg)
     {
@@ -374,6 +386,7 @@ namespace mctl
         arma::Mat<double> ft_mat = force_and_torque_t();
 
         rtn_status = add_mat_double_dataset(h5file,ft_mat,dataset_name);
+
         if (!rtn_status.success())
         {
             return rtn_status;

@@ -21,8 +21,8 @@ namespace mctl
     const std::string FT_SensorCal::DefaultForceUnits("N");
     const std::string FT_SensorCal::DefaultTorqueUnits("N-m"); 
     const FT_ToolTransform FT_SensorCal::DefaultToolTransform = FT_ToolTransform();
-    const bool FT_SensorCal::DefaultTemperatureComp = false;
     const int FT_SensorCal::FT_VectorSize = 6;
+    const int FT_SensorCal::AinVectorSize = FT_VectorSize+1;
     const int FT_SensorCal::DisplayFloatPrecision = 5;
     const int FT_SensorCal::DisplayMatrixColumnWidth = FT_SensorCal::DisplayFloatPrecision+7;
 
@@ -65,7 +65,13 @@ namespace mctl
             return rtn_status;
         }
 
-        rtn_status = set_temperature_comp(DefaultTemperatureComp);
+        bool temp_comp_flag;
+        rtn_status = has_temperature_comp(temp_comp_flag);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        rtn_status = set_temperature_comp(temp_comp_flag);
         if (!rtn_status.success())
         {
             return rtn_status;
@@ -243,38 +249,38 @@ namespace mctl
             return rtn_status;
         }
 
-        std::stringstream ss;
-        ss << std::setprecision(DisplayFloatPrecision);
-        ss << std::scientific;
+        std::ostringstream oss;
+        oss << std::setprecision(DisplayFloatPrecision);
+        oss << std::scientific;
 
-        ss << "serial number:     " << cal_.get() -> Serial << std::endl;
-        ss << "body style:        " << cal_.get() -> BodyStyle << std::endl;
-        ss << "calibration:       " << cal_.get() -> PartNumber << std::endl;
-        ss << "calibration date:  " << cal_.get() -> CalDate << std::endl;
-        ss << "family             " << cal_.get() -> Family << std::endl;
-        ss << "number channels:   " << cal_.get() -> rt.NumChannels << std::endl;
-        ss << "number axes:       " << cal_.get() -> rt.NumAxes << std::endl;
-        ss << "force units:       " << cal_.get() -> cfg.ForceUnits << std::endl;
-        ss << "torque units:      " << cal_.get() -> cfg.TorqueUnits << std::endl;
-        ss << "temperature comp:  " << (cal_.get() -> TempCompAvailable ? "Yes" : "No") << std::endl;;
-        ss << "filename:          " << filename_ << std::endl;
+        oss << "serial number:     " << cal_.get() -> Serial << std::endl;
+        oss << "body style:        " << cal_.get() -> BodyStyle << std::endl;
+        oss << "calibration:       " << cal_.get() -> PartNumber << std::endl;
+        oss << "calibration date:  " << cal_.get() -> CalDate << std::endl;
+        oss << "family             " << cal_.get() -> Family << std::endl;
+        oss << "number channels:   " << cal_.get() -> rt.NumChannels << std::endl;
+        oss << "number axes:       " << cal_.get() -> rt.NumAxes << std::endl;
+        oss << "force units:       " << cal_.get() -> cfg.ForceUnits << std::endl;
+        oss << "torque units:      " << cal_.get() -> cfg.TorqueUnits << std::endl;
+        oss << "temperature comp:  " << (cal_.get() -> TempCompAvailable ? "Yes" : "No") << std::endl;;
+        oss << "filename:          " << filename_ << std::endl;
 
-        ss << std::endl;
-        ss << "calibration matrix" << std::endl;
+        oss << std::endl;
+        oss << "calibration matrix" << std::endl;
         for (int i=0; i<cal_.get()->rt.NumAxes; i++)
         {
             std::string axis_name = cal_.get() -> AxisNames[i];
-            ss << axis_name << ": ";
+            oss << axis_name << ": ";
             for (int j=0; j<cal_.get()->rt.NumAxes;j++)
             {
-                ss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
-                ss << cal_.get() -> rt.working_matrix[i][j] << " ";
+                oss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
+                oss << cal_.get() -> rt.working_matrix[i][j] << " ";
             }
-            ss << std::endl;
+            oss << std::endl;
         }
 
-        ss << std::endl;
-        ss << "rated loads" << std::endl;
+        oss << std::endl;
+        oss << "rated loads" << std::endl;
         for (int i=0; i<cal_.get()->rt.NumAxes; i++)
         {
             std::string units;
@@ -288,31 +294,31 @@ namespace mctl
             }
             std::string axis_name(cal_.get() -> AxisNames[i]);
             float max_load = cal_.get() -> MaxLoads[i];
-            ss << axis_name << ": " << max_load << " " << units << std::endl;
+            oss << axis_name << ": " << max_load << " " << units << std::endl;
         }
 
 
         if (cal_.get() -> TempCompAvailable) 
         {
-            ss << std::endl;
-            ss << "temperature compensation bias slopes: " << std::endl;;
+            oss << std::endl;
+            oss << "temperature compensation bias slopes: " << std::endl;;
             for (int i=0; i<(cal_.get()->rt.NumAxes); i++)
             {
-                ss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
-                ss << (cal_.get()->rt.bias_slopes[i]) << " ";
+                oss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
+                oss << (cal_.get()->rt.bias_slopes[i]) << " ";
             }
-            ss << std::endl;
-            ss << "temperature compensation gain slopes: " << std::endl;;
+            oss << std::endl;
+            oss << "temperature compensation gain slopes: " << std::endl;;
             for (int i=0; i<(cal_.get()->rt.NumAxes); i++)
             {
-                ss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
-                ss << (cal_.get()->rt.gain_slopes[i]) << " ";
+                oss << std::setw(DisplayMatrixColumnWidth) << std::setfill(' ');
+                oss << (cal_.get()->rt.gain_slopes[i]) << " ";
             }
-            ss << std::endl;
+            oss << std::endl;
         }
 
-        ss << std::endl;
-        ss << "bias vector: " << std::endl; 
+        oss << std::endl;
+        oss << "bias vector: " << std::endl; 
         for (int i=0; i<(cal_.get()->rt.NumAxes); i++)
         {
             std::string units;
@@ -326,11 +332,11 @@ namespace mctl
             }
             std::string axis_name(cal_.get() -> AxisNames[i]);
             float bias = cal_.get() -> rt.bias_vector[i];
-            ss << axis_name << ": " << bias << " " << units << std::endl;
+            oss << axis_name << ": " << bias << " " << units << std::endl;
         }
 
-        ss << std::endl;
-        ss << "tool transform" << std::endl;
+        oss << std::endl;
+        oss << "tool transform" << std::endl;
         for (int i=0; i<cal_.get()->rt.NumAxes; i++)
         {
             std::string units;
@@ -344,11 +350,23 @@ namespace mctl
             }
             std::string axis_name(cal_.get() -> AxisNames[i]);
             float ttval= cal_.get() -> cfg.UserTransform.TT[i];
-            ss << axis_name << ": " << ttval << " " << units << std::endl;
+            oss << axis_name << ": " << ttval << " " << units << std::endl;
         }
-        info = ss.str();
+        info = oss.str();
         return rtn_status;
     }
+
+
+    RtnStatus FT_SensorCal::has_temperature_comp(bool &value)
+    {
+        RtnStatus rtn_status;
+        if (is_initialized(rtn_status))
+        {
+            value = bool(cal_.get() -> TempCompAvailable); 
+        }
+        return rtn_status;
+    }
+
 
     void FT_SensorCal::print_info_string()
     {
@@ -367,15 +385,21 @@ namespace mctl
     RtnStatus FT_SensorCal::convert(std::vector<double> ain_vec, std::vector<double> &ft_vec)
     {
         RtnStatus rtn_status;
-        if (ain_vec.size()!= FT_VectorSize)
+        if (!is_initialized(rtn_status))
         {
+            return rtn_status;
+        }
+        if (ain_vec.size()< AinVectorSize)
+        {
+            std::ostringstream oss;
+            oss << "error: analog input vector size must >= " << AinVectorSize;
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("error: analog input vector size incorrect");
+            rtn_status.set_error_msg(oss.str());
         }
         else
         {
             std::vector<float> ain_float_vec(ain_vec.begin(), ain_vec.end());
-            std::vector<float> ft_float_vec(FT_VectorSize);
+            std::vector<float> ft_float_vec(FT_VectorSize,0.0);
             atidaq::ConvertToFT(cal_.get(), ain_float_vec.data(), ft_float_vec.data());
             ft_vec = std::vector<double>(ft_float_vec.begin(), ft_float_vec.end()); 
         }
@@ -386,10 +410,16 @@ namespace mctl
     RtnStatus FT_SensorCal::convert(arma::Row<double> ain_vec, arma::Row<double> &ft_vec)
     {
         RtnStatus rtn_status;
-        if (ain_vec.size() != FT_VectorSize)
+        if (!is_initialized(rtn_status))
         {
+            return rtn_status;
+        }
+        if (ain_vec.size() < AinVectorSize)
+        {
+            std::ostringstream oss;
+            oss << "error: analog input vector size must >= " << AinVectorSize;
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("error: analog input vector size incorrect");
+            rtn_status.set_error_msg(oss.str());
         }
         else
         {
@@ -405,18 +435,22 @@ namespace mctl
     RtnStatus FT_SensorCal::convert(arma::Mat<double> ain_mat, arma::Mat<double> &ft_mat)
     {
         RtnStatus rtn_status;
-        if (ain_mat.n_cols != FT_VectorSize)
+        if (!is_initialized(rtn_status))
         {
-            std::stringstream ss;
-            ss << "error: analog input matrix must have n_cols == " << FT_VectorSize;
+            return rtn_status;
+        }
+        if (ain_mat.n_cols < AinVectorSize)
+        {
+            std::ostringstream oss;
+            oss << "error: analog input matrix must have n_cols >=" << AinVectorSize;
             rtn_status.set_success(false);
-            rtn_status.set_error_msg(ss.str());
+            rtn_status.set_error_msg(oss.str());
         }
         else
         {
-            if ((ft_mat.n_cols != ain_mat.n_cols) || (ft_mat.n_rows != ain_mat.n_rows))
+            if ((ft_mat.n_rows != ain_mat.n_rows) || (ft_mat.n_cols != FT_VectorSize))
             {
-                ft_mat.resize(ain_mat.n_rows, ain_mat.n_cols);
+                ft_mat.resize(ain_mat.n_rows, FT_VectorSize);
             }
             for (int i=0; i<ain_mat.n_rows; i++)
             {
@@ -447,6 +481,7 @@ namespace mctl
         {
             rtn_status.set_success(false);
             rtn_status.set_error_msg("error: calibration is not initialized");
+            rval = false;
         }
         return rval;
     }

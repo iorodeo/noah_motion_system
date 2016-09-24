@@ -747,6 +747,8 @@ namespace mctl
             return check_status(rtn_status);
         }
 
+        // Set Outscan data configuration
+        data.set_config(config_);
 
         // Move to beginning of trajectory
         if (!quiet)
@@ -819,6 +821,10 @@ namespace mctl
                     rtn_status.set_success(false);
                     rtn_status.set_error_msg("failed to receive Cmd_SetModeVelocityControl");
                     break;
+                }
+                else
+                {
+                    msg_count_ = dev_to_host_msg.count+1;;
                 }
             }
 

@@ -9,17 +9,16 @@
 
 int main(int argc, char *argv[])
 {
+    mctl::FT_SensorCal cal;
+    //cal.load("/home/wbd/.mctl/FT8652.cal");
 
-    mctl::RtnStatus rtn_status;
-
-    mctl::Configuration config;
-    rtn_status = config.load();
-
+    arma::Mat<double> v(100,10,arma::fill::zeros);
+    arma::Mat<double> f;
+    mctl::RtnStatus rtn_status = cal.convert(v,f);
     if (!rtn_status.success())
     {
-        std::cout << rtn_status.error_msg() << std::endl;
+        std::cout << "convert failed" << std::endl;
     }
-
 
     //mctl::Controller controller;
 

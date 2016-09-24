@@ -456,27 +456,70 @@ namespace mctl
     }
 
 
-    std::vector<double> Configuration::get_force_and_torque(std::vector<double> analog_input)
+    RtnStatus Configuration::get_force_and_torque(std::vector<double> ain_vec, std::vector<double> &ft_vec)
     {
-        // PLACE HOLDER - NOT FINISHED
-        std::vector<double> tmp_vec(ForceAndTorqueRowDim,0.0);
-        return tmp_vec;
+        RtnStatus rtn_status;
+        if (ain_vec.size() < FT_SensorCal::AinVectorSize)
+        {
+            std::ostringstream oss;
+            oss << "error:  analog input vector size must >= " << FT_SensorCal::AinVectorSize;
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+        }
+        else
+        {
+            rtn_status = ft_sensor_cal_.convert(ain_vec, ft_vec);
+        }
+
+        if (!rtn_status.success())
+        {
+            ft_vec = std::vector<double>(FT_SensorCal::FT_VectorSize,0.0); // fill with zeros
+        }
+        return rtn_status;
     }
 
 
-    arma::Row<double> Configuration::get_force_and_torque(arma::Row<double> analog_input)
+    RtnStatus Configuration::get_force_and_torque(arma::Row<double> ain_vec, arma::Row<double> &ft_vec)
     {
-        // PLACE HOLDER - NOT FINISHED
-        arma::Row<double> tmp_vec(ForceAndTorqueRowDim,arma::fill::zeros);
-        return tmp_vec;
+        RtnStatus rtn_status;
+        if (ain_vec.size() < FT_SensorCal::AinVectorSize)
+        {
+            std::ostringstream oss;
+            oss << "error:  analog input vector size must >= " << FT_SensorCal::AinVectorSize;
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+        }
+        else
+        {
+            rtn_status = ft_sensor_cal_.convert(ain_vec,ft_vec);
+        }
+        if (!rtn_status.success())
+        {
+            ft_vec = arma::Row<double>(FT_SensorCal::FT_VectorSize,arma::fill::zeros); // fill with zeros
+        }
+        return rtn_status;
     }
 
 
-    arma::Mat<double> Configuration::get_force_and_torque(arma::Mat<double> analog_input)
+    RtnStatus Configuration::get_force_and_torque(arma::Mat<double> ain_mat, arma::Mat<double> &ft_mat)
     {
-        // PLACE HOLDER - NOT FINISHED
-        arma::Mat<double> tmp_mat(analog_input.n_rows,ForceAndTorqueRowDim,arma::fill::zeros);
-        return tmp_mat;
+        RtnStatus rtn_status;
+        if (ain_mat.n_cols < FT_SensorCal::AinVectorSize)
+        {
+            std::ostringstream oss;
+            oss << "error:  analog input matrix n_cols must >= " << FT_SensorCal::AinVectorSize;
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+        }
+        else
+        {
+            rtn_status = ft_sensor_cal_.convert(ain_mat,ft_mat);
+        }
+        if (!rtn_status.success())
+        {
+            ft_mat = arma::Mat<double>(ain_mat.n_rows,FT_SensorCal::FT_VectorSize,arma::fill::zeros);
+        }
+        return rtn_status;
     }
 
     // -------------------------------------------------------------------------

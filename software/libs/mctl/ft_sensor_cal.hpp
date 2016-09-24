@@ -26,8 +26,8 @@ namespace mctl
             static const std::string DefaultForceUnits;
             static const std::string DefaultTorqueUnits; 
             static const FT_ToolTransform DefaultToolTransform;
-            static const bool DefaultTemperatureComp;
             static const int FT_VectorSize;
+            static const int AinVectorSize;
             static const int DisplayFloatPrecision;
             static const int DisplayMatrixColumnWidth;
 
@@ -47,6 +47,7 @@ namespace mctl
             RtnStatus get_tool_transform(FT_ToolTransform &tran);
             RtnStatus get_filename(std::string &filename);
             RtnStatus get_info_string(std::string &info);
+            RtnStatus has_temperature_comp(bool &value);
             void print_info_string();
 
             RtnStatus convert(std::vector<double> ain_vec, std::vector<double> &ft_vec);

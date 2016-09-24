@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     std::map<std::string,docopt::value>  arg_map =  get_arg_map(argc, argv); 
 
-    if (false) { print_arg_map(arg_map); } // DEBUG
+    if (true) { print_arg_map(arg_map); } // DEBUG
 
     // Setup mctl controller
     mctl::Controller controller;
@@ -377,17 +377,28 @@ void cmd_jog_ind(mctl::Controller &controller, std::map<std::string,docopt::valu
 
 void cmd_outscan(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
 {
-    if (arg_map["<input_file>"].isString())
-    {
-        std::string filename = arg_map["<input_file>"].asString();
-        std::cout << "outscanning " << filename << std::endl;
-
-        mctl::OutscanData data;
-        controller.outscan(filename,data);
-    }
-    else
+    if (!arg_map["<input_file>"].isString())
     {
         std::cout << "error: <filename> must be string" << std::endl;
+        return;
+    }
+    if (!arg_map["-o"].isString())
+    {
+        std::cout << "error: <output_file> must be string" << std::endl;
+        return;
+    }
+
+
+    std::string traj_filename = arg_map["<input_file>"].asString();
+    std::string data_filename = arg_map["-o"].asString();
+    std::cout << "outscanning " << traj_filename << std::endl;
+
+    mctl::OutscanData data;
+    controller.outscan(traj_filename,data);
+    mctl::RtnStatus rtn_status = data.save(data_filename);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg();
     }
 }
 
