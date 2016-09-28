@@ -39,34 +39,16 @@ namespace mctl
     }
 
 
+
+
     RtnStatus Configuration::load(std::string filename)
     {
         RtnStatus rtn_status;
 
-        filesystem::path config_path(filename);
-
-        // Check that configuration directory and file exist
-        if (!config_path.parent_path().exists())
+        std::ifstream config_ifs;
+        rtn_status = get_config_file_ifstream(filename, config_ifs);
+        if (!rtn_status.success())
         {
-            rtn_status.set_success(false);
-            rtn_status.set_error_msg("error: configuration directory does not exist");
-            return rtn_status;
-        }
-
-        if (!config_path.exists())
-        {
-            rtn_status.set_success(false);
-            rtn_status.set_error_msg("error: configuration file does not exist");
-            return rtn_status;
-
-        }
-
-        // Open configuration file and read json
-        std::ifstream config_ifs(config_path.str(), std::ifstream::in);
-        if (!config_ifs.is_open())
-        {
-            rtn_status.set_success(false);
-            rtn_status.set_error_msg("error: unable to open configuration file");
             return rtn_status;
         }
 
@@ -84,6 +66,7 @@ namespace mctl
             return rtn_status;
         }
 
+        filesystem::path config_path(filename);
         config_dir_  = config_path.parent_path().str();
         config_file_ = config_path.str();
 
@@ -143,6 +126,34 @@ namespace mctl
         return rtn_status;
     }
 
+
+    std::string Configuration::file()
+    {
+        return config_file_;
+    }
+
+
+    std::string Configuration::dir()
+    {
+        return config_dir_;
+    }
+
+    std::string Configuration::file_contents()
+    {
+        std::stringstream ss;
+
+        std::ifstream config_ifs;
+        RtnStatus rtn_status = get_config_file_ifstream(config_file_, config_ifs);
+        if (rtn_status.success())
+        {
+            std::string line;
+            while (std::getline(config_ifs,line))
+            {
+                ss << line << std::endl;
+            }
+        }
+        return ss.str();
+    }
 
     // Configuration protected methods
     // ----------------------------------------------------------------------------------
@@ -690,6 +701,40 @@ namespace mctl
                     }
                 }
             }
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Configuration::get_config_file_ifstream(std::string filename, std::ifstream &config_ifs)
+    {
+        RtnStatus rtn_status;
+
+        filesystem::path config_path(filename);
+
+        // Check that configuration directory and file exist
+        if (!config_path.parent_path().exists())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: configuration directory does not exist");
+            return rtn_status;
+        }
+
+        if (!config_path.exists())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: configuration file does not exist");
+            return rtn_status;
+
+        }
+
+        // Open configuration file and read json
+        config_ifs.open(config_path.str(), std::ifstream::in);
+        if (!config_ifs.is_open())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: unable to open configuration file");
+            return rtn_status;
         }
         return rtn_status;
     }

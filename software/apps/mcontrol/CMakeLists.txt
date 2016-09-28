@@ -9,7 +9,7 @@ include_directories(
     /usr/include/hdf5/serial/
     )
 
-add_executable(mcontrol mcontrol.cpp)
+add_executable(mcontrol mcontrol.cpp mcontrol_help.cpp)
 
 target_link_libraries(mcontrol mctl atidaq)
 

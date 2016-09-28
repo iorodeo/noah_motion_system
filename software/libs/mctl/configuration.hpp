@@ -9,8 +9,10 @@
 #include <map>
 #include <vector>
 #include <armadillo>
+#include <iosfwd>
 
 using json = nlohmann::json;
+
 
 namespace mctl
 {
@@ -23,6 +25,10 @@ namespace mctl
             RtnStatus load(); // Loads default in .mctl dir
             RtnStatus load(std::string filename);
             RtnStatus load(json config_json);
+
+            std::string file();
+            std::string dir();
+            std::string file_contents();
 
             bool homing_enabled(Axis axis);
             void set_homing_enabled(Axis axis, bool value);
@@ -118,6 +124,7 @@ namespace mctl
             RtnStatus load_max_speed(json config_json);
             RtnStatus load_max_accel(json config_json);
             RtnStatus load_stepper_values(json config_json, std::string key, std::map<Axis,double> &value_map);
+            RtnStatus get_config_file_ifstream(std::string filename, std::ifstream &config_ifs);
 
 
     };

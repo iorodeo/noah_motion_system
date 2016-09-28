@@ -957,7 +957,7 @@ namespace mctl
         {
             set_config(config);
         }
-        return rtn_status;
+        return check_status(rtn_status);
     }
 
     RtnStatus Controller::load_config(std::string filename)

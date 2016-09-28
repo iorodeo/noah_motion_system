@@ -1,4 +1,5 @@
 #include "mcontrol.hpp"
+#include "mcontrol_help.hpp"
 
 #include <sstream>
 #include <iostream>
@@ -10,9 +11,9 @@
 
 int main(int argc, char *argv[])
 {
-    std::map<std::string,docopt::value>  arg_map =  get_arg_map(argc, argv); 
+    StringToValueMap arg_map =  get_arg_map(argc, argv); 
 
-    if (true) { print_arg_map(arg_map); } // DEBUG
+    if (false) { print_arg_map(arg_map); } // DEBUG
 
     // Setup mctl controller
     mctl::Controller controller;
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
 
 // Command functions
 // ------------------------------------------------------------------------------------------------
-void cmd_home(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_home(mctl::Controller &controller, StringToValueMap arg_map)
 {
     std::string axis_str("");
     RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
@@ -77,7 +78,7 @@ void cmd_home(mctl::Controller &controller, std::map<std::string,docopt::value> 
 }
 
 
-void cmd_is_homed(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_is_homed(mctl::Controller &controller, StringToValueMap arg_map)
 {
     std::string axis_str("");
     RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
@@ -109,7 +110,7 @@ void cmd_is_homed(mctl::Controller &controller, std::map<std::string,docopt::val
 }
 
 
-void cmd_set_homed(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_set_homed(mctl::Controller &controller, StringToValueMap arg_map)
 {
     std::string axis_str("");
     RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
@@ -139,7 +140,7 @@ void cmd_set_homed(mctl::Controller &controller, std::map<std::string,docopt::va
 }
 
 
-void cmd_get_mode(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_get_mode(mctl::Controller &controller, StringToValueMap arg_map)
 {
     std::string mode_str;
     controller.mode(mode_str);
@@ -147,21 +148,21 @@ void cmd_get_mode(mctl::Controller &controller, std::map<std::string,docopt::val
 }
 
 
-void cmd_set_mode_ready(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_set_mode_ready(mctl::Controller &controller, StringToValueMap arg_map)
 {
     controller.set_mode_ready();
     std::cout << "setting mode to ready" << std::endl;
 }
 
 
-void cmd_set_mode_disabled(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_set_mode_disabled(mctl::Controller &controller, StringToValueMap arg_map)
 {
     controller.set_mode_disabled();
     std::cout << "setting mode to disabled" << std::endl;
 }
 
 
-void cmd_get_position(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_get_position(mctl::Controller &controller, StringToValueMap arg_map)
 {
     std::vector<double> pos_vec;
     controller.position(pos_vec);
@@ -190,7 +191,7 @@ void cmd_get_position(mctl::Controller &controller, std::map<std::string,docopt:
 }
 
 
-void cmd_get_position_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_get_position_ind(mctl::Controller &controller, StringToValueMap arg_map)
 {
     std::vector<int32_t> pos_vec;
     controller.position(pos_vec);
@@ -215,7 +216,7 @@ void cmd_get_position_ind(mctl::Controller &controller, std::map<std::string,doc
 }
 
 
-void cmd_move_to(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_move_to(mctl::Controller &controller, StringToValueMap arg_map)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
@@ -255,7 +256,7 @@ void cmd_move_to(mctl::Controller &controller, std::map<std::string,docopt::valu
 }
 
 
-void cmd_move_to_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_move_to_ind(mctl::Controller &controller, StringToValueMap arg_map)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
@@ -295,7 +296,7 @@ void cmd_move_to_ind(mctl::Controller &controller, std::map<std::string,docopt::
 }
 
 
-void cmd_jog(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_jog(mctl::Controller &controller, StringToValueMap arg_map)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
@@ -335,7 +336,7 @@ void cmd_jog(mctl::Controller &controller, std::map<std::string,docopt::value> a
 }
 
 
-void cmd_jog_ind(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_jog_ind(mctl::Controller &controller, StringToValueMap arg_map)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
@@ -375,7 +376,7 @@ void cmd_jog_ind(mctl::Controller &controller, std::map<std::string,docopt::valu
 }
 
 
-void cmd_outscan(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_outscan(mctl::Controller &controller, StringToValueMap arg_map)
 {
     if (!arg_map["<input_file>"].isString())
     {
@@ -403,7 +404,7 @@ void cmd_outscan(mctl::Controller &controller, std::map<std::string,docopt::valu
 }
 
 
-void cmd_status(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_status(mctl::Controller &controller, StringToValueMap arg_map)
 {
     arg_map["<axis>"] = docopt::value(std::string("all"));
     std::cout << std::endl;
@@ -419,7 +420,19 @@ void cmd_status(mctl::Controller &controller, std::map<std::string,docopt::value
 }
 
 
-void cmd_ft_info(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_config(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    mctl::Configuration config = controller.config();
+
+    std::cout << std::endl;
+    std::cout << "config file: " << config.file() << std::endl;
+    std::cout << std::endl;
+    std::cout << config.file_contents();
+    std::cout << std::endl;
+}
+
+
+void cmd_ft_info(mctl::Controller &controller, StringToValueMap arg_map)
 {
     mctl::Configuration config = controller.config();
 
@@ -437,16 +450,25 @@ void cmd_ft_info(mctl::Controller &controller, std::map<std::string,docopt::valu
 }
 
 
-void cmd_help(mctl::Controller &controller, std::map<std::string,docopt::value> arg_map)
+void cmd_help(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    std::cout << "help command" << std::endl;
+    if (!arg_map["<command>"].isString())
+    {
+        std::cout << "error: <command> must be string" << std::endl;
+    }
+    std::string command = arg_map["<command>"].asString();
+    mctl::RtnStatus rtn_status = print_command_help(command);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;;
+    }
 }
 
 
 // Utility functions
 // ------------------------------------------------------------------------------------------------
 
-std::map<std::string,docopt::value>  get_arg_map(int argc, char *argv[]) 
+StringToValueMap  get_arg_map(int argc, char *argv[]) 
 {
     // Replace '-' before numbers with 'n' and parse command line arguments
     // This is to prevent docopt parser from thinking negative numbers are 
@@ -462,12 +484,12 @@ std::map<std::string,docopt::value>  get_arg_map(int argc, char *argv[])
         }
     }
     // Parse command line arguments
-    std::map<std::string,docopt::value> arg_map = docopt::docopt(USAGE,{argv+1,argv+argc},true,"mctl 0.1"); 
+    StringToValueMap arg_map = docopt::docopt(USAGE,{argv+1,argv+argc},true,VersionString); 
     return arg_map;
 }
 
 
-void print_arg_map(std::map<std::string,docopt::value> arg_map)
+void print_arg_map(StringToValueMap arg_map)
 {
     std::cout << std::endl;
     std::cout << "arg_map" << std::endl;
@@ -531,7 +553,7 @@ RtnStatus get_docopt_value_as_int32(docopt::value docopt_value, int32_t  &value_
 }
 
 
-RtnStatus get_axis_str_from_arg_map(std::map<std::string,docopt::value> arg_map, std::string &axis_str)
+RtnStatus get_axis_str_from_arg_map(StringToValueMap arg_map, std::string &axis_str)
 {
     RtnStatus rtn_status;
     if (arg_map["<axis>"].isString())
@@ -554,7 +576,7 @@ RtnStatus get_axis_str_from_arg_map(std::map<std::string,docopt::value> arg_map,
 }
 
 
-RtnStatus get_axis_from_arg_map(std::map<std::string,docopt::value> arg_map, mctl::Axis &axis)
+RtnStatus get_axis_from_arg_map(StringToValueMap arg_map, mctl::Axis &axis)
 {
     std::string axis_str;
     RtnStatus rtn_status = get_axis_str_from_arg_map(arg_map,axis_str);
