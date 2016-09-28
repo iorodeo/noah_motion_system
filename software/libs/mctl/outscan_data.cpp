@@ -83,6 +83,7 @@ namespace mctl
         config_ = new_config;
     }
 
+
     void OutscanData::update(DevToHostMsg msg)
     {
         // Add time in seconds
@@ -311,7 +312,6 @@ namespace mctl
     }
 
 
-
     RtnStatus OutscanData::add_stepper_velocity_dataset(H5::H5File &h5file)
     {
         // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
@@ -334,6 +334,7 @@ namespace mctl
 
         return rtn_status;
     }
+
 
     RtnStatus OutscanData::add_pwm_position_dataset(H5::H5File &h5file)
     {
@@ -359,6 +360,7 @@ namespace mctl
         return rtn_status;
     }
 
+
     RtnStatus OutscanData::add_analog_input_dataset(H5::H5File &h5file)
     {
         // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
@@ -376,6 +378,7 @@ namespace mctl
         return rtn_status;
     }
 
+
     RtnStatus OutscanData::add_force_and_torque_dataset(H5::H5File &h5file)
     {
         // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
@@ -390,11 +393,10 @@ namespace mctl
         {
             return rtn_status;
         }
-
-        // TODO: added units attribue.  Get this from sensor cal.
-
+        rtn_status = add_force_and_torque_attribute(h5file,dataset_name);
         return rtn_status;
     }
+
 
     RtnStatus OutscanData::add_status_dataset(H5::H5File &h5file)
     {
@@ -540,11 +542,15 @@ namespace mctl
         }
 
         std::ostringstream ft_oss;
-
-        //////////////////////////////////////////////////////////////////////////////////////////////
-        // NOT DONE !!!
-        //////////////////////////////////////////////////////////////////////////////////////////////
-
+        for (int i=0; i<units_vec.size(); i++)
+        {
+            ft_oss << units_vec[i];
+            if (i < units_vec.size()-1)
+            {
+                ft_oss << ", ";
+            }
+        }
+        rtn_status = add_dataset_attribute(h5file, dataset_name, unit_attr_name_, ft_oss.str());
         return rtn_status;
     }
 
