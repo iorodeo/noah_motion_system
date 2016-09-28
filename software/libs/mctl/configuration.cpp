@@ -467,6 +467,12 @@ namespace mctl
     }
 
 
+    RtnStatus Configuration::get_force_and_torque_units(std::vector<std::string> &units_vec)
+    {
+        return ft_sensor_cal_.get_units(units_vec);
+    }
+
+
     RtnStatus Configuration::get_force_and_torque(std::vector<double> ain_vec, std::vector<double> &ft_vec)
     {
         RtnStatus rtn_status;

@@ -42,6 +42,7 @@ namespace mctl
             RtnStatus set_bias(arma::Row<double> bias_vec);
             RtnStatus set_bias(double fx, double fy, double fz, double tx, double ty, double tz);
 
+            RtnStatus get_units(std::vector<std::string> &units_vec);
             RtnStatus get_force_units(std::string &units);
             RtnStatus get_torque_units(std::string &units);
             RtnStatus get_tool_transform(FT_ToolTransform &tran);

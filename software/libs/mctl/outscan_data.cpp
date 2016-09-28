@@ -257,10 +257,10 @@ namespace mctl
         }
         catch (H5::Exception &error)
         {
-            std::stringstream error_ss;
-            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
-            error_ss << error.getDetailMsg();
-            rtn_status.set_error_msg(error_ss.str());
+            std::ostringstream error_oss;
+            error_oss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_oss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_oss.str());
             rtn_status.set_success(false);
         }
         return rtn_status;
@@ -372,7 +372,6 @@ namespace mctl
         {
             return rtn_status;
         }
-
         rtn_status = add_analog_input_unit_attribute(h5file,dataset_name);
         return rtn_status;
     }
@@ -435,10 +434,10 @@ namespace mctl
         std::string group_name("/");
 
         std::time_t now = std::time(nullptr);
-        std::stringstream date_data_ss;
-        date_data_ss << std::asctime(std::localtime(&now));
+        std::ostringstream date_data_oss;
+        date_data_oss << std::asctime(std::localtime(&now));
 
-        rtn_status = add_group_attribute(h5file,group_name,date_attr_name_,date_data_ss.str());
+        rtn_status = add_group_attribute(h5file,group_name,date_attr_name_,date_data_oss.str());
         return rtn_status;
     }
 
@@ -446,16 +445,16 @@ namespace mctl
     RtnStatus OutscanData::add_stepper_unit_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream unit_ss;
+        std::ostringstream unit_oss;
         for (int i=0; i<NumStepper; i++)
         {
-            unit_ss << config_.axis_unit_string(Axis(i));
+            unit_oss << config_.axis_unit_string(Axis(i));
             if (i < (NumStepper-1))
             {
-                unit_ss << ", ";
+                unit_oss << ", ";
             }
         }
-        rtn_status = add_dataset_attribute(h5file,dataset_name,unit_attr_name_,unit_ss.str());
+        rtn_status = add_dataset_attribute(h5file,dataset_name,unit_attr_name_,unit_oss.str());
         return rtn_status;
     }
 
@@ -463,33 +462,33 @@ namespace mctl
     RtnStatus OutscanData::add_stepper_axis_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream axis_ss;
+        std::ostringstream axis_oss;
         for (int i=0; i<NumStepper; i++)
         {
-            axis_ss << config_.axis_name(Axis(i));
+            axis_oss << config_.axis_name(Axis(i));
             if (i < (NumStepper-1))
             {
-                axis_ss << ", ";
+                axis_oss << ", ";
             }
         }
-        rtn_status = add_dataset_attribute(h5file, dataset_name, axis_attr_name_, axis_ss.str());
+        rtn_status = add_dataset_attribute(h5file, dataset_name, axis_attr_name_, axis_oss.str());
         return rtn_status;
     }
 
     RtnStatus OutscanData::add_pwm_unit_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream unit_ss;
+        std::ostringstream unit_oss;
         int ind = 0;
         for (auto num : PwmList)
         {
-            unit_ss << config_.axis_unit_string(Axis(num));
+            unit_oss << config_.axis_unit_string(Axis(num));
             if (ind < (NumPwm-1))
             {
-                unit_ss << ", ";
+                unit_oss << ", ";
             }
         }
-        rtn_status = add_dataset_attribute(h5file, dataset_name, unit_attr_name_, unit_ss.str());
+        rtn_status = add_dataset_attribute(h5file, dataset_name, unit_attr_name_, unit_oss.str());
         return rtn_status;
     }
     
@@ -497,34 +496,55 @@ namespace mctl
     RtnStatus OutscanData::add_pwm_axis_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream axis_ss;
+        std::ostringstream axis_oss;
         int ind = 0;
         for (auto num : PwmList)
         {
-            axis_ss << config_.axis_name(Axis(num));
+            axis_oss << config_.axis_name(Axis(num));
             if (ind < (NumPwm-1))
             {
-                axis_ss << ", ";
+                axis_oss << ", ";
             }
             ind++;
         }
-        rtn_status = add_dataset_attribute(h5file, dataset_name, axis_attr_name_, axis_ss.str());
+        rtn_status = add_dataset_attribute(h5file, dataset_name, axis_attr_name_, axis_oss.str());
         return rtn_status;
     }
+
 
     RtnStatus OutscanData::add_analog_input_unit_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
-        std::stringstream ain_ss;
+        std::ostringstream ain_oss;
         for (int i=0; i<NumAnalogInput; i++)
         {
-            ain_ss << config_.analog_input_unit_string();
+            ain_oss << config_.analog_input_unit_string();
             if (i < (NumAnalogInput-1))
             {
-                ain_ss << ", ";
+                ain_oss << ", ";
             }
         }
-        rtn_status = add_dataset_attribute(h5file, dataset_name, unit_attr_name_, ain_ss.str());
+        rtn_status = add_dataset_attribute(h5file, dataset_name, unit_attr_name_, ain_oss.str());
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_force_and_torque_attribute(H5::H5File &h5file, std::string dataset_name)
+    {
+        RtnStatus rtn_status;
+        std::vector<std::string> units_vec;
+        rtn_status = config_.get_force_and_torque_units(units_vec);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        std::ostringstream ft_oss;
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
+        // NOT DONE !!!
+        //////////////////////////////////////////////////////////////////////////////////////////////
+
         return rtn_status;
     }
 
@@ -543,10 +563,10 @@ namespace mctl
         }
         catch (H5::Exception &error)
         {
-            std::stringstream error_ss;
-            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
-            error_ss << error.getDetailMsg();
-            rtn_status.set_error_msg(error_ss.str());
+            std::ostringstream error_oss;
+            error_oss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_oss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_oss.str());
             rtn_status.set_success(false);
         }
 
@@ -568,10 +588,10 @@ namespace mctl
         }
         catch (H5::Exception &error)
         {
-            std::stringstream error_ss;
-            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
-            error_ss << error.getDetailMsg();
-            rtn_status.set_error_msg(error_ss.str());
+            std::ostringstream error_oss;
+            error_oss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_oss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_oss.str());
             rtn_status.set_success(false);
         }
         return rtn_status;
@@ -593,10 +613,10 @@ namespace mctl
         }
         catch (H5::Exception &error)
         {
-            std::stringstream error_ss;
-            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
-            error_ss << error.getDetailMsg();
-            rtn_status.set_error_msg(error_ss.str());
+            std::ostringstream error_oss;
+            error_oss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_oss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_oss.str());
             rtn_status.set_success(false);
         }
         return rtn_status;
@@ -622,10 +642,10 @@ namespace mctl
         }
         catch (H5::Exception &error)
         {
-            std::stringstream error_ss;
-            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
-            error_ss << error.getDetailMsg();
-            rtn_status.set_error_msg(error_ss.str());
+            std::ostringstream error_oss;
+            error_oss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_oss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_oss.str());
             rtn_status.set_success(false);
         }
         return rtn_status;
@@ -645,10 +665,10 @@ namespace mctl
         }
         catch (H5::Exception &error)
         {
-            std::stringstream error_ss;
-            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
-            error_ss << error.getDetailMsg();
-            rtn_status.set_error_msg(error_ss.str());
+            std::ostringstream error_oss;
+            error_oss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_oss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_oss.str());
             rtn_status.set_success(false);
         }
         return rtn_status;
@@ -668,10 +688,10 @@ namespace mctl
         }
         catch (H5::Exception &error)
         {
-            std::stringstream error_ss;
-            error_ss << "Error: " << __PRETTY_FUNCTION__ << ", ";
-            error_ss << error.getDetailMsg();
-            rtn_status.set_error_msg(error_ss.str());
+            std::ostringstream error_oss;
+            error_oss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_oss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_oss.str());
             rtn_status.set_success(false);
         }
         return rtn_status;

@@ -80,6 +80,7 @@ namespace mctl
             RtnStatus add_pwm_unit_attribute(H5::H5File &h5file, std::string dataset_name);
             RtnStatus add_pwm_axis_attribute(H5::H5File &h5file, std::string dataset_name);
             RtnStatus add_analog_input_unit_attribute(H5::H5File &h5file, std::string dataset_name);
+            RtnStatus add_force_and_torque_attribute(H5::H5File &h5file, std::string dataset_name);
 
             RtnStatus add_col_uint8_dataset(H5::H5File &h5file, arma::Col<uint8_t> &col, std::string name);
             RtnStatus add_col_uint16_dataset(H5::H5File &h5file, arma::Col<uint16_t> &col, std::string name);

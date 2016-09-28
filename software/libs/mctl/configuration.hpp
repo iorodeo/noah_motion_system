@@ -68,6 +68,7 @@ namespace mctl
             // -------------------------------------------------------------------------
             bool have_ft_sensor_cal();
             std::string ft_sensor_cal_info();
+            RtnStatus get_force_and_torque_units(std::vector<std::string> &units_vec);
             RtnStatus get_force_and_torque(std::vector<double> ain_vec, std::vector<double> &ft_vec);
             RtnStatus get_force_and_torque(arma::Row<double> ain_vec, arma::Row<double> &ft_vec);
             RtnStatus get_force_and_torque(arma::Mat<double> ain_mat, arma::Mat<double> &ft_vec);

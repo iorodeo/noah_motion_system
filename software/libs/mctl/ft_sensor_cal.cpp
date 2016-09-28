@@ -173,6 +173,31 @@ namespace mctl
         return set_bias(bias_vec_std);
     }
 
+    
+    RtnStatus FT_SensorCal::get_units(std::vector<std::string> &units_vec)
+    {
+        RtnStatus rtn_status;
+        if (!is_initialized(rtn_status))
+        {
+            return rtn_status;
+        }
+
+        for (int i=0; i<(cal_.get()->rt.NumAxes); i++)
+        {
+            std::string units;
+            if (cal_.get() -> AxisNames[i][0] == 'F')
+            {
+                units = std::string(cal_.get() -> cfg.ForceUnits);
+            }
+            else
+            {
+                units = std::string(cal_.get() -> cfg.TorqueUnits);
+            }
+            units_vec.push_back(units);
+        }
+        return rtn_status;
+    }
+
 
     RtnStatus FT_SensorCal::get_force_units(std::string &units)
     {
