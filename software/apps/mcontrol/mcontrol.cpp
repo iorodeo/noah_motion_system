@@ -420,10 +420,13 @@ void cmd_status(mctl::Controller &controller, StringToValueMap arg_map)
 }
 
 
-void cmd_config(mctl::Controller &controller, StringToValueMap arg_map)
+void cmd_config_info(mctl::Controller &controller, StringToValueMap arg_map)
 {
     mctl::Configuration config = controller.config();
 
+    std::cout << std::endl;
+    std::cout << "                   Configuration                      " << std::endl;
+    std::cout << "======================================================" << std::endl;
     std::cout << std::endl;
     std::cout << "config file: " << config.file() << std::endl;
     std::cout << std::endl;

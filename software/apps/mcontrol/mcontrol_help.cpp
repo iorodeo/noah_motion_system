@@ -75,7 +75,7 @@ mcontrol get-position-ind
 )");
 
 
-const std::string config_help_string(R"( 
+const std::string config_info_help_string(R"( 
 mcontrol config
 )");
 
@@ -110,7 +110,7 @@ const StringMap CommandToHelpMap =
     {"outscan", outscan_help_string}, 
     {"get-position", get_position_help_string}, 
     {"get-position-ind", get_position_ind_help_string},
-    {"config", config_help_string},
+    {"config-info", config_info_help_string},
     {"ft-info", ft_info_help_string},
     {"status", status_help_string},
     {"help", help_help_string},

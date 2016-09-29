@@ -35,7 +35,12 @@ mcontrol  - Motion Controller
       mcontrol outscan <input_file> [-o <output_file>] 
       mcontrol get-position 
       mcontrol get-position-ind
-      mcontrol config
+      mcontrol set-position
+      mcontrol set-postion-ind
+      mcontrol joystick
+      mcontrol config-update
+      mcontrol config-check
+      mcontrol config-info
       mcontrol ft-info
       mcontrol status
       mcontrol help <command> 
@@ -91,7 +96,7 @@ void cmd_outscan(mctl::Controller &controller, StringToValueMap arg_map);
 
 void cmd_status(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_config(mctl::Controller &controller, StringToValueMap arg_map);
+void cmd_config_info(mctl::Controller &controller, StringToValueMap arg_map);
 
 void cmd_ft_info(mctl::Controller &controller, StringToValueMap arg_map);
 
@@ -131,7 +136,7 @@ CmdStringToFuncMap =
     {"jog", &cmd_jog},
     {"jog-ind", &cmd_jog_ind},
     {"outscan", &cmd_outscan},
-    {"config",  &cmd_config},
+    {"config-info",  &cmd_config_info},
     {"ft-info", &cmd_ft_info},
     {"status", &cmd_status},
     {"help", &cmd_help},

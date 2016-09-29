@@ -28,3 +28,6 @@ link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/") # for rpi
 
 target_link_libraries(mctl usb armadillo hdf5_cpp hdf5 docopt)
 
+#file(GLOB_RECURSE mctl_INCLUDE_FILES ./ *.hpp  *.h)
+#message(STATUS "${mctl_INCLUDE_FILES}")
+
