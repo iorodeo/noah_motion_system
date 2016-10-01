@@ -11,5 +11,6 @@ include_directories(
 
 link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/") # for rpi
 add_executable(mcontrol mcontrol.cpp mcontrol_help.cpp)
-target_link_libraries(mcontrol mctl atidaq)
+target_link_libraries(mcontrol mctl atidaq docopt)
+install(TARGETS mcontrol DESTINATION bin)
 

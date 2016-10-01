@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include <ctime>
+#include <H5Cpp.h>
 
 namespace mctl
 {

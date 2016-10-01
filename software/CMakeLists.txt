@@ -8,3 +8,5 @@ add_subdirectory("libs/atidaq")
 add_subdirectory("libs/mctl")
 add_subdirectory("apps/mcontrol")
 add_subdirectory("apps/devel")
+
+message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")

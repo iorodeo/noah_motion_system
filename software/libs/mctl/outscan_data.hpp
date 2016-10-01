@@ -5,7 +5,9 @@
 #include <string>
 #include <deque>
 #include <armadillo>
-#include <H5Cpp.h>
+
+namespace H5 { class H5File; } 
+
 
 namespace mctl
 {
