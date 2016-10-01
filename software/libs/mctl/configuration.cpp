@@ -23,9 +23,11 @@ namespace mctl
         analog_input_offset_ = DefaultAnalogInputOffset;
         analog_input_unit_ = DefaultAnalogInputUnit; 
 
-        std::string config_dir_ = std::string("");
-        std::string config_file_ = std::string("");
+        config_dir_ = std::string("");
+        config_file_ = std::string("");
 
+        axis_to_joystick_map_ = DefaultAxisToJoystickMap;
+        joystick_device_ = DefaultJoystickDevice;
     }
 
 
@@ -122,6 +124,12 @@ namespace mctl
         }
 
         rtn_status = load_max_accel(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = load_joystick_config(config_json);
 
         return rtn_status;
     }
@@ -705,6 +713,77 @@ namespace mctl
                         rtn_status.set_error_msg(oss.str());
                         break;
                     }
+                }
+            }
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus Configuration::load_joystick_config(json config_json)
+    {
+        RtnStatus rtn_status;
+        if (!config_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration root must be object");
+            return rtn_status;
+        }
+        if (config_json.count("joystick"))
+        {
+            json joy_json = config_json["joystick"];
+
+            // Get device string
+            if (!joy_json.count("device"))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: joystick device not specified");
+                return rtn_status;
+            }
+            if (!joy_json["device"].is_string())
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: joystick device is not string");
+                return rtn_status;
+            }
+            joystick_device_ = joy_json["device"];
+
+            // Get axis to joystick mapping
+            if (!joy_json.count("mapping"))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: axis to joystick mapping is missing ");
+                return rtn_status;
+            }
+            json axis_map_json = joy_json["mapping"];
+
+            for (auto axis : AxisList)
+            {
+                std::string axis_name = AxisToStringMap[axis];
+                if (axis_map_json.count(axis_name))
+                {
+                    if (!axis_map_json[axis_name].is_number())
+                    {
+                        rtn_status.set_success(false);
+                        rtn_status.set_error_msg("error: axis to joystick map value must integer");
+                        return rtn_status;
+                    }
+                    else
+                    {
+                        int value = int(axis_map_json[axis_name]);
+                        if (value < 0)
+                        {
+                            axis_to_joystick_map_[axis] = -1;
+                        }
+                        else
+                        {
+                            axis_to_joystick_map_[axis] = value;
+                        }
+                    }
+                }
+                else
+                {
+                    axis_to_joystick_map_[axis] = -1;
                 }
             }
         }

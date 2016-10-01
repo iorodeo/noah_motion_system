@@ -58,6 +58,9 @@ namespace mctl
     extern std::map<Axis,bool> DefaultHomingEnabledMap;
     extern std::map<Axis,double> DefaultHomingBackoffMap;
 
+    extern const std::string DefaultJoystickDevice;
+    extern std::map<Axis,int> DefaultAxisToJoystickMap;
+
     // Files and Directories
     extern const std::string DefaultConfigurationDir;
     extern const std::string DefaultConfigurationFile;

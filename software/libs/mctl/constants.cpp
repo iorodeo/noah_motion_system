@@ -131,6 +131,20 @@ namespace mctl
         {Axis_B, 5.0},
     };
 
+    const std::string DefaultJoystickDevice = "/dev/input/js0";
+    std::map<Axis,int> DefaultAxisToJoystickMap =
+    {
+        {Axis_X, -1}, 
+        {Axis_Y, -1},
+        {Axis_Z, -1},
+        {Axis_A, -1},
+        {Axis_B, -1}, 
+        {Pwm_0,  -1},
+        {Pwm_1,  -1},
+        {Pwm_2,  -1},
+        {Pwm_3,  -1},
+    };
+
     // Files and Directories
     extern const std::string DefaultConfigurationDir = std::string(".mctl");
     const std::string DefaultConfigurationFile = std::string("config.json");
