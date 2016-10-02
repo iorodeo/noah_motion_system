@@ -21,7 +21,6 @@ void SystemState::initialize()
     // DEBUG
     // ------------------------------------------------
     //Serial.begin(115200);
-    //set_mode_ready();
     // ------------------------------------------------
 
 }
@@ -85,10 +84,20 @@ void SystemState::update_stop_motion_on_loop()
         int32_t velocity = stepper_[i].velocity();
         all_stopped &= (velocity == 0);
     }
+
     if (all_stopped)
     {
         set_mode_ready(true);
         stop_motion_flag_ = false;
+
+        // Stop triggers in exiting velocity control mode
+        if (mode_ == constants::Mode_VelocityControl)
+        {
+            for (int i=0; i<constants::NumTrigger; i++)
+            {
+                trigger_[i].set_enabled(false);
+            }
+        }
     }
 }
 
@@ -283,6 +292,7 @@ DevToHostMsg SystemState::create_dev_to_host_msg()
     // Echo back last command and set command response data
     dev_to_host_msg.command = host_to_dev_msg_last_.command;
     dev_to_host_msg.command_data = command_response_data_;
+    command_response_data_ =  0;
 
     return dev_to_host_msg;
 }
@@ -341,6 +351,14 @@ void SystemState::command_switchyard()
             break;
 
         case constants::Cmd_GetTriggerEnabled:
+            get_trigger_enabled_cmd();
+            break;
+
+        case constants::Cmd_SetTriggerEnabled:
+            set_trigger_enabled_cmd();
+            break;
+
+        case constants::Cmd_SetStepperPosition:
             break;
 
         case constants::Cmd_GetDigitalOutput:
@@ -462,9 +480,14 @@ void SystemState::set_mode_velocity_control()
     {
         for (int i=0; i<constants::NumStepper; i++)
         {
-        stepper_[i].enable_bounds_check();
-        velocity_controller_[i].reset();
+            stepper_[i].enable_bounds_check();
+            velocity_controller_[i].reset();
         }
+        for (int i=0; i<constants::NumTrigger; i++)
+        {
+            trigger_[i].set_enabled(true);
+        }
+        timer_count_ = 0;
         mode_ = constants::Mode_VelocityControl;
     }
     else
@@ -517,6 +540,36 @@ void SystemState::get_axis_homed_cmd()
     else
     {
         // Error:
+    }
+
+}
+
+
+void SystemState::set_trigger_enabled_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    bool value = bool(host_to_dev_msg_last_.command_data[1]);
+    if (num < constants::NumTrigger)
+    {
+        trigger_[num].set_enabled(value);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::get_trigger_enabled_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumTrigger)
+    {
+        command_response_data_ = uint16_t(trigger_[num].enabled());
+    }
+    else
+    {
+        // Error: 
     }
 
 }
@@ -623,6 +676,7 @@ void SystemState::setup_trigger_output()
                 constants::DefaultTriggerEnabled[i]
                 );
         trigger_[i].initialize();
+        trigger_[i].set_enabled(false);
     }
 }
 

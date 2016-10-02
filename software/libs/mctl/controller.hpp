@@ -57,6 +57,9 @@ namespace mctl
             RtnStatus is_homed(Axis axis, bool &is_homed_flag);
             RtnStatus is_homed(std::map<Axis,bool> &is_homed_map);
 
+            RtnStatus set_trigger_enabled(int trigger, bool value);
+            RtnStatus get_trigger_enabled(int trigger, bool &value); 
+
             RtnStatus wait_for_ready(bool check=true, bool quiet=false);
             Unit axis_unit(Axis axis);
             std::string axis_unit_string(Axis axis);

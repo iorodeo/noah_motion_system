@@ -110,6 +110,10 @@ mcontrol trigger-off
 )");
 
 
+const std::string trigger_state_help_string(R"( 
+mcontrol trigger-state 
+)");
+
 const std::string get_ai_samples_help_string(R"( 
 mcontrol get-ai-samples 
 )");
@@ -192,6 +196,7 @@ const StringMap CommandToHelpMap =
     {"get_trigger-freq", get_trigger_freq_help_string},
     {"trigger-on", trigger_on_help_string},
     {"trigger-off", trigger_off_help_string},
+    {"trigger-state", trigger_state_help_string},
     {"get-ai-samples", get_ai_samples_help_string},
     {"get-ft-samples", get_ft_samples_help_string},
     {"ai-display", ai_display_help_string},

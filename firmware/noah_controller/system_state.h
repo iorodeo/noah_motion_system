@@ -87,6 +87,8 @@ class SystemState
         void stop_motion_cmd();
         void set_axis_homed_cmd();
         void get_axis_homed_cmd();
+        void set_trigger_enabled_cmd();
+        void get_trigger_enabled_cmd();
 
         bool all_axes_homed();
 

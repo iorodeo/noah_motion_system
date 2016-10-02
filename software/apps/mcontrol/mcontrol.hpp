@@ -39,10 +39,11 @@ mcontrol  - Motion Controller
       mcontrol set-position <X> <Y> <Z> <A> <B>
       mcontrol set-position-ind <axis> <value>
       mcontrol set-position-ind <A> <Y> <Z> <A> <B> 
-      mcontrol set-trigger-freq <freq>
-      mcontrol get-trigger-freq
-      mcontrol trigger-on
-      mcontrol trigger-off
+      mcontrol set-trigger-freq <trigger> <freq>
+      mcontrol get-trigger-freq <trigger>
+      mcontrol trigger-on <trigger>
+      mcontrol trigger-off <trigger>
+      mcontrol trigger-state <trigger>
       mcontrol get-ai-samples [-n <number>] [-o <output_file>]
       mcontrol get-ft-samples [-n <number>] [-o <output_file>]
       mcontrol ai-display 
@@ -126,6 +127,8 @@ bool cmd_trigger_on(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_trigger_off(mctl::Controller &controller, StringToValueMap arg_map);
 
+bool cmd_trigger_state(mctl::Controller &controller, StringToValueMap arg_map);
+
 bool cmd_get_ai_samples(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_get_ft_samples(mctl::Controller &controller, StringToValueMap arg_map);
@@ -161,9 +164,13 @@ RtnStatus get_docopt_value_as_double(docopt::value docopt_value, double &value_d
 
 RtnStatus get_docopt_value_as_int32(docopt::value docopt_value, int32_t  &value_int32);
 
+RtnStatus get_docopt_value_as_int(docopt::value docopt_value, int  &value_int);
+
 RtnStatus get_axis_from_arg_map(StringToValueMap arg_map, mctl::Axis &axis);
 
 RtnStatus get_axis_str_from_arg_map(StringToValueMap arg_map, std::string &axis_str);
+
+RtnStatus get_trigger_from_docopt(docopt::value docopt_value, std::vector<int> &trigger_vec);
 
 
 // Command Map: command string ->  command function 
@@ -191,6 +198,7 @@ CmdStringToFuncMap =
     {"get-trigger-freq", &cmd_get_trigger_freq},
     {"trigger-on", &cmd_trigger_on},
     {"trigger-off", &cmd_trigger_off},
+    {"trigger-state", &cmd_trigger_state},
     {"get-ai-samples", &cmd_get_ai_samples},       //
     {"get-ft-samples", &cmd_get_ft_samples},       //
     {"ai-display", &cmd_ai_display},               //

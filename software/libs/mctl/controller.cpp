@@ -344,6 +344,41 @@ namespace mctl
     }
 
 
+    RtnStatus Controller::set_trigger_enabled(int trigger, bool value)
+    {
+        RtnStatus rtn_status;
+        if ((trigger < 0) || (trigger >= NumTrigger))
+        {
+            std::ostringstream oss;
+            oss << "error: trigger must >=0 and < " << int(NumTrigger) << std::endl;
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+            return check_status(rtn_status);
+        }
+
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetTriggerEnabled;
+        host_to_dev_msg.command_data[0] = uint16_t(trigger);
+        host_to_dev_msg.command_data[1] = uint16_t(value);
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_trigger_enabled(int trigger, bool &value) 
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_GetTriggerEnabled;
+        host_to_dev_msg.command_data[0] = uint16_t(trigger);
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        value = bool(dev_to_host_msg.command_data);
+        return check_status(rtn_status);
+    }
+
+
     RtnStatus Controller::is_homed(std::map<Axis,bool> &is_homed_map)
     {
         RtnStatus rtn_status;

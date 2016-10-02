@@ -265,18 +265,63 @@ bool cmd_get_trigger_freq(mctl::Controller &controller, StringToValueMap arg_map
 
 bool cmd_trigger_on(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    std::vector<int> trigger_vec;
+    RtnStatus rtn_status = get_trigger_from_docopt(arg_map["<trigger>"], trigger_vec);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;;
+        return false;
+    }
+    for (auto trigger : trigger_vec)
+    {
+        controller.set_trigger_enabled(trigger,true);
+        std::cout << "set trigger[" << trigger << "] on"  << std::endl;
+    }
     return true;
 }
 
 
 bool cmd_trigger_off(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    std::vector<int> trigger_vec;
+    RtnStatus rtn_status = get_trigger_from_docopt(arg_map["<trigger>"], trigger_vec);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;;
+        return false;
+    }
+    for (auto trigger :trigger_vec)
+    {
+        controller.set_trigger_enabled(trigger,false);
+        std::cout << "set trigger[" << trigger << "] off"  << std::endl;
+    }
+    return true;
+}
+
+
+bool cmd_trigger_state(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    std::vector<int> trigger_vec;
+    RtnStatus rtn_status = get_trigger_from_docopt(arg_map["<trigger>"], trigger_vec);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;;
+        return false;
+    }
+    for (auto trigger : trigger_vec)
+    {
+        bool enabled;
+        controller.get_trigger_enabled(trigger,enabled);
+        std::cout << "trigger[" << trigger << "] = " ;
+        if (enabled)
+        {
+            std::cout << "on" << std::endl;
+        }
+        else
+        {
+            std::cout << "off" << std::endl;
+        }
+    }
     return true;
 }
 
@@ -728,12 +773,33 @@ RtnStatus get_docopt_value_as_int32(docopt::value docopt_value, int32_t  &value_
     catch (std::runtime_error  error)
     {
         rtn_status.set_success(false);
-        rtn_status.set_error_msg("error: unable to convert string to integer");
+        rtn_status.set_error_msg("error: unable to convert string to int32 (*)");
     }
     catch (std::invalid_argument error)
     {
         rtn_status.set_success(false);
-        rtn_status.set_error_msg("error: unable to convert string to int32");
+        rtn_status.set_error_msg("error: unable to convert string to int32 (**)");
+    }
+    return rtn_status;
+}
+
+
+RtnStatus get_docopt_value_as_int(docopt::value docopt_value, int &value_int)
+{
+    RtnStatus rtn_status;
+    try
+    { 
+        value_int= int(docopt_value.asLong());
+    }
+    catch (std::runtime_error  error)
+    {
+        rtn_status.set_success(false);
+        rtn_status.set_error_msg("error: unable to convert string to int (*)");
+    }
+    catch (std::invalid_argument error)
+    {
+        rtn_status.set_success(false);
+        rtn_status.set_error_msg("error: unable to convert string to int (**)");
     }
     return rtn_status;
 }
@@ -769,6 +835,35 @@ RtnStatus get_axis_from_arg_map(StringToValueMap arg_map, mctl::Axis &axis)
     if (rtn_status.success())
     {
         axis = StringToAxisMap[axis_str];
+    }
+    return rtn_status;
+}
+
+RtnStatus get_trigger_from_docopt(docopt::value docopt_value, std::vector<int> &trigger_vec)
+{
+    int trigger_num;
+    RtnStatus rtn_status = get_docopt_value_as_int(docopt_value,trigger_num);
+    if (rtn_status.success())
+    {
+        trigger_vec.push_back(trigger_num);
+    }
+    else
+    {
+        std::string trigger_str = docopt_value.asString();
+        if (trigger_str.compare(std::string("all")) == 0)
+        {
+            for (int i=0; i<mctl::NumTrigger; i++)
+            {
+                trigger_vec.push_back(i);
+            }
+            rtn_status.set_success(true);
+            rtn_status.set_error_msg("");
+        }
+        else
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: <trigger> must be # or 'all'");
+        }
     }
     return rtn_status;
 }

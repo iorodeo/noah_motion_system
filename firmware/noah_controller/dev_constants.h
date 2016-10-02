@@ -36,7 +36,9 @@ namespace constants
         Cmd_GetAxisHomed,
         Cmd_GetTriggerCount,
         Cmd_SetTriggerCount,
+        Cmd_SetTriggerEnabled,
         Cmd_GetTriggerEnabled,
+        Cmd_SetStepperPosition,
         Cmd_GetDigitalOutput
     };
 

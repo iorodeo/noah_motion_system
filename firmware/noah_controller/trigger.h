@@ -19,8 +19,8 @@ class Trigger
 
     protected:
         uint8_t pin_ = 0;
-        bool enabled_ = false;
-        uint16_t count_ = 5000;
+        volatile  bool enabled_ = false;
+        volatile uint16_t count_ = 5000;
 };
 
 inline void Trigger::set_pin_high_on_count(uint32_t timer_count)
