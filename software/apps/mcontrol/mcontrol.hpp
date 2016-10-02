@@ -70,43 +70,43 @@ std::vector<std::string> AxisValueArgStringList = {"<X>", "<Y>", "<Z>", "<A>", "
 
 // Command functions
 // -----------------------------------------------------------------------------------------------
-void cmd_home(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_home(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_is_homed(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_is_homed(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_set_homed(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_set_homed(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_get_mode(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_get_mode(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_set_mode_ready(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_set_mode_ready(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_set_mode_disabled(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_set_mode_disabled(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_get_position(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_get_position(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_get_position_ind(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_get_position_ind(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_move_to(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_move_to(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_move_to_ind(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_move_to_ind(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_jog(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_jog(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_jog_ind(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_jog_ind(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_outscan(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_outscan(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_is_outscan_ready(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_is_outscan_ready(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_status(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_status(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_config_info(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_config_info(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_config_file(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_config_file(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_ft_info(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_ft_info(mctl::Controller &controller, StringToValueMap arg_map);
 
-void cmd_help(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_help(mctl::Controller &controller, StringToValueMap arg_map);
 
 
 // Utility functions
@@ -126,7 +126,7 @@ RtnStatus get_axis_str_from_arg_map(StringToValueMap arg_map, std::string &axis_
 
 // Command Map: command string ->  command function 
 //-----------------------------------------------------------------------------------------------------
-std::map<std::string,std::function<void(mctl::Controller&,StringToValueMap)>> 
+std::map<std::string,std::function<bool(mctl::Controller&,StringToValueMap)>> 
 CmdStringToFuncMap = 
 {
     {"home", &cmd_home},
