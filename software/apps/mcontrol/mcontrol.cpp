@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
     StringToValueMap arg_map =  get_arg_map(argc, argv); 
 
-    if (false) { print_arg_map(arg_map); } // DEBUG
+    if (true) { print_arg_map(arg_map); } // DEBUG
 
     // Setup mctl controller
     mctl::Controller controller;
@@ -228,6 +228,123 @@ bool cmd_get_position_ind(mctl::Controller &controller, StringToValueMap arg_map
 }
 
 
+bool cmd_set_position(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ////////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    ////////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+bool cmd_set_position_ind(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_set_trigger_freq(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_get_trigger_freq(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_trigger_on(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_trigger_off(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_get_ai_samples(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_get_ft_samples(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_ai_display(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_ft_display(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+
+bool cmd_joystick(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_config_update(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
+bool cmd_config_check(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    ///////////////////////////////////////////////////////////////////////
+    // NOT DONE
+    //////////////////////////////////////////////////////////////////////
+    return true;
+}
+
+
 bool cmd_move_to(mctl::Controller &controller, StringToValueMap arg_map)
 {
     RtnStatus rtn_status;
@@ -396,22 +513,28 @@ bool cmd_jog_ind(mctl::Controller &controller, StringToValueMap arg_map)
 
 bool cmd_outscan(mctl::Controller &controller, StringToValueMap arg_map)
 {
+    // Get input trajectory filename
     if (!arg_map["<input_file>"].isString())
     {
         std::cout << "error: <filename> must be string" << std::endl;
         return false;
     }
-    if (!arg_map["-o"].isString())
+    std::string traj_filename = arg_map["<input_file>"].asString();
+
+    // Get output data filename
+    std::string data_filename = DefaultOutscanDataFile;
+    if (arg_map["-o"])
     {
-        std::cout << "error: <output_file> must be string" << std::endl;
-        return false;
+        if (!arg_map["-o"].isString())
+        {
+            std::cout << "error: <output_file> must be string" << std::endl;
+            return false;
+        }
+        data_filename = arg_map["-o"].asString();
     }
 
-
-    std::string traj_filename = arg_map["<input_file>"].asString();
-    std::string data_filename = arg_map["-o"].asString();
+    // Outscan trajectory
     std::cout << "outscanning " << traj_filename << std::endl;
-
     mctl::OutscanData data;
     controller.outscan(traj_filename,data);
     mctl::RtnStatus rtn_status = data.save(data_filename);

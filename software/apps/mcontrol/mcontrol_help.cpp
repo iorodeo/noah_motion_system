@@ -80,6 +80,71 @@ mcontrol get-position-ind
 )");
 
 
+const std::string set_position_help_string(R"( 
+mcontrol set-position 
+)");
+
+
+const std::string set_position_ind_help_string(R"( 
+mcontrol set-position-ind 
+)");
+
+
+const std::string set_trigger_freq_help_string(R"( 
+mcontrol set-trigger-freq
+)");
+
+
+const std::string get_trigger_freq_help_string(R"( 
+mcontrol get-trigger-freq 
+)");
+
+
+const std::string trigger_on_help_string(R"( 
+mcontrol trigger-on 
+)");
+
+
+const std::string trigger_off_help_string(R"( 
+mcontrol trigger-off 
+)");
+
+
+const std::string get_ai_samples_help_string(R"( 
+mcontrol get-ai-samples 
+)");
+
+
+const std::string get_ft_samples_help_string(R"( 
+mcontrol get-ft-samples 
+)");
+
+
+const std::string ai_display_help_string(R"( 
+mcontrol ai-display 
+)");
+
+
+const std::string ft_display_help_string(R"( 
+mcontrol ft-display 
+)");
+
+
+const std::string joystick_help_string(R"( 
+mcontrol joystick 
+)");
+
+
+const std::string config_update_help_string(R"( 
+mcontrol config-update 
+)");
+
+
+const std::string config_check_help_string(R"( 
+mcontrol config-check 
+)");
+
+
 const std::string config_info_help_string(R"( 
 mcontrol config-info
 )");
@@ -121,6 +186,19 @@ const StringMap CommandToHelpMap =
     {"is-outscan-ready", is_outscan_ready_string},
     {"get-position", get_position_help_string}, 
     {"get-position-ind", get_position_ind_help_string},
+    {"set-position", set_position_help_string},
+    {"set-position-ind", set_position_ind_help_string},
+    {"set-trigger-freq", set_trigger_freq_help_string},
+    {"get_trigger-freq", get_trigger_freq_help_string},
+    {"trigger-on", trigger_on_help_string},
+    {"trigger-off", trigger_off_help_string},
+    {"get-ai-samples", get_ai_samples_help_string},
+    {"get-ft-samples", get_ft_samples_help_string},
+    {"ai-display", ai_display_help_string},
+    {"ft_display", ft_display_help_string},
+    {"joystick",  joystick_help_string},
+    {"config-update", config_update_help_string},
+    {"config-check", config_check_help_string},
     {"config-file", config_file_help_string},
     {"config-info", config_info_help_string},
     {"ft-info", ft_info_help_string},

@@ -11,7 +11,6 @@ using mctl::RtnStatus;
 
 typedef std::map<std::string,docopt::value> StringToValueMap;
 
-const int DisplayPositionPrecision = 4;
 
 static const char USAGE[] =
 R"(
@@ -36,8 +35,18 @@ mcontrol  - Motion Controller
       mcontrol is-outscan-ready
       mcontrol get-position 
       mcontrol get-position-ind
-      mcontrol set-position
-      mcontrol set-postion-ind
+      mcontrol set-position <axis> <value>
+      mcontrol set-position <X> <Y> <Z> <A> <B>
+      mcontrol set-position-ind <axis> <value>
+      mcontrol set-position-ind <A> <Y> <Z> <A> <B> 
+      mcontrol set-trigger-freq <freq>
+      mcontrol get-trigger-freq
+      mcontrol trigger-on
+      mcontrol trigger-off
+      mcontrol get-ai-samples [-n <number>] [-o <output_file>]
+      mcontrol get-ft-samples [-n <number>] [-o <output_file>]
+      mcontrol ai-display 
+      mcontrol ft-display
       mcontrol joystick
       mcontrol config-update
       mcontrol config-check
@@ -51,11 +60,18 @@ mcontrol  - Motion Controller
 
     Options:
       -h --help          Show this screen.
+      -o <output_file>   Specify output file 
+      -n <number>        Number of samples
       -v --version       Show version.
-      -o <output_file>   Specify output file [default: outscan_data.h5]
 )";
 
 const std::string VersionString("mcontrol 0.1");
+
+const int DisplayPositionPrecision = 4;
+
+const std::string DefaultOutscanDataFile("outscan_data.h5");
+
+const std::string DefaultSamplesDataFile("samples.txt");
 
 std::map<std::string, mctl::Axis> StringToAxisMap = 
 {
@@ -82,10 +98,6 @@ bool cmd_set_mode_ready(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_set_mode_disabled(mctl::Controller &controller, StringToValueMap arg_map);
 
-bool cmd_get_position(mctl::Controller &controller, StringToValueMap arg_map);
-
-bool cmd_get_position_ind(mctl::Controller &controller, StringToValueMap arg_map);
-
 bool cmd_move_to(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_move_to_ind(mctl::Controller &controller, StringToValueMap arg_map);
@@ -98,13 +110,43 @@ bool cmd_outscan(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_is_outscan_ready(mctl::Controller &controller, StringToValueMap arg_map);
 
-bool cmd_status(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_get_position(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_get_position_ind(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_set_position(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_set_position_ind(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_set_trigger_freq(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_get_trigger_freq(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_trigger_on(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_trigger_off(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_get_ai_samples(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_get_ft_samples(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_ai_display(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_ft_display(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_joystick(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_config_update(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_config_check(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_config_info(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_config_file(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_ft_info(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_status(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_help(mctl::Controller &controller, StringToValueMap arg_map);
 
@@ -135,19 +177,33 @@ CmdStringToFuncMap =
     {"get-mode", &cmd_get_mode},
     {"set-mode-ready",   &cmd_set_mode_ready},
     {"set-mode-disabled", &cmd_set_mode_disabled},
-    {"get-position", &cmd_get_position},
-    {"get-position-ind", &cmd_get_position_ind},
     {"move-to", &cmd_move_to},
     {"move-to-ind", &cmd_move_to_ind},
     {"jog", &cmd_jog},
     {"jog-ind", &cmd_jog_ind},
     {"outscan", &cmd_outscan},
     {"is-outscan-ready", &cmd_is_outscan_ready},
-    {"config-file",  &cmd_config_file},
-    {"config-info",  &cmd_config_info},
+    {"get-position", &cmd_get_position},
+    {"get-position-ind", &cmd_get_position_ind},
+    {"set-position", &cmd_set_position},           //
+    {"set-position-ind", &cmd_set_position_ind},   //
+    {"set-trigger-freq", &cmd_set_trigger_freq},
+    {"get-trigger-freq", &cmd_get_trigger_freq},
+    {"trigger-on", &cmd_trigger_on},
+    {"trigger-off", &cmd_trigger_off},
+    {"get-ai-samples", &cmd_get_ai_samples},       //
+    {"get-ft-samples", &cmd_get_ft_samples},       //
+    {"ai-display", &cmd_ai_display},               //
+    {"ft-display", &cmd_ft_display},               //
+    {"joystick", &cmd_joystick},                   //
+    {"config-update", &cmd_config_update},         //
+    {"config-check", &cmd_config_check},           //
+    {"config-file", &cmd_config_file},
+    {"config-info", &cmd_config_info},
     {"ft-info", &cmd_ft_info},
     {"status", &cmd_status},
     {"help", &cmd_help},
 };
+
 
 #endif
