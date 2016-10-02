@@ -80,6 +80,11 @@ mcontrol config
 )");
 
 
+const std::string config_file_help_string(R"( 
+mcontrol config
+)");
+
+
 const std::string ft_info_help_string(R"( 
 mcontrol ft-info
 )");
@@ -110,6 +115,7 @@ const StringMap CommandToHelpMap =
     {"outscan", outscan_help_string}, 
     {"get-position", get_position_help_string}, 
     {"get-position-ind", get_position_ind_help_string},
+    {"config-file", config_file_help_string},
     {"config-info", config_info_help_string},
     {"ft-info", ft_info_help_string},
     {"status", status_help_string},

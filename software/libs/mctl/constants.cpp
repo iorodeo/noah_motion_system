@@ -75,6 +75,7 @@ namespace mctl
     const int ForceAndTorqueRowDim = 6;
     const int HomingDebounceSleep_ms = 500;
     const int DefaultOutscanStartDelay_ms = 2000;
+    const int DefaultOutscanNumBiasSamples = 300;
     const int32_t DefaultGain = 100;
 
     const double DefaultAnalogInputScale = (49900.0/3000.0)*(1.2/65535.0); // (Rin/Rf)*(AINREF/MAX_UINT16)
@@ -143,6 +144,19 @@ namespace mctl
         {Pwm_1,  -1},
         {Pwm_2,  -1},
         {Pwm_3,  -1},
+    };
+
+    std::map<Axis,bool> DefaultAxisToJoystickInvertMap
+    {
+        {Axis_X, false}, 
+        {Axis_Y, false},
+        {Axis_Z, false},
+        {Axis_A, false},
+        {Axis_B, false}, 
+        {Pwm_0,  false},
+        {Pwm_1,  false},
+        {Pwm_2,  false},
+        {Pwm_3,  false},
     };
 
     // Files and Directories

@@ -365,25 +365,33 @@ namespace mctl
     RtnStatus Controller::home(Axis axis, bool backoff, bool wait)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
-        host_to_dev_msg.command = Cmd_SetModeHoming;
-        host_to_dev_msg.command_data[0] = axis;
-        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
-        if (rtn_status.success() && (wait || backoff))
+        if (!config_.homing_enabled(axis))
         {
-            rtn_status = wait_for_ready();
-            if (rtn_status.success() && backoff)
+            rtn_status = set_homed_true(axis);
+
+        }
+        else
+        {
+            HostToDevMsg host_to_dev_msg;
+            DevToHostMsg dev_to_host_msg;
+            host_to_dev_msg.command = Cmd_SetModeHoming;
+            host_to_dev_msg.command_data[0] = axis;
+            rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+            if (rtn_status.success() && (wait || backoff))
             {
-                double backoff = config_.homing_backoff(axis);
-                rtn_status = jog_position(axis,backoff);
-                if (rtn_status.success())
+                rtn_status = wait_for_ready();
+                if (rtn_status.success() && backoff)
                 {
-                    rtn_status = wait_for_ready();
+                    double backoff = config_.homing_backoff(axis);
+                    rtn_status = jog_position(axis,backoff);
+                    if (rtn_status.success())
+                    {
+                        rtn_status = wait_for_ready();
+                    }
                 }
             }
+            std::this_thread::sleep_for(std::chrono::milliseconds(HomingDebounceSleep_ms));
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(HomingDebounceSleep_ms));
         return check_status(rtn_status);
     }
 

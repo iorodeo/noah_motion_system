@@ -47,6 +47,7 @@ namespace mctl
     extern const int ForceAndTorqueRowDim;
     extern const int HomingDebounceSleep_ms;
     extern const int DefaultOutscanStartDelay_ms;
+    extern const int DefaultOutscanNumBiasSamples;
     extern const int32_t DefaultGain;
 
     extern const double DefaultAnalogInputScale;
@@ -60,6 +61,7 @@ namespace mctl
 
     extern const std::string DefaultJoystickDevice;
     extern std::map<Axis,int> DefaultAxisToJoystickMap;
+    extern std::map<Axis,bool> DefaultAxisToJoystickInvertMap;
 
     // Files and Directories
     extern const std::string DefaultConfigurationDir;

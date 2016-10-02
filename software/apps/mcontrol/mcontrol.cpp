@@ -420,17 +420,30 @@ void cmd_status(mctl::Controller &controller, StringToValueMap arg_map)
 }
 
 
+void cmd_config_file(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    mctl::Configuration config = controller.config();
+
+    std::cout << std::endl;
+    std::cout << "               Configuration File                     " << std::endl;
+    std::cout << "======================================================" << std::endl;
+    std::cout << std::endl;
+    std::cout << "file: " << config.file() << std::endl;
+    std::cout << std::endl;
+    std::cout << config.file_contents();
+    std::cout << std::endl;
+}
+
+
 void cmd_config_info(mctl::Controller &controller, StringToValueMap arg_map)
 {
     mctl::Configuration config = controller.config();
 
     std::cout << std::endl;
-    std::cout << "                   Configuration                      " << std::endl;
+    std::cout << "               Configuration Info                     " << std::endl;
     std::cout << "======================================================" << std::endl;
     std::cout << std::endl;
-    std::cout << "config file: " << config.file() << std::endl;
-    std::cout << std::endl;
-    std::cout << config.file_contents();
+    std::cout << config.info_string();
     std::cout << std::endl;
 }
 

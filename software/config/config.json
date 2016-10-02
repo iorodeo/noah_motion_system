@@ -1,5 +1,9 @@
 {
     "ft_calibration" : "FT8652.cal",
+    "outscan" : {
+        "start_delay_ms"   : 5000,
+        "num_bias_samples" : 200
+    },
     "homing_enabled" : {  
         "X" : true,
         "Y" : true,
@@ -45,12 +49,18 @@
     "joystick" : {
         "device"  : "/dev/input/js0",
         "mapping" : {
-            "X" :  0,
-            "Y" :  1,
-            "Z" :  2,
-            "A" :  3,
-            "B" : -1,
-                
+            "X" :  1,
+            "Y" :  0,
+            "Z" :  3,
+            "A" :  2,
+            "B" : -1 
+        },
+        "invert" : {
+            "X" : false,
+            "Y" : false,
+            "Z" : true,
+            "A" : true,
+            "B" : false
         }
     }
 }

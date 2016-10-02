@@ -87,20 +87,26 @@ namespace mctl
             int outscan_start_delay();
             void set_outscan_start_delay(int value);
 
+            int outscan_num_bias_samples();
+            void set_outscan_num_bias_samples(int value);
+
             double analog_input_scale();
             void set_analog_input_scale(double value);
 
             double analog_input_offset();
             void set_analog_input_offset(double value);
 
+            std::string info_string();
+
         protected:
 
             std::string config_dir_;
             std::string config_file_;
 
-            std::map<Axis,bool> homing_enabled_map_;
             std::map<Axis,Unit> axis_to_unit_map_;
             std::map<Axis,double> axis_to_unit_conversion_map_; 
+
+            std::map<Axis,bool> homing_enabled_map_;
             std::map<Axis,double> homing_backoff_map_;
 
             std::map<Axis,double> min_position_map_;
@@ -112,23 +118,27 @@ namespace mctl
             FT_SensorCal ft_sensor_cal_;
             
             int32_t gain_;
-            int outscan_start_delay_;
+            int outscan_start_delay_; 
+            int outscan_num_bias_samples_;     
 
             double analog_input_scale_;
             double analog_input_offset_;
             Unit analog_input_unit_;
 
             std::map<Axis,int> axis_to_joystick_map_;
+            std::map<Axis,bool> axis_to_joystick_invert_map_;
             std::string joystick_device_;
 
+            RtnStatus load_homing_enabled(json config_json);
             RtnStatus load_ft_sensor_cal(json config_json);
             RtnStatus load_min_position(json config_json);
             RtnStatus load_max_position(json config_json);
             RtnStatus load_home_position(json config_json);
             RtnStatus load_max_speed(json config_json);
             RtnStatus load_max_accel(json config_json);
-            RtnStatus load_stepper_values(json config_json, std::string key, std::map<Axis,double> &value_map);
+            RtnStatus load_outscan_config(json config_json);
             RtnStatus load_joystick_config(json config_json);
+            RtnStatus load_stepper_values(json config_json, std::string key, std::map<Axis,double> &value_map);
             RtnStatus get_config_file_ifstream(std::string filename, std::ifstream &config_ifs);
 
 

@@ -18,6 +18,7 @@ namespace mctl
 
         gain_ = DefaultGain;
         outscan_start_delay_ = DefaultOutscanStartDelay_ms;
+        outscan_num_bias_samples_ = DefaultOutscanNumBiasSamples;
 
         analog_input_scale_ = DefaultAnalogInputScale;
         analog_input_offset_ = DefaultAnalogInputOffset;
@@ -27,6 +28,7 @@ namespace mctl
         config_file_ = std::string("");
 
         axis_to_joystick_map_ = DefaultAxisToJoystickMap;
+        axis_to_joystick_invert_map_ = DefaultAxisToJoystickInvertMap;
         joystick_device_ = DefaultJoystickDevice;
     }
 
@@ -39,8 +41,6 @@ namespace mctl
         path_oss << DefaultConfigurationFile;
         return load(path_oss.str());
     }
-
-
 
 
     RtnStatus Configuration::load(std::string filename)
@@ -93,6 +93,18 @@ namespace mctl
             return rtn_status;
         }
 
+        rtn_status = load_homing_enabled(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = load_outscan_config(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
         rtn_status = load_ft_sensor_cal(config_json);
         if (!rtn_status.success())
         {
@@ -124,6 +136,12 @@ namespace mctl
         }
 
         rtn_status = load_max_accel(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = load_outscan_config(config_json);
         if (!rtn_status.success())
         {
             return rtn_status;
@@ -162,6 +180,132 @@ namespace mctl
         }
         return ss.str();
     }
+
+
+    std::string Configuration::info_string()
+    {
+        std::string pad(" ");
+        std::stringstream ss;
+        ss << std::setprecision(8) << std::fixed;
+
+        ss << "axis units: " << std::endl;
+        for (auto kv : axis_to_unit_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            std::string unit = UnitToStringMap[kv.second];
+            ss << pad << name << " = " << unit << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "axis to unit conversion: " << std::endl;
+        for (auto kv : axis_to_unit_conversion_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            ss << pad << name << " = " << kv.second << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "homing enabled: " << std::endl;
+        ss << std::boolalpha;
+        for (auto kv : homing_enabled_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            ss << pad << name << " = " << kv.second << std::endl;
+        }
+        ss << std::noboolalpha;
+
+        ss << std::endl;
+        ss << "homing backoff: " << std::endl;
+        for (auto kv : homing_backoff_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            ss << pad << name << " = " << kv.second << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "min position: " << std::endl;
+        for (auto kv : min_position_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            ss << pad << name << " = " << kv.second << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "max position: " << std::endl;
+        for (auto kv : max_position_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            ss << pad << name << " = " << kv.second << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "home position: " << std::endl;
+        for (auto kv : home_position_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            ss << pad << name << " = " << kv.second << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "max speed: " << std::endl;
+        for (auto kv : max_speed_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            ss << pad << name << " = " << kv.second << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "max accel: " << std::endl;
+        for (auto kv : max_accel_map_)
+        {
+            std::string name = AxisToStringMap[kv.first];
+            ss << pad << name << " = " << kv.second << std::endl;
+        }
+
+        ss << std::endl;
+        ss << "axis to joystick map:" << std::endl;
+        for (auto kv : axis_to_joystick_map_)
+        {
+            if (kv.second >= 0)
+            {
+                std::string name = AxisToStringMap[kv.first];
+                ss << pad << name << " = " << kv.second << std::endl;
+            }
+        }
+
+        ss << std::endl;
+        ss << "axis joystick invert:" << std::endl;
+        ss << std::boolalpha;
+        for (auto kv : axis_to_joystick_invert_map_)
+        {
+            if (axis_to_joystick_map_[kv.first] >= 0)
+            {
+                std::string name = AxisToStringMap[kv.first];
+                ss << pad << name << " = " << kv.second << std::endl;
+            }
+        }
+        ss << std::noboolalpha;
+        
+        ss << std::endl;
+        ss << "config file:             " << config_file_ << std::endl;
+        std::string ft_cal_file;
+        RtnStatus rtn_status = ft_sensor_cal_.get_filename(ft_cal_file);
+        ss << "ft_calibration:          ";
+        if (rtn_status.success())
+        {
+            ss << ft_cal_file;
+        }
+        else
+        {
+            ss << "none";
+        }
+        ss << std::endl;
+        ss << "joystick device:         " << joystick_device_ << std::endl;
+        ss << "outscan start delay:     " << outscan_start_delay_ << " (ms)" << std::endl;
+        ss << "outscan # bias samples:  " << outscan_num_bias_samples_ << std::endl;
+        return ss.str();
+    }
+
 
     // Configuration protected methods
     // ----------------------------------------------------------------------------------
@@ -455,13 +599,11 @@ namespace mctl
     }
 
 
-    // DEVEL - NOT DONE
-    // -------------------------------------------------------------------------
-    
     bool Configuration::have_ft_sensor_cal()
     {
         return ft_sensor_cal_.is_initialized();
     }
+
 
     std::string Configuration::ft_sensor_cal_info()
     {
@@ -603,6 +745,18 @@ namespace mctl
     }
 
 
+    int Configuration::outscan_num_bias_samples()
+    {
+        return outscan_num_bias_samples_;
+    }
+
+
+    void Configuration::set_outscan_num_bias_samples(int value)
+    {
+        outscan_num_bias_samples_ = value;
+    }
+
+
     double Configuration::analog_input_scale()
     {
         return analog_input_scale_;
@@ -627,14 +781,70 @@ namespace mctl
     }
 
 
+    RtnStatus Configuration::load_homing_enabled(json config_json)
+    {
+        RtnStatus rtn_status;
+        if (!config_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration root must be object");
+            return rtn_status;
+        }
+
+        if (!config_json.count("homing_enabled"))
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration does not contain homing_enabled");
+            return rtn_status;
+        }
+
+        json enabled_json = config_json["homing_enabled"];
+        if (!enabled_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration homing_enabled is not object");
+            return rtn_status;
+        }
+
+        for (auto axis : StepperList)
+        {
+            std::string axis_name = AxisToStringMap[axis];
+            if (!enabled_json.count(axis_name))
+            {
+                std::ostringstream oss;
+                oss << "error: json configuration homing_enabled missing " << axis_name << " axis";
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg(oss.str());
+                return rtn_status;
+            }
+            if (!enabled_json[axis_name].is_boolean())
+            {
+                std::ostringstream oss;
+                oss << "error: json configuration homing_enabled " << axis_name << " axis is not boolean";
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg(oss.str());
+                return rtn_status;
+            }
+            homing_enabled_map_[axis] = enabled_json[axis_name];
+        }
+        return rtn_status;
+    }
+
     RtnStatus Configuration::load_ft_sensor_cal(json config_json)
     {
         RtnStatus rtn_status;
+        if (!config_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration root must be object");
+            return rtn_status;
+        }
+
 
         if (!config_json.count("ft_calibration"))
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("error: configuration  does not contain ft_calibration");
+            rtn_status.set_error_msg("error: configuration does not contain ft_calibration");
             return rtn_status;
         }
         if (!config_json["ft_calibration"].is_string())
@@ -719,6 +929,73 @@ namespace mctl
         return rtn_status;
     }
 
+    RtnStatus Configuration::load_outscan_config(json config_json)
+    {
+        RtnStatus rtn_status;
+        if (!config_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration root must be object");
+            return rtn_status;
+        }
+        if (config_json.count("outscan"))
+        {
+            if (!config_json.is_object())
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: json configuration outscan must be object");
+                return rtn_status;
+            }
+
+            json outscan_json = config_json["outscan"];
+
+            // Get start delay
+            if (!outscan_json.count("start_delay_ms"))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: json configuration outscan must contian start_delay");
+                return rtn_status;
+            }
+            if (!outscan_json["start_delay_ms"].is_number())
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: json configuration outscan start_delay_ms must be number");
+                return rtn_status;
+            }
+            int start_delay_tmp = int(outscan_json["start_delay_ms"]);
+            if (start_delay_tmp < 0)
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: json configuration outscan start_delay_ms must be >=0");
+                return rtn_status;
+            }
+            outscan_start_delay_ = start_delay_tmp;
+
+            // get number of bias samples
+            if(!outscan_json.count("num_bias_samples"))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: json configuration outscan must contain num_bias_samples");
+                return rtn_status;
+            }
+            if (!outscan_json["num_bias_samples"].is_number())
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: json configuration outscan num_bias_samples must be number");
+                return rtn_status;
+            }
+            int num_bias_samples_tmp = int(outscan_json["num_bias_samples"]);
+            if (num_bias_samples_tmp < 0)
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: json configuration outscan bias_samples must be >=0");
+                return rtn_status;
+            }
+            outscan_num_bias_samples_ = num_bias_samples_tmp;
+        }
+        return rtn_status;
+    }
+
 
     RtnStatus Configuration::load_joystick_config(json config_json)
     {
@@ -755,7 +1032,14 @@ namespace mctl
                 rtn_status.set_error_msg("error: axis to joystick mapping is missing ");
                 return rtn_status;
             }
+
             json axis_map_json = joy_json["mapping"];
+            if (!axis_map_json.is_object())
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: joystick mapping is not object");
+                return rtn_status;
+            }
 
             for (auto axis : AxisList)
             {
@@ -786,6 +1070,42 @@ namespace mctl
                     axis_to_joystick_map_[axis] = -1;
                 }
             }
+
+
+            // Get joystick invert mapping
+            if (!joy_json.count("invert"))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: axis to joystick invert assignment is missing ");
+                return rtn_status;
+            }
+            if (!joy_json["invert"].is_object())
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: joystick invert is not object");
+                return rtn_status;
+            }
+
+            json invert_json = joy_json["invert"];
+            for (auto axis : AxisList)
+            {
+                std::string axis_name = AxisToStringMap[axis];
+                if (invert_json.count(axis_name))
+                {
+                    if (!invert_json[axis_name].is_boolean())
+                    {
+                        rtn_status.set_success(false);
+                        rtn_status.set_error_msg("error: axis to joystick invert value must be boolean");
+                        return rtn_status;
+                    }
+                    axis_to_joystick_invert_map_[axis] = bool(invert_json[axis_name]);
+                }
+                else
+                {
+                    axis_to_joystick_invert_map_[axis] = false;
+                }
+            }
+
         }
         return rtn_status;
     }

@@ -40,6 +40,7 @@ mcontrol  - Motion Controller
       mcontrol joystick
       mcontrol config-update
       mcontrol config-check
+      mcontrol config-file
       mcontrol config-info
       mcontrol ft-info
       mcontrol status
@@ -48,9 +49,9 @@ mcontrol  - Motion Controller
       mcontrol (-v | --version)
 
     Options:
-      -h --help     Show this screen.
-      -v --version  Show version.
-      -o <output_file>     Specify output file [default: outscan_data.h5]
+      -h --help          Show this screen.
+      -v --version       Show version.
+      -o <output_file>   Specify output file [default: outscan_data.h5]
 )";
 
 const std::string VersionString("mcontrol 0.1");
@@ -98,6 +99,8 @@ void cmd_status(mctl::Controller &controller, StringToValueMap arg_map);
 
 void cmd_config_info(mctl::Controller &controller, StringToValueMap arg_map);
 
+void cmd_config_file(mctl::Controller &controller, StringToValueMap arg_map);
+
 void cmd_ft_info(mctl::Controller &controller, StringToValueMap arg_map);
 
 void cmd_help(mctl::Controller &controller, StringToValueMap arg_map);
@@ -136,6 +139,7 @@ CmdStringToFuncMap =
     {"jog", &cmd_jog},
     {"jog-ind", &cmd_jog_ind},
     {"outscan", &cmd_outscan},
+    {"config-file",  &cmd_config_file},
     {"config-info",  &cmd_config_info},
     {"ft-info", &cmd_ft_info},
     {"status", &cmd_status},
