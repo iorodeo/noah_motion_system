@@ -345,9 +345,11 @@ void SystemState::command_switchyard()
             break;
 
         case constants::Cmd_GetTriggerCount:
+            get_trigger_count_cmd();
             break;
 
         case constants::Cmd_SetTriggerCount:
+            set_trigger_count_cmd();
             break;
 
         case constants::Cmd_GetTriggerEnabled:
@@ -545,12 +547,41 @@ void SystemState::get_axis_homed_cmd()
 }
 
 
+void SystemState::set_trigger_count_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumTrigger)
+    {
+        uint16_t count = host_to_dev_msg_last_.command_data[1];
+        trigger_[num].set_count(count);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::get_trigger_count_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumTrigger)
+    {
+        command_response_data_ = trigger_[num].count();
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
 void SystemState::set_trigger_enabled_cmd()
 {
     uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
-    bool value = bool(host_to_dev_msg_last_.command_data[1]);
     if (num < constants::NumTrigger)
     {
+        bool value = bool(host_to_dev_msg_last_.command_data[1]);
         trigger_[num].set_enabled(value);
     }
     else

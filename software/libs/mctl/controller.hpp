@@ -59,6 +59,10 @@ namespace mctl
 
             RtnStatus set_trigger_enabled(int trigger, bool value);
             RtnStatus get_trigger_enabled(int trigger, bool &value); 
+            RtnStatus set_trigger_count(int trigger, uint16_t value);
+            RtnStatus get_trigger_count(int trigger, uint16_t &value);
+            RtnStatus set_trigger_frequency(int trigger, double value);
+            RtnStatus get_trigger_frequency(int trigger, double &value);
 
             RtnStatus wait_for_ready(bool check=true, bool quiet=false);
             Unit axis_unit(Axis axis);

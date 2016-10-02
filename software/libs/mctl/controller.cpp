@@ -369,12 +369,98 @@ namespace mctl
     RtnStatus Controller::get_trigger_enabled(int trigger, bool &value) 
     {
         RtnStatus rtn_status;
+        if ((trigger < 0) || (trigger >= NumTrigger))
+        {
+            std::ostringstream oss;
+            oss << "error: trigger must >=0 and < " << int(NumTrigger) << std::endl;
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+            return check_status(rtn_status);
+        }
         HostToDevMsg host_to_dev_msg;
         DevToHostMsg dev_to_host_msg;
         host_to_dev_msg.command = Cmd_GetTriggerEnabled;
         host_to_dev_msg.command_data[0] = uint16_t(trigger);
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
-        value = bool(dev_to_host_msg.command_data);
+        if (rtn_status.success())
+        {
+            value = bool(dev_to_host_msg.command_data);
+        }
+        return check_status(rtn_status);
+    }
+
+    RtnStatus Controller::set_trigger_count(int trigger, uint16_t value)
+    {
+        RtnStatus rtn_status;
+        if ((trigger < 0) || (trigger >= NumTrigger))
+        {
+            std::ostringstream oss;
+            oss << "error: trigger must >=0 and < " << int(NumTrigger) << std::endl;
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+            return check_status(rtn_status);
+        }
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetTriggerCount;
+        host_to_dev_msg.command_data[0] = uint16_t(trigger);
+        host_to_dev_msg.command_data[1] = value;
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_trigger_count(int trigger, uint16_t &value)
+    {
+        RtnStatus rtn_status;
+        if ((trigger < 0) || (trigger >= NumTrigger))
+        {
+            std::ostringstream oss;
+            oss << "error: trigger must >=0 and < " << int(NumTrigger) << std::endl;
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+            return check_status(rtn_status);
+        }
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_GetTriggerCount;
+        host_to_dev_msg.command_data[0] = uint16_t(trigger);
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        if (rtn_status.success())
+        {
+            value = dev_to_host_msg.command_data;
+        }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_trigger_frequency(int trigger, double value)
+    {
+        RtnStatus rtn_status;
+        double period_us = (1.0e6)/value;
+        uint16_t count = uint16_t(period_us/double(TimerPeriod_us));
+        rtn_status = set_trigger_count(trigger,count);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_trigger_frequency(int trigger, double &value)
+    {
+        uint16_t count;
+        RtnStatus rtn_status = get_trigger_count(trigger,count);
+        if (rtn_status.success())
+        {
+            double period_us = double(TimerPeriod_us)*double(count);
+            if (period_us == 0.0)
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: period_us is zero");
+            }
+            else
+            {
+                value = 1.0/((1.0e-6)*period_us);
+            }
+        }
         return check_status(rtn_status);
     }
 

@@ -247,18 +247,55 @@ bool cmd_set_position_ind(mctl::Controller &controller, StringToValueMap arg_map
 
 bool cmd_set_trigger_freq(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    std::vector<int> trigger_vec;
+    RtnStatus rtn_status = get_trigger_from_docopt(arg_map["<trigger>"], trigger_vec, false);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;;
+        return false;
+    }
+
+    double frequency;
+    rtn_status = get_docopt_value_as_double(arg_map["<freq>"],frequency);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;
+        return false;
+    }
+    if (frequency < 0.0)
+    {
+        std::cout << "error: frequency must be > 0" << std::endl;
+        return false;
+    }
+
+    std::cout << std::setprecision(DisplayFrequencyPrecision);
+    std::cout << std::fixed;
+    for (auto trigger : trigger_vec)
+    {
+        controller.set_trigger_frequency(trigger,frequency);
+        std::cout << "triger[" << trigger << "] frequency set to " << frequency << std::endl;
+    }
     return true;
 }
 
 
 bool cmd_get_trigger_freq(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    std::vector<int> trigger_vec;
+    RtnStatus rtn_status = get_trigger_from_docopt(arg_map["<trigger>"], trigger_vec);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;;
+        return false;
+    }
+    std::cout << std::setprecision(DisplayFrequencyPrecision);
+    std::cout << std::fixed;
+    for (auto trigger : trigger_vec)
+    {
+        double frequency;
+        controller.get_trigger_frequency(trigger,frequency);
+        std::cout << "trigger[" << trigger << "] frequency = " << frequency << std::endl;
+    }
     return true;
 }
 
@@ -616,11 +653,16 @@ bool cmd_is_outscan_ready(mctl::Controller &controller, StringToValueMap arg_map
 bool cmd_status(mctl::Controller &controller, StringToValueMap arg_map)
 {
     arg_map["<axis>"] = docopt::value(std::string("all"));
+    arg_map["<trigger>"] = docopt::value(std::string("all"));
     std::cout << std::endl;
     std::cout << "               Motion Controller Status               " << std::endl;
     std::cout << "======================================================" << std::endl;
     std::cout << std::endl;
     cmd_get_mode(controller,arg_map);
+    std::cout << std::endl;
+    cmd_trigger_state(controller,arg_map);
+    std::cout << std::endl;
+    cmd_get_trigger_freq(controller,arg_map);
     std::cout << std::endl;
     cmd_is_homed(controller,arg_map);
     std::cout << std::endl;
@@ -839,7 +881,7 @@ RtnStatus get_axis_from_arg_map(StringToValueMap arg_map, mctl::Axis &axis)
     return rtn_status;
 }
 
-RtnStatus get_trigger_from_docopt(docopt::value docopt_value, std::vector<int> &trigger_vec)
+RtnStatus get_trigger_from_docopt(docopt::value docopt_value, std::vector<int> &trigger_vec, bool allow_all)
 {
     int trigger_num;
     RtnStatus rtn_status = get_docopt_value_as_int(docopt_value,trigger_num);
@@ -849,20 +891,28 @@ RtnStatus get_trigger_from_docopt(docopt::value docopt_value, std::vector<int> &
     }
     else
     {
-        std::string trigger_str = docopt_value.asString();
-        if (trigger_str.compare(std::string("all")) == 0)
+        if (allow_all)
         {
-            for (int i=0; i<mctl::NumTrigger; i++)
+            std::string trigger_str = docopt_value.asString();
+            if (trigger_str.compare(std::string("all")) == 0)
             {
-                trigger_vec.push_back(i);
+                for (int i=0; i<mctl::NumTrigger; i++)
+                {
+                    trigger_vec.push_back(i);
+                }
+                rtn_status.set_success(true);
+                rtn_status.set_error_msg("");
             }
-            rtn_status.set_success(true);
-            rtn_status.set_error_msg("");
+            else
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: <trigger> must be # or 'all'");
+            }
         }
         else
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("error: <trigger> must be # or 'all'");
+            rtn_status.set_error_msg("error: <trigger> must be #");
         }
     }
     return rtn_status;

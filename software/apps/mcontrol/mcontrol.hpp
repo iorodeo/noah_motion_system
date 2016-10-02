@@ -70,6 +70,8 @@ const std::string VersionString("mcontrol 0.1");
 
 const int DisplayPositionPrecision = 4;
 
+const int DisplayFrequencyPrecision = 2;
+
 const std::string DefaultOutscanDataFile("outscan_data.h5");
 
 const std::string DefaultSamplesDataFile("samples.txt");
@@ -170,7 +172,7 @@ RtnStatus get_axis_from_arg_map(StringToValueMap arg_map, mctl::Axis &axis);
 
 RtnStatus get_axis_str_from_arg_map(StringToValueMap arg_map, std::string &axis_str);
 
-RtnStatus get_trigger_from_docopt(docopt::value docopt_value, std::vector<int> &trigger_vec);
+RtnStatus get_trigger_from_docopt(docopt::value docopt_value, std::vector<int> &trigger_vec, bool allow_all=true);
 
 
 // Command Map: command string ->  command function 
