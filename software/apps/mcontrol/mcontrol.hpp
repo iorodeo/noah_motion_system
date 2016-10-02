@@ -33,6 +33,7 @@ mcontrol  - Motion Controller
       mcontrol jog-ind <axis> <value>
       mcontrol jog-ind <X> <Y> <Z> <A> <B>
       mcontrol outscan <input_file> [-o <output_file>] 
+      mcontrol is-outscan-ready
       mcontrol get-position 
       mcontrol get-position-ind
       mcontrol set-position
@@ -95,6 +96,8 @@ void cmd_jog_ind(mctl::Controller &controller, StringToValueMap arg_map);
 
 void cmd_outscan(mctl::Controller &controller, StringToValueMap arg_map);
 
+void cmd_is_outscan_ready(mctl::Controller &controller, StringToValueMap arg_map);
+
 void cmd_status(mctl::Controller &controller, StringToValueMap arg_map);
 
 void cmd_config_info(mctl::Controller &controller, StringToValueMap arg_map);
@@ -139,6 +142,7 @@ CmdStringToFuncMap =
     {"jog", &cmd_jog},
     {"jog-ind", &cmd_jog_ind},
     {"outscan", &cmd_outscan},
+    {"is-outscan-ready", &cmd_is_outscan_ready},
     {"config-file",  &cmd_config_file},
     {"config-info",  &cmd_config_info},
     {"ft-info", &cmd_ft_info},

@@ -65,6 +65,11 @@ mcontrol outscan <input_file> [-o <output_file>]
 )");
 
 
+const std::string is_outscan_ready_string(R"( 
+mcontrol is-outscan-ready 
+)");
+
+
 const std::string get_position_help_string(R"( 
 mcontrol get-position 
 )");
@@ -76,12 +81,12 @@ mcontrol get-position-ind
 
 
 const std::string config_info_help_string(R"( 
-mcontrol config
+mcontrol config-info
 )");
 
 
 const std::string config_file_help_string(R"( 
-mcontrol config
+mcontrol config-file
 )");
 
 
@@ -113,6 +118,7 @@ const StringMap CommandToHelpMap =
     {"jog", jog_help_string}, 
     {"jog-ind", jog_ind_help_string},
     {"outscan", outscan_help_string}, 
+    {"is-outscan-ready", is_outscan_ready_string},
     {"get-position", get_position_help_string}, 
     {"get-position-ind", get_position_ind_help_string},
     {"config-file", config_file_help_string},

@@ -732,6 +732,37 @@ namespace mctl
     }
 
 
+    RtnStatus Controller::is_ready_for_outscan(bool &ready)
+    {
+        RtnStatus rtn_status;
+
+        OperatingMode curr_mode;
+        rtn_status  = mode(curr_mode);  
+        if (!rtn_status.success())
+        {
+            return check_status(rtn_status);
+        }
+
+        std::map<Axis, bool> is_homed_map;
+        rtn_status = is_homed(is_homed_map);
+        if (!rtn_status.success())
+        {
+            return check_status(rtn_status);
+        }
+
+        ready = true;
+        if (curr_mode != Mode_Ready)
+        {
+            ready = false;
+        }
+        for (auto kv : is_homed_map)
+        {
+            ready &= kv.second;
+        }
+        return check_status(rtn_status);
+    }
+
+
     RtnStatus Controller::outscan(
             arma::Mat<int32_t> ind_pos_mat, 
             arma::Mat<int32_t> ind_vel_mat, 

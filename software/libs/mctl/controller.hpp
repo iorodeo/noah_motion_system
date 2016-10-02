@@ -87,6 +87,7 @@ namespace mctl
             RtnStatus jog_position(arma::Row<double> pos_vec, bool wait=true); 
 
             // Outscan methods 
+            RtnStatus is_ready_for_outscan(bool &ready);
             RtnStatus outscan(
                     arma::Mat<int32_t> ind_pos_mat, 
                     arma::Mat<int32_t> ind_vel_mat, 

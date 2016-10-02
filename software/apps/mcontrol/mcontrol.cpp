@@ -403,6 +403,24 @@ void cmd_outscan(mctl::Controller &controller, StringToValueMap arg_map)
     }
 }
 
+void cmd_is_outscan_ready(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    bool ready;
+    RtnStatus rtn_status = controller.is_ready_for_outscan(ready);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg();
+    }
+    if (ready)
+    {
+        std::cout << "ready for outscan" << std::endl;
+    }
+    else
+    {
+        std::cout << "not ready for outscan" << std::endl;
+    }
+}
+
 
 void cmd_status(mctl::Controller &controller, StringToValueMap arg_map)
 {
