@@ -89,15 +89,6 @@ void SystemState::update_stop_motion_on_loop()
     {
         set_mode_ready(true);
         stop_motion_flag_ = false;
-
-        // Stop triggers in exiting velocity control mode
-        if (mode_ == constants::Mode_VelocityControl)
-        {
-            for (int i=0; i<constants::NumTrigger; i++)
-            {
-                trigger_[i].set_enabled(false);
-            }
-        }
     }
 }
 
@@ -550,6 +541,14 @@ void SystemState::stop_motion_cmd()
         HomingController::disable();
         homing_controller_[homing_axis_].set_velocity_setp(0);
         stepper_[homing_axis_].enable_bounds_check();
+    }
+
+    if (mode_ == constants::Mode_VelocityControl)
+    {
+        for (int i=0; i<constants::NumTrigger; i++)
+        {
+            trigger_[i].set_enabled(false);
+        }
     }
     stop_motion_flag_ = true;
 }

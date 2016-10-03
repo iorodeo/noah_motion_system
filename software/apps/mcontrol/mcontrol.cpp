@@ -464,12 +464,9 @@ bool cmd_ft_display(mctl::Controller &controller, StringToValueMap arg_map)
 }
 
 
-
 bool cmd_joystick(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    controller.joystick_pendant();
     return true;
 }
 

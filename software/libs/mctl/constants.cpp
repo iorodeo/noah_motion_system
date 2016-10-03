@@ -161,15 +161,15 @@ namespace mctl
 
     std::map<Axis,double> DefaultAxisToJoystickSpeedMap
     {
-        {Axis_X, 0.05}, 
-        {Axis_Y, 0.05},
-        {Axis_Z, 0.05},
-        {Axis_A, 10.0},
-        {Axis_B, 10.0}, 
-        {Pwm_0,  10.0},
-        {Pwm_1,  10.0},
-        {Pwm_2,  10.0},
-        {Pwm_3,  10.0},
+        {Axis_X, 0.02}, 
+        {Axis_Y, 0.02},
+        {Axis_Z, 0.02},
+        {Axis_A, 20.0},
+        {Axis_B, 20.0}, 
+        {Pwm_0,  1.0},
+        {Pwm_1,  1.0},
+        {Pwm_2,  1.0},
+        {Pwm_3,  1.0},
     };
 
     // Files and Directories

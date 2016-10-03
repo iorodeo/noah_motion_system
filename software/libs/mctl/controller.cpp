@@ -1853,6 +1853,19 @@ namespace mctl
         RtnStatus rtn_status;
         const int32_t int16_max = std::numeric_limits<int16_t>::max();
 
+        bool ready = false;
+        rtn_status = is_ready_for_outscan(ready);
+        if (!rtn_status.success())
+        {
+            return check_status(rtn_status);
+        }
+        if (!ready)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: not ready for joystick pendant - check mode and homing");
+            return check_status(rtn_status);
+        }
+
         Joystick joystick(config_.joystick_device());
         if (!joystick.isFound())
         {
@@ -1875,6 +1888,32 @@ namespace mctl
             }
         }
 
+        // Setup display output
+        std::cout << std::endl;
+        std::cout << "joystick pendant (Ctrl-C to exit) " << std::endl << std::endl;
+        std::streamsize original_precision = std::cout.precision();
+        if (display_position_on_move_)
+        {
+            std::cout << std::setprecision(4);
+            std::cout << std::fixed;
+            std::cout << std::endl;
+        }
+
+        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg;
+        for (int i=0; i<NumStepper; i++)
+        {
+            host_to_dev_msg.stepper_velocity[i] = 0;
+        }
+
+        // Enable velocity control mode
+        rtn_status = set_mode_velocity_control();
+        if (!rtn_status.success())
+        {
+            quit_flag = true;
+        }
+        bool is_first = true;
+
         while (!quit_flag)
         {
             // Get velocity update form joystick
@@ -1896,20 +1935,56 @@ namespace mctl
                         }
                     }
                 }
-
-                // DEVEL
-                // -----------------------------------------------------------------------------------------
-                for (auto kv : velocity_map)
-                {
-                    std::cout << "velocity " << AxisToStringMap[kv.first] << ": " << kv.second << std::endl;
-                }
-                std::cout << std::endl;
-                // ------------------------------------------------------------------------------------------
-
+                
             } // if (joystick.sample 
+
+            // Receive data from device
+            if (!hid_dev_.recvData(&dev_to_host_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable to sync messaging loop");
+                break;
+            }
+
+            // Create host to devive message 
+            if (is_first) 
+            { 
+                msg_count_ = 0; 
+            }
+            host_to_dev_msg.command = Cmd_Empty;
+            host_to_dev_msg.count = msg_count_;
+            msg_count_++;
+            for (auto kv : velocity_map)
+            {
+                int32_t ind_vel = config_.unit_to_index(kv.first,kv.second);
+                host_to_dev_msg.stepper_velocity[kv.first] = ind_vel;
+            }
+
+            // Send message to device
+            if (!hid_dev_.sendData(&host_to_dev_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable to sync messaging loop");
+                break;
+            }
+
+            // Display position
+            std::cout << '\r';
+            for (auto axis : StepperList)
+            {
+                int32_t ind = dev_to_host_msg.stepper_position[axis];
+                double  pos = config_.index_to_unit(axis,ind);
+                std::cout << std::setw(10) << pos; 
+            }
+            std::cout << std::flush;
 
         } // while (!quit_flag)
 
+        std::cout << std::setprecision(original_precision);
+        std::cout << std::endl << std::endl;
+
+        // Stop velocity control mode 
+        rtn_status = stop_motion(true,true);
 
         return check_status(rtn_status);
     }

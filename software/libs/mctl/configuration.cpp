@@ -284,7 +284,7 @@ namespace mctl
         }
 
         ss << std::endl;
-        ss << "axis joystick invert:" << std::endl;
+        ss << "axis to joystick invert map:" << std::endl;
         ss << std::boolalpha;
         for (auto kv : axis_to_joystick_invert_map_)
         {
@@ -295,6 +295,17 @@ namespace mctl
             }
         }
         ss << std::noboolalpha;
+
+        ss << std::endl;
+        ss << "axis to joystick speed map:" << std::endl;
+        for (auto kv : axis_to_joystick_speed_map_)
+        {
+            if (axis_to_joystick_map_[kv.first] >= 0)
+            {
+                std::string name = AxisToStringMap[kv.first];
+                ss << pad << name << " = " << kv.second << std::endl;
+            }
+        }
         
         ss << std::endl;
         ss << "config file:             " << config_file_ << std::endl;
@@ -1197,7 +1208,51 @@ namespace mctl
                 }
             }
 
-        }
+            // Get joystick speed mapping
+            if (!joy_json.count("speed"))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: axis to joystick speed assignment is missing ");
+                return rtn_status;
+            }
+            if (!joy_json["speed"].is_object())
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: joystick speed is not object");
+                return rtn_status;
+            }
+
+            json speed_json = joy_json["speed"];
+            for (auto axis : AxisList)
+            {
+                std::string axis_name = AxisToStringMap[axis];
+                if (speed_json.count(axis_name))
+                {
+                    if (!speed_json[axis_name].is_number())
+                    {
+                        rtn_status.set_success(false);
+                        rtn_status.set_error_msg("error: axis to joystick speed value must be double ");
+                        return rtn_status;
+                    }
+                    double speed = double(speed_json[axis_name]);
+                    if (speed >= 0.0)
+                    {
+                        axis_to_joystick_speed_map_[axis] = double(speed_json[axis_name]);
+                    }
+                    else
+                    {
+                        rtn_status.set_success(false);
+                        rtn_status.set_error_msg("error: joystick speed must be >= 0.0");
+                        return rtn_status;
+                    }
+                }
+                else
+                {
+                    axis_to_joystick_speed_map_[axis] = false;
+                }
+            }
+
+        } // if (config_json.count("joystick"))
         return rtn_status;
     }
 
