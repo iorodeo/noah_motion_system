@@ -1,4 +1,5 @@
 #include "system_state.h"
+#include <EEPROM.h>
 
 // SystemState public methods
 // ------------------------------------------------------------------------------------------------
@@ -7,6 +8,7 @@ SystemState::SystemState() { }
 
 void SystemState::initialize()
 { 
+    
     setup_stepper();
     setup_velocity_controller();
     setup_position_controller();
@@ -16,13 +18,13 @@ void SystemState::initialize()
     setup_digital_output();
     setup_pwm_output();
     setup_homing();
+    //load_eeprom_values();
     setup_timer(); // Always last in setup
 
     // DEBUG
     // ------------------------------------------------
     //Serial.begin(115200);
     // ------------------------------------------------
-
 }
 
 
@@ -959,6 +961,34 @@ void SystemState::setup_homing()
     }
 }
 
+
+//void SystemState::load_eeprom_values()
+//{
+//    EEPROM_Int32_Data data_int32;
+//    EEPROM_Int8_Data data_int8;
+//
+//    for (int i=0; i<constants::NumStepper; i++)
+//    {
+//        EEPROM.get(constants::EEPROM_Address_StepperMinimumPosition[i], data_int32);
+//        if (data_int32.flag == 0)
+//        {
+//            stepper_[i].set_min_position(data_int32.value);
+//            velocity_controller_[i].set_min_position(data_int32.value);
+//        }
+//       
+//
+//        EEPROM.get(constants::EEPROM_Address_StepperMaximumPosition[i], data_int32);
+//        //stepper_[i].set_max_position(data_int32);
+//        //velocity_controller_[i].set_max_position(data_int32);
+//
+//        EEPROM.get(constants::EEPROM_Address_StepperMaximumSpeed[i], data_int32);
+//        //stepper_[i].set_max_speed(data_int32);
+//        //velocity_controller_[i].set_max_speed(data_int32);
+//        
+//        EEPROM.get(constants::EEPROM_Address_StepperMaximumAccel[i], data_int32);
+//        //velocity_controller_[i].set_max_accel(value);
+//    }
+//}
 
 // SystemState Instance
 // ------------------------------------------------------------------------------------------------

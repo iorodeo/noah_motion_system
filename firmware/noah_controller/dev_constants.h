@@ -102,6 +102,12 @@ namespace constants
     extern const uint8_t StepperClockHighDelay;
     extern const uint8_t StepperDriveEnablePin;
 
+    //extern const uint16_t EEPROM_Address_StepperMinimumPosition[NumStepper]; 
+    //extern const uint16_t EEPROM_Address_StepperMaximumPosition[NumStepper]; 
+    //extern const uint16_t EEPROM_Address_StepperMaximumSpeed[NumStepper];    
+    //extern const uint16_t EEPROM_Address_StepperMaximumAccel[NumStepper];    
+    //extern const uint16_t EEPROM_Address_StepperHomingDirection[NumStepper]; 
+
     // PositionController  parameters
     extern const uint32_t PositionControllerMaximumSpeed[NumStepper];
     extern const uint32_t PositionControllerGain[NumStepper];

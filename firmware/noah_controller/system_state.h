@@ -9,6 +9,7 @@
 #include "position_controller.h"
 #include "homing_controller.h"
 #include "estop_monitor.h"
+#include "eeprom_data.h"
 
 class SystemState
 {
@@ -117,6 +118,7 @@ class SystemState
         void setup_pwm_output();
         void setup_homing();
         void setup_timer();
+        void load_eeprom_values();
 };
 
 extern SystemState system_state; 
