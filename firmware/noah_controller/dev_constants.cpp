@@ -18,14 +18,13 @@ namespace constants
 
     // Stepper parameters  - shared with host software
     // all units in steps, steps/sec and steps/sec**2
-    const int32_t StepperMaximumSpeed[NumStepper]    = {  8000,   8000,   8000,   8000,   8000    };
-    const int32_t StepperMaximumAccel[NumStepper]    = {  10000,  10000,  10000,  10000,  10000   }; 
-    const int32_t StepperMinimumPosition[NumStepper] = { -10000, -10000, -10000, -30000, -30000   };
-    const int32_t StepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  30000,  30000   };  
-    const int32_t StepperHomePosition[NumStepper]    = { -10000, -10000, -10000, -10000, -10000   };
+    const int32_t DefaultStepperMaximumSpeed[NumStepper]    = {  8000,   8000,   8000,   8000,   8000    };
+    const int32_t DefaultStepperMaximumAccel[NumStepper]    = {  10000,  10000,  10000,  10000,  10000   }; 
+    const int32_t DefaultStepperMinimumPosition[NumStepper] = { -10000, -10000, -10000, -30000, -30000   };
+    const int32_t DefaultStepperMaximumPosition[NumStepper] = {  10000,  10000,  10000,  30000,  30000   };  
 
     // Homing parameters - shared with host software
-    const int8_t HomingDirection[NumStepper] = {1,1,1,1,1}; // 1 or -1.
+    const int8_t DefaultHomingDirection[NumStepper] = {1,1,1,1,1}; // 1 or -1.
 
 #ifndef  __linux__
     // Communications timeouts

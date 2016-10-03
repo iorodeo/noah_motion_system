@@ -111,9 +111,9 @@ namespace mctl
 
             std::map<Axis,double> min_position_map_;
             std::map<Axis,double> max_position_map_;
-            std::map<Axis,double> home_position_map_;
             std::map<Axis,double> max_speed_map_;
             std::map<Axis,double> max_accel_map_;
+            std::map<Axis,int> home_direction_map_;
 
             FT_SensorCal ft_sensor_cal_;
             
@@ -133,14 +133,13 @@ namespace mctl
             RtnStatus load_ft_sensor_cal(json config_json);
             RtnStatus load_min_position(json config_json);
             RtnStatus load_max_position(json config_json);
-            RtnStatus load_home_position(json config_json);
+            RtnStatus load_home_direction(json config_json);
             RtnStatus load_max_speed(json config_json);
             RtnStatus load_max_accel(json config_json);
             RtnStatus load_outscan_config(json config_json);
             RtnStatus load_joystick_config(json config_json);
             RtnStatus load_stepper_values(json config_json, std::string key, std::map<Axis,double> &value_map);
             RtnStatus get_config_file_ifstream(std::string filename, std::ifstream &config_ifs);
-
 
     };
 

@@ -47,6 +47,28 @@ namespace mctl
             RtnStatus position(std::map<Axis,double>  &pos_map);
             RtnStatus position(arma::Row<double> &pos_vec);  
 
+            RtnStatus set_position(Axis axis, int32_t ind);
+            RtnStatus set_position(Axis axis, double pos);
+
+            RtnStatus set_min_position(Axis axis, int32_t ind);
+            RtnStatus set_min_position(Axis axis, double pos);
+            RtnStatus set_max_position(Axis axis, int32_t ind);
+            RtnStatus set_max_position(Axis axis, double pos);
+            RtnStatus get_min_position(Axis axis, int32_t &ind);
+            RtnStatus get_min_position(Axis axis, double &pos);
+            RtnStatus get_max_position(Axis axis, int32_t &ind);
+            RtnStatus get_max_position(Axis axis, double &pos);
+
+            RtnStatus set_max_speed(Axis axis, int32_t ind_speed);
+            RtnStatus set_max_speed(Axis axis, double speed);
+            RtnStatus get_max_speed(Axis axis, int32_t &ind_speed);
+            RtnStatus get_max_speed(Axis axis, double &speed);
+
+            RtnStatus set_max_accel(Axis axis, int32_t ind_accel);
+            RtnStatus set_max_accel(Axis axis, double accel);
+            RtnStatus get_max_accel(Axis axis, int32_t &ind_accel);
+            RtnStatus get_max_accel(Axis axis, double &accel);
+
             RtnStatus print_position(bool unit=true);  
 
             void enable_homing(Axis axis);

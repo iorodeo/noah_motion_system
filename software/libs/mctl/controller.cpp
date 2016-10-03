@@ -3,6 +3,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <csignal>
+#include <cstring>
 #include <iostream>
 #include <bitset>
 #include <chrono>
@@ -259,6 +260,242 @@ namespace mctl
         if (rtn_status.success())
         {
             pos_vec = config_.index_to_unit(ind_vec);
+        }
+        return check_status(rtn_status);
+    }
+
+    
+    RtnStatus Controller::set_position(Axis axis, int32_t ind)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetStepperPosition;
+        host_to_dev_msg.command_data[0] = axis;
+        host_to_dev_msg.command_data[1] = uint16_t(ind);
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_position(Axis axis, double pos)
+    {
+        RtnStatus rtn_status;
+        int32_t ind_pos = config_.unit_to_index(axis,pos);
+        RtnStatus rtn_satus = set_position(axis,ind_pos);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_min_position(Axis axis, int32_t ind)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetStepperMinPosition;
+        host_to_dev_msg.command_data[0] = axis;
+        host_to_dev_msg.command_data[1] = uint16_t(ind);
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_min_position(Axis axis, double pos)
+    {
+        RtnStatus rtn_status;
+        int32_t ind_pos = config_.unit_to_index(axis,pos);
+        RtnStatus rtn_satus = set_min_position(axis,ind_pos);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_max_position(Axis axis, int32_t ind)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetStepperMaxPosition;
+        host_to_dev_msg.command_data[0] = axis;
+        host_to_dev_msg.command_data[1] = uint16_t(ind);
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_max_position(Axis axis, double pos)
+    {
+        RtnStatus rtn_status;
+        int32_t ind_pos = config_.unit_to_index(axis,pos);
+        RtnStatus rtn_satus = set_max_position(axis,ind_pos);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_min_position(Axis axis, int32_t &ind)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_GetStepperMinPosition;
+        host_to_dev_msg.command_data[0] = axis;
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        if (rtn_status.success())
+        {
+            int16_t ind_tmp = int16_t(dev_to_host_msg.command_data);
+            ind = int32_t(ind_tmp);
+        }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_min_position(Axis axis, double &pos)
+    {
+        int32_t ind;
+        RtnStatus rtn_status = get_min_position(axis,ind);
+        if (rtn_status.success())
+        {
+            pos = config_.index_to_unit(axis,ind);
+        }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_max_position(Axis axis, int32_t &ind)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_GetStepperMaxPosition;
+        host_to_dev_msg.command_data[0] = axis;
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        if (rtn_status.success())
+        {
+            int16_t ind_tmp = int16_t(dev_to_host_msg.command_data);
+            ind = int32_t(ind_tmp);
+        }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_max_position(Axis axis, double &pos)
+    {
+        int32_t ind;
+        RtnStatus rtn_status = get_max_position(axis,ind);
+        if (rtn_status.success())
+        {
+            pos = config_.index_to_unit(axis,ind);
+        }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_max_speed(Axis axis, int32_t ind_speed)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetStepperMaxSpeed;
+        host_to_dev_msg.command_data[0] = axis;
+        host_to_dev_msg.command_data[1] = uint16_t(ind_speed);
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_max_speed(Axis axis, double speed)
+    {
+        RtnStatus rtn_status;
+        if (speed <= 0.0)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: max_speed must be > 0");
+            return check_status(rtn_status);
+        }
+        int32_t ind_speed = config_.unit_to_index(axis,speed);
+        rtn_status = set_max_speed(axis,ind_speed);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_max_speed(Axis axis, int32_t &ind_speed)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_GetStepperMaxSpeed;
+        host_to_dev_msg.command_data[0] = axis;
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        if (rtn_status.success())
+        {
+            ind_speed = uint16_t(dev_to_host_msg.command_data);
+        }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_max_speed(Axis axis, double &speed)
+    {
+        int32_t ind_speed;
+        RtnStatus rtn_status = get_max_speed(axis,ind_speed);
+        if (rtn_status.success())
+        {
+            speed = config_.index_to_unit(axis,ind_speed);
+        }
+        return check_status(rtn_status);
+    }
+
+    
+    RtnStatus Controller::set_max_accel(Axis axis, int32_t ind_accel)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SetStepperMaxAccel;
+        host_to_dev_msg.command_data[0] = axis;
+        host_to_dev_msg.command_data[1] = uint16_t(ind_accel);
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::set_max_accel(Axis axis, double accel)
+    {
+        RtnStatus rtn_status;
+        if (accel <= 0.0)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: max_accel must be > 0");
+            return check_status(rtn_status);
+        }
+        int32_t ind_accel = config_.unit_to_index(axis,accel);
+        rtn_status = set_max_accel(axis,ind_accel);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_max_accel(Axis axis, int32_t &ind_accel)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_GetStepperMaxAccel;
+        host_to_dev_msg.command_data[0] = axis;
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        if (rtn_status.success())
+        { 
+            ind_accel = int32_t(dev_to_host_msg.command_data);
+        }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_max_accel(Axis axis, double &accel)
+    {
+        int32_t ind_accel;
+        RtnStatus rtn_status = get_max_accel(axis,ind_accel);
+        if (rtn_status.success())
+        {
+            accel = config_.index_to_unit(axis,ind_accel);
         }
         return check_status(rtn_status);
     }

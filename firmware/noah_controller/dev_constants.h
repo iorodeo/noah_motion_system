@@ -39,7 +39,16 @@ namespace constants
         Cmd_SetTriggerEnabled,
         Cmd_GetTriggerEnabled,
         Cmd_SetStepperPosition,
+        Cmd_SetStepperMinPosition,
+        Cmd_GetStepperMinPosition,
+        Cmd_SetStepperMaxPosition,
+        Cmd_GetStepperMaxPosition,
+        Cmd_SetStepperMaxSpeed,
+        Cmd_GetStepperMaxSpeed,
+        Cmd_SetStepperMaxAccel,
+        Cmd_GetStepperMaxAccel,
         Cmd_GetDigitalOutput
+
     };
 
     const uint8_t NumAnalogInput = 10;
@@ -54,19 +63,18 @@ namespace constants
 
     // Stepper parameters - shared with host software
     // all units in steps, steps/sec and steps/sec**2
-    extern const int32_t StepperMaximumSpeed[NumStepper];
-    extern const int32_t StepperMaximumAccel[NumStepper];
-    extern const int32_t StepperMinimumPosition[NumStepper];
-    extern const int32_t StepperMaximumPosition[NumStepper];
-    extern const int32_t StepperHomePosition[NumStepper];
+    extern const int32_t DefaultStepperMaximumSpeed[NumStepper];
+    extern const int32_t DefaultStepperMaximumAccel[NumStepper];
+    extern const int32_t DefaultStepperMinimumPosition[NumStepper];
+    extern const int32_t DefaultStepperMaximumPosition[NumStepper];
+    extern const int8_t  DefaultHomingDirection[NumStepper];
 
-    extern const float PwmFrequency;
-    extern const uint8_t PwmResolution;
+    extern const float    PwmFrequency;
+    extern const uint8_t  PwmResolution;
     extern const uint16_t PwmMinimumValue;
     extern const uint16_t PwmMaximumValue;
     extern const uint16_t PwmDefaultValue;
 
-    extern const int8_t HomingDirection[NumStepper];
 
 #ifndef __linux__
 

@@ -129,11 +129,11 @@ void SystemState::update_homing_on_loop()
         int32_t home_position;
         if (homing_controller_[homing_axis_].direction() > 0)
         {
-            home_position = constants::StepperMaximumPosition[homing_axis_];
+            home_position = stepper_[homing_axis_].max_position();
         }
         else
         {
-            home_position = constants::StepperMinimumPosition[homing_axis_];
+            home_position = stepper_[homing_axis_].min_position();
         }
         stepper_[homing_axis_].set_position(home_position);
         stepper_[homing_axis_].enable_bounds_check();
@@ -302,10 +302,6 @@ void SystemState::command_switchyard()
 {
     constants::UsbCommand command = constants::UsbCommand(host_to_dev_msg_last_.command);
 
-    //Serial.print("cmd: ");
-    //Serial.println(command);
-
-
     switch (command)
     {
         case constants::Cmd_Empty: 
@@ -361,7 +357,41 @@ void SystemState::command_switchyard()
             break;
 
         case constants::Cmd_SetStepperPosition:
+            set_stepper_position_cmd();
             break;
+
+        case constants::Cmd_SetStepperMinPosition:
+            set_stepper_min_position_cmd();
+            break;
+
+        case constants::Cmd_GetStepperMinPosition:
+            get_stepper_min_position_cmd();
+            break;
+
+        case constants::Cmd_SetStepperMaxPosition:
+            set_stepper_max_position_cmd();
+            break;
+
+        case constants::Cmd_GetStepperMaxPosition:
+            get_stepper_max_position_cmd();
+            break;
+
+        case constants::Cmd_SetStepperMaxSpeed:
+            set_stepper_max_speed_cmd();
+            break;
+
+        case constants::Cmd_GetStepperMaxSpeed:
+            get_stepper_max_speed_cmd();
+            break;
+
+        case constants::Cmd_SetStepperMaxAccel:
+            set_stepper_max_accel_cmd();
+            break;
+
+        case constants::Cmd_GetStepperMaxAccel:
+            get_stepper_max_accel_cmd();
+            break;
+
 
         case constants::Cmd_GetDigitalOutput:
             break;
@@ -445,11 +475,11 @@ void SystemState::set_mode_positioning()
 
         for (int i=0; i<constants::NumStepper; i++)
         {
-            if (host_to_dev_msg_last_.stepper_position[i] < constants::StepperMinimumPosition[i])
+            if (host_to_dev_msg_last_.stepper_position[i] < stepper_[i].min_position())
             {
                 bounds_error = true;
             }
-            if (host_to_dev_msg_last_.stepper_position[i] > constants::StepperMaximumPosition[i])
+            if (host_to_dev_msg_last_.stepper_position[i] > stepper_[i].max_position())
             {
                 bounds_error = true;
             }
@@ -606,6 +636,144 @@ void SystemState::get_trigger_enabled_cmd()
 }
 
 
+void SystemState::set_stepper_position_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        int32_t position = int32_t(host_to_dev_msg_last_.command_data[1]);
+        stepper_[num].set_position(position);
+    }
+    else
+    {
+        // Error: 
+    }
+}
+
+
+void SystemState::set_stepper_min_position_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        int16_t min_position = int16_t(host_to_dev_msg_last_.command_data[1]);
+        stepper_[num].set_min_position(min_position);
+        velocity_controller_[num].set_min_position(min_position);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::get_stepper_min_position_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        int16_t min_position = int16_t(stepper_[num].min_position());
+        command_response_data_ = uint16_t(min_position);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::set_stepper_max_position_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        int16_t max_position = int16_t(host_to_dev_msg_last_.command_data[1]);
+        stepper_[num].set_max_position(max_position);
+        velocity_controller_[num].set_max_position(max_position);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::get_stepper_max_position_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        int16_t max_position = stepper_[num].max_position();
+        command_response_data_ = uint16_t(max_position);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::set_stepper_max_speed_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        uint16_t speed = uint16_t(host_to_dev_msg_last_.command_data[1]);
+        stepper_[num].set_max_speed(speed);
+        velocity_controller_[num].set_max_speed(speed);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::get_stepper_max_speed_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        uint16_t max_speed = uint16_t(stepper_[num].max_speed());
+        command_response_data_ = max_speed;
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::set_stepper_max_accel_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        uint16_t max_accel = uint16_t(host_to_dev_msg_last_.command_data[1]);
+        velocity_controller_[num].set_max_accel(max_accel);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::get_stepper_max_accel_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+        uint16_t max_accel  = uint16_t(velocity_controller_[num].max_accel());
+        command_response_data_ = max_accel;
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
 bool SystemState::all_axes_homed()
 {
     bool rval = true;
@@ -645,9 +813,9 @@ void SystemState::setup_stepper()
         StepperPin pin = constants::StepperPinArray[i];
         stepper_[i] = Stepper(pin.clk,pin.dir); 
         stepper_[i].initialize();
-        stepper_[i].set_min_position(constants::StepperMinimumPosition[i]);
-        stepper_[i].set_max_position(constants::StepperMaximumPosition[i]);
-        stepper_[i].set_max_speed(constants::StepperMaximumSpeed[i]);
+        stepper_[i].set_min_position(constants::DefaultStepperMinimumPosition[i]);
+        stepper_[i].set_max_position(constants::DefaultStepperMaximumPosition[i]);
+        stepper_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
         stepper_[i].disable_bounds_check();
         stepper_[i].set_velocity(0);
         homed_flag_[i] = false;
@@ -659,10 +827,10 @@ void SystemState::setup_velocity_controller()
 {
     for (int i=0; i<constants::NumStepper; i++)
     {
-        velocity_controller_[i].set_min_position(constants::StepperMinimumPosition[i]);
-        velocity_controller_[i].set_max_position(constants::StepperMaximumPosition[i]);
-        velocity_controller_[i].set_max_speed(constants::StepperMaximumSpeed[i]);
-        velocity_controller_[i].set_max_accel(constants::StepperMaximumAccel[i]);
+        velocity_controller_[i].set_min_position(constants::DefaultStepperMinimumPosition[i]);
+        velocity_controller_[i].set_max_position(constants::DefaultStepperMaximumPosition[i]);
+        velocity_controller_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
+        velocity_controller_[i].set_max_accel(constants::DefaultStepperMaximumAccel[i]);
         velocity_controller_[i].set_velocity(0);
         velocity_controller_[i].set_velocity_setp(0);
         velocity_controller_[i].enable_bounds_check();
@@ -746,9 +914,9 @@ void SystemState::setup_homing()
 
     for (int i=0; i<constants::NumStepper; i++)
     {
-        homing_controller_[i] = HomingController(constants::HomingDirection[i], constants::HomingSpeed[i]);
-        homing_controller_[i].set_max_speed(constants::StepperMaximumSpeed[i]);
-        homing_controller_[i].set_accel(constants::StepperMaximumAccel[i]);
+        homing_controller_[i] = HomingController(constants::DefaultHomingDirection[i], constants::HomingSpeed[i]);
+        homing_controller_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
+        homing_controller_[i].set_accel(constants::DefaultStepperMaximumAccel[i]);
     }
 }
 

@@ -30,6 +30,15 @@ namespace mctl
         axis_to_joystick_map_ = DefaultAxisToJoystickMap;
         axis_to_joystick_invert_map_ = DefaultAxisToJoystickInvertMap;
         joystick_device_ = DefaultJoystickDevice;
+
+        for (auto stepper : StepperList)
+        {
+            min_position_map_[stepper] = DefaultStepperMinimumPosition[stepper];
+            max_position_map_[stepper] = DefaultStepperMaximumPosition[stepper];
+            max_speed_map_[stepper] = DefaultStepperMaximumSpeed[stepper];
+            max_accel_map_[stepper] = DefaultStepperMaximumAccel[stepper];
+            home_direction_map_[stepper] = DefaultHomingDirection[stepper];
+        } 
     }
 
 
@@ -123,7 +132,7 @@ namespace mctl
             return rtn_status;
         }
 
-        rtn_status = load_home_position(config_json);
+        rtn_status = load_home_direction(config_json);
         if (!rtn_status.success())
         {
             return rtn_status;
@@ -239,8 +248,8 @@ namespace mctl
         }
 
         ss << std::endl;
-        ss << "home position: " << std::endl;
-        for (auto kv : home_position_map_)
+        ss << "home direction: " << std::endl;
+        for (auto kv : home_direction_map_)
         {
             std::string name = AxisToStringMap[kv.first];
             ss << pad << name << " = " << kv.second << std::endl;
@@ -703,7 +712,7 @@ namespace mctl
 
         if (axis < NumStepper)
         {
-            if (HomingDirection[axis] > 0)
+            if (home_direction_map_[axis] > 0)
             {
                 direction = -1.0;
             }
@@ -873,9 +882,36 @@ namespace mctl
     }
 
 
-    RtnStatus Configuration::load_home_position(json config_json)
+    RtnStatus Configuration::load_home_direction(json config_json)
     {
-        return load_stepper_values(config_json,"home_position", home_position_map_);
+        std::map<Axis,double> map_tmp;
+        RtnStatus rtn_status = load_stepper_values(config_json,"home_direction", map_tmp);
+        if (rtn_status.success())
+        {
+            for (auto kv : map_tmp)
+            {
+                if (kv.second == 0)
+                {
+                    rtn_status.set_success(false);
+                    rtn_status.set_error_msg("error: home direction must be nonzero");
+                    return rtn_status;
+                }
+            }
+
+            home_direction_map_.clear();
+            for (auto kv : map_tmp)
+            {
+                if (kv.second > 0)
+                {
+                    home_direction_map_.emplace(kv.first,1);
+                }
+                else
+                {
+                    home_direction_map_.emplace(kv.first,-1);
+                }
+            }
+        }
+        return rtn_status;
     }
 
 

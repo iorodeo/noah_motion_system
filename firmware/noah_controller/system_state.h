@@ -92,6 +92,16 @@ class SystemState
         void set_trigger_enabled_cmd();
         void get_trigger_enabled_cmd();
 
+        void set_stepper_position_cmd();
+        void set_stepper_min_position_cmd();
+        void get_stepper_min_position_cmd();
+        void set_stepper_max_position_cmd();
+        void get_stepper_max_position_cmd();
+        void set_stepper_max_speed_cmd();
+        void get_stepper_max_speed_cmd();
+        void set_stepper_max_accel_cmd();
+        void get_stepper_max_accel_cmd();
+
         bool all_axes_homed();
 
         // Setup/Initialization methods
@@ -163,8 +173,6 @@ inline void timer_callback()
     system_state.update_new_msg_flag_on_timer();
     system_state.update_count_on_timer();
 }
-
-
 
 
 #endif 
