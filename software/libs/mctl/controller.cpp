@@ -1767,7 +1767,6 @@ namespace mctl
 
         // Stop velocity control mode 
         rtn_status = stop_motion(true,true);
-
         return check_status(rtn_status);
     }
 
@@ -2176,7 +2175,6 @@ namespace mctl
         return rtn_status;
     }
 
-
     
     RtnStatus Controller::check_status(RtnStatus rtn_status)
     {
@@ -2195,7 +2193,7 @@ namespace mctl
                 std::cout << "done" << std::endl << std::endl;
             }
             close();
-            exit(0);
+            exit(1);
         }
         return rtn_status;
     }
