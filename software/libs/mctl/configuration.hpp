@@ -96,6 +96,12 @@ namespace mctl
             double analog_input_offset();
             void set_analog_input_offset(double value);
 
+            std::map<Axis,double> min_position_map();
+            std::map<Axis,double> max_position_map();
+            std::map<Axis,double> max_speed_map();
+            std::map<Axis,double> max_accel_map();
+            std::map<Axis,int> homing_direction_map();
+
             std::string info_string();
 
         protected:
@@ -113,7 +119,7 @@ namespace mctl
             std::map<Axis,double> max_position_map_;
             std::map<Axis,double> max_speed_map_;
             std::map<Axis,double> max_accel_map_;
-            std::map<Axis,int> home_direction_map_;
+            std::map<Axis,int> homing_direction_map_;
 
             FT_SensorCal ft_sensor_cal_;
             

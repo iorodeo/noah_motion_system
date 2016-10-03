@@ -46,30 +46,58 @@ namespace mctl
             RtnStatus position(std::vector<double>  &pos_vec); 
             RtnStatus position(std::map<Axis,double>  &pos_map);
             RtnStatus position(arma::Row<double> &pos_vec);  
+            RtnStatus print_position(bool unit=true);  
 
             RtnStatus set_position(Axis axis, int32_t ind);
+            RtnStatus set_position(std::vector<int32_t> ind_vec);
+            RtnStatus set_position(std::map<Axis,int32_t> ind_map);
+            RtnStatus set_position(arma::Row<int32_t> ind_vec);
+
             RtnStatus set_position(Axis axis, double pos);
+            RtnStatus set_position(std::vector<double> pos_vec);
+            RtnStatus set_position(std::map<Axis,double> pos_map);
+            RtnStatus set_position(arma::Row<double> pos_vec);
 
             RtnStatus set_min_position(Axis axis, int32_t ind);
             RtnStatus set_min_position(Axis axis, double pos);
-            RtnStatus set_max_position(Axis axis, int32_t ind);
-            RtnStatus set_max_position(Axis axis, double pos);
+            RtnStatus set_min_position(std::map<Axis,int32_t> ind_map);
+            RtnStatus set_min_position(std::map<Axis,double> pos_map);
             RtnStatus get_min_position(Axis axis, int32_t &ind);
             RtnStatus get_min_position(Axis axis, double &pos);
+            RtnStatus get_min_position(std::map<Axis,int32_t> &ind_map);
+            RtnStatus get_min_position(std::map<Axis,double> &pos_map);
+
+            RtnStatus set_max_position(Axis axis, int32_t ind);
+            RtnStatus set_max_position(Axis axis, double pos);
+            RtnStatus set_max_position(std::map<Axis,int32_t> ind_map);
+            RtnStatus set_max_position(std::map<Axis,double> pos_map);
             RtnStatus get_max_position(Axis axis, int32_t &ind);
             RtnStatus get_max_position(Axis axis, double &pos);
+            RtnStatus get_max_position(std::map<Axis,int32_t> &ind_map);
+            RtnStatus get_max_position(std::map<Axis,double> &pos_map);
 
             RtnStatus set_max_speed(Axis axis, int32_t ind_speed);
             RtnStatus set_max_speed(Axis axis, double speed);
+            RtnStatus set_max_speed(std::map<Axis,int32_t> ind_speed_map);
+            RtnStatus set_max_speed(std::map<Axis,double> speed_map);
             RtnStatus get_max_speed(Axis axis, int32_t &ind_speed);
             RtnStatus get_max_speed(Axis axis, double &speed);
+            RtnStatus get_max_speed(std::map<Axis,int32_t> &ind_speed_map);
+            RtnStatus get_max_speed(std::map<Axis,double> &speed_map);
 
             RtnStatus set_max_accel(Axis axis, int32_t ind_accel);
             RtnStatus set_max_accel(Axis axis, double accel);
+            RtnStatus set_max_accel(std::map<Axis,int32_t> ind_accel_map);
+            RtnStatus set_max_accel(std::map<Axis,double> accel_map);
             RtnStatus get_max_accel(Axis axis, int32_t &ind_accel);
             RtnStatus get_max_accel(Axis axis, double &accel);
+            RtnStatus get_max_accel(std::map<Axis,int32_t> &ind_accel_map);
+            RtnStatus get_max_accel(std::map<Axis,double> &accel_map);
 
-            RtnStatus print_position(bool unit=true);  
+            RtnStatus set_homing_direction(Axis axis, int dir);
+            RtnStatus set_homing_direction(std::map<Axis,int> dir_map);
+            RtnStatus get_homing_direction(Axis axis, int &dir);
+            RtnStatus get_homing_direction(std::map<Axis,int> &dir_map);
 
             void enable_homing(Axis axis);
             void disable_homing(Axis axis);
@@ -131,7 +159,8 @@ namespace mctl
             // Configuration methods
             RtnStatus load_config();
             RtnStatus load_config(std::string filename);
-
+            RtnStatus set_device_config();
+            RtnStatus get_device_config_string(std::string &config_string);
             void set_config(Configuration config);
             Configuration config();
 

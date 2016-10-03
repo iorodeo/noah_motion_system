@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
     StringToValueMap arg_map =  get_arg_map(argc, argv); 
 
-    if (true) { print_arg_map(arg_map); } // DEBUG
+    if (false) { print_arg_map(arg_map); } // DEBUG
 
     // Setup mctl controller
     mctl::Controller controller;
@@ -230,17 +230,82 @@ bool cmd_get_position_ind(mctl::Controller &controller, StringToValueMap arg_map
 
 bool cmd_set_position(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ////////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    ////////////////////////////////////////////////////////////////////////
+    RtnStatus rtn_status;
+    if (arg_map["<axis>"].isString())
+    {
+        mctl::Axis axis;
+        rtn_status = get_axis_from_arg_map(arg_map,axis);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+            return false;
+        }
+        double value = 0.0; 
+        rtn_status = get_docopt_value_as_double(arg_map["<value>"],value);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+            return false;
+        }
+        controller.set_position(axis,value);
+    }
+    else
+    {
+        std::vector<double> pos_vec;
+        for (auto arg_str : AxisValueArgStringList)
+        {
+            double value = 0.0; 
+            rtn_status = get_docopt_value_as_double(arg_map[arg_str],value);
+            if (!rtn_status.success())
+            {
+                std::cout << rtn_status.error_msg() << std::endl;
+                return false;
+            }
+            pos_vec.push_back(value);
+        }
+        controller.set_position(pos_vec);
+    }
     return true;
 }
 
 bool cmd_set_position_ind(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    RtnStatus rtn_status;
+    if (arg_map["<axis>"].isString())
+    {
+        mctl::Axis axis;
+        
+        rtn_status = get_axis_from_arg_map(arg_map,axis);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+            return false;
+        }
+        int32_t value = 0;
+        rtn_status = get_docopt_value_as_int32(arg_map["<value>"],value);
+        if (!rtn_status.success())
+        {
+            std::cout << rtn_status.error_msg() << std::endl;
+            return false;
+        }
+        controller.set_position(axis,value);
+    }
+    else
+    {
+        std::vector<int32_t> ind_vec;
+        for (auto arg_str : AxisValueArgStringList)
+        {
+            int32_t value = 0; 
+            rtn_status = get_docopt_value_as_int32(arg_map[arg_str],value);
+            if (!rtn_status.success())
+            {
+                std::cout << rtn_status.error_msg() << std::endl;
+                return false;
+            }
+            ind_vec.push_back(value);
+        }
+        controller.set_position(ind_vec);
+    }
     return true;
 }
 
@@ -409,12 +474,24 @@ bool cmd_joystick(mctl::Controller &controller, StringToValueMap arg_map)
 }
 
 
-bool cmd_config_update(mctl::Controller &controller, StringToValueMap arg_map)
+bool cmd_set_device_config(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    std::cout << "setting device configuration ..." << std::flush;
+    controller.set_device_config();
+    std::cout << "done" << std::endl;
     return true;
+}
+
+
+bool cmd_device_config(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    std::cout << "reading device configuration ... " << std::flush;
+    std::string config_string;
+    controller.get_device_config_string(config_string);
+    std::cout << "done" << std::endl;
+    std::cout << std::endl;
+    std::cout << config_string;
+    std::cout << std::endl;
 }
 
 

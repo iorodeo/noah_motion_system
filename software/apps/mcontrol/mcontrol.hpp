@@ -49,7 +49,8 @@ mcontrol  - Motion Controller
       mcontrol ai-display 
       mcontrol ft-display
       mcontrol joystick
-      mcontrol config-update
+      mcontrol set-device-config
+      mcontrol device-config
       mcontrol config-check
       mcontrol config-file
       mcontrol config-info
@@ -141,7 +142,9 @@ bool cmd_ft_display(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_joystick(mctl::Controller &controller, StringToValueMap arg_map);
 
-bool cmd_config_update(mctl::Controller &controller, StringToValueMap arg_map);
+bool cmd_set_device_config(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_device_config(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_config_check(mctl::Controller &controller, StringToValueMap arg_map);
 
@@ -206,7 +209,8 @@ CmdStringToFuncMap =
     {"ai-display", &cmd_ai_display},               //
     {"ft-display", &cmd_ft_display},               //
     {"joystick", &cmd_joystick},                   //
-    {"config-update", &cmd_config_update},         //
+    {"set-device-config", &cmd_set_device_config},
+    {"device-config", &cmd_device_config},
     {"config-check", &cmd_config_check},           //
     {"config-file", &cmd_config_file},
     {"config-info", &cmd_config_info},

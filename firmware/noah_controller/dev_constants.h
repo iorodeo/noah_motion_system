@@ -47,6 +47,8 @@ namespace constants
         Cmd_GetStepperMaxSpeed,
         Cmd_SetStepperMaxAccel,
         Cmd_GetStepperMaxAccel,
+        Cmd_SetStepperHomingDirection,
+        Cmd_GetStepperHomingDirection,
         Cmd_GetDigitalOutput
 
     };
@@ -67,7 +69,7 @@ namespace constants
     extern const int32_t DefaultStepperMaximumAccel[NumStepper];
     extern const int32_t DefaultStepperMinimumPosition[NumStepper];
     extern const int32_t DefaultStepperMaximumPosition[NumStepper];
-    extern const int8_t  DefaultHomingDirection[NumStepper];
+    extern const int8_t  DefaultStepperHomingDirection[NumStepper];
 
     extern const float    PwmFrequency;
     extern const uint8_t  PwmResolution;

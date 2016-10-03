@@ -392,6 +392,13 @@ void SystemState::command_switchyard()
             get_stepper_max_accel_cmd();
             break;
 
+        case constants::Cmd_SetStepperHomingDirection:
+            set_stepper_homing_dir_cmd();
+            break;
+
+        case constants::Cmd_GetStepperHomingDirection:
+            get_stepper_homing_dir_cmd();
+            break;
 
         case constants::Cmd_GetDigitalOutput:
             break;
@@ -774,6 +781,36 @@ void SystemState::get_stepper_max_accel_cmd()
 }
 
 
+void SystemState::set_stepper_homing_dir_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+       int8_t dir = int8_t(host_to_dev_msg_last_.command_data[1]); 
+       homing_controller_[num].set_direction(dir);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
+void SystemState::get_stepper_homing_dir_cmd()
+{
+    uint8_t num = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (num < constants::NumStepper)
+    {
+       int8_t dir = homing_controller_[num].direction(); 
+       command_response_data_ = uint16_t(dir);
+    }
+    else
+    {
+        // Error:
+    }
+}
+
+
 bool SystemState::all_axes_homed()
 {
     bool rval = true;
@@ -914,7 +951,10 @@ void SystemState::setup_homing()
 
     for (int i=0; i<constants::NumStepper; i++)
     {
-        homing_controller_[i] = HomingController(constants::DefaultHomingDirection[i], constants::HomingSpeed[i]);
+        homing_controller_[i] = HomingController(
+                constants::DefaultStepperHomingDirection[i], 
+                constants::HomingSpeed[i]
+                );
         homing_controller_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
         homing_controller_[i].set_accel(constants::DefaultStepperMaximumAccel[i]);
     }

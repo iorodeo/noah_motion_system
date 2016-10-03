@@ -101,6 +101,8 @@ class SystemState
         void get_stepper_max_speed_cmd();
         void set_stepper_max_accel_cmd();
         void get_stepper_max_accel_cmd();
+        void set_stepper_homing_dir_cmd();
+        void get_stepper_homing_dir_cmd();
 
         bool all_axes_homed();
 

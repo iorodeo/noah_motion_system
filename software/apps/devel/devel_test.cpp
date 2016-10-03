@@ -47,6 +47,16 @@ int main(int argc, char *argv[])
     std::cout << "max_accel_out: " << max_accel_out << std::endl;
     std::cout << std::endl;
 
+    int dir_in = -1;
+    int dir_out;
+    controller.set_homing_direction(mctl::Axis_X,dir_in);
+    controller.get_homing_direction(mctl::Axis_X,dir_out);
+    std::cout << "dir_in: " << dir_in << std::endl;
+    std::cout << "dir_out: " << dir_out << std::endl;
+    std::cout << std::endl;
+
+
+
 
     //mctl::FT_SensorCal cal;
     //cal.load("/home/wbd/.mctl/FT8652.cal");

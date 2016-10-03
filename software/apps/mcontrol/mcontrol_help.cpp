@@ -139,8 +139,13 @@ mcontrol joystick
 )");
 
 
-const std::string config_update_help_string(R"( 
-mcontrol config-update 
+const std::string set_device_config_help_string(R"( 
+mcontrol set-device-config 
+)");
+
+
+const std::string device_config_help_string(R"( 
+mcontrol device-config 
 )");
 
 
@@ -202,7 +207,8 @@ const StringMap CommandToHelpMap =
     {"ai-display", ai_display_help_string},
     {"ft_display", ft_display_help_string},
     {"joystick",  joystick_help_string},
-    {"config-update", config_update_help_string},
+    {"set-device-config", set_device_config_help_string},
+    {"device-config", device_config_help_string},
     {"config-check", config_check_help_string},
     {"config-file", config_file_help_string},
     {"config-info", config_info_help_string},

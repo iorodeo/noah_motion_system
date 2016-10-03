@@ -37,7 +37,7 @@ namespace mctl
             max_position_map_[stepper] = DefaultStepperMaximumPosition[stepper];
             max_speed_map_[stepper] = DefaultStepperMaximumSpeed[stepper];
             max_accel_map_[stepper] = DefaultStepperMaximumAccel[stepper];
-            home_direction_map_[stepper] = DefaultHomingDirection[stepper];
+            homing_direction_map_[stepper] = DefaultStepperHomingDirection[stepper];
         } 
     }
 
@@ -249,7 +249,7 @@ namespace mctl
 
         ss << std::endl;
         ss << "home direction: " << std::endl;
-        for (auto kv : home_direction_map_)
+        for (auto kv : homing_direction_map_)
         {
             std::string name = AxisToStringMap[kv.first];
             ss << pad << name << " = " << kv.second << std::endl;
@@ -712,7 +712,7 @@ namespace mctl
 
         if (axis < NumStepper)
         {
-            if (home_direction_map_[axis] > 0)
+            if (homing_direction_map_[axis] > 0)
             {
                 direction = -1.0;
             }
@@ -789,7 +789,37 @@ namespace mctl
         analog_input_offset_ = value;
     }
 
+    std::map<Axis,double> Configuration::min_position_map()
+    {
+        return min_position_map_;
+    }
 
+
+    std::map<Axis,double> Configuration::max_position_map()
+    {
+        return max_position_map_;
+    }
+
+
+    std::map<Axis,double> Configuration::max_speed_map()
+    {
+        return max_speed_map_;
+    }
+
+
+    std::map<Axis,double> Configuration::max_accel_map()
+    {
+        return max_accel_map_;
+    }
+
+
+    std::map<Axis,int> Configuration::homing_direction_map()
+    {
+        return homing_direction_map_;
+    }
+
+    // Protected methods
+    // --------------------------------------------------------------------------------------
     RtnStatus Configuration::load_homing_enabled(json config_json)
     {
         RtnStatus rtn_status;
@@ -898,16 +928,16 @@ namespace mctl
                 }
             }
 
-            home_direction_map_.clear();
+            homing_direction_map_.clear();
             for (auto kv : map_tmp)
             {
                 if (kv.second > 0)
                 {
-                    home_direction_map_.emplace(kv.first,1);
+                    homing_direction_map_.emplace(kv.first,1);
                 }
                 else
                 {
-                    home_direction_map_.emplace(kv.first,-1);
+                    homing_direction_map_.emplace(kv.first,-1);
                 }
             }
         }
