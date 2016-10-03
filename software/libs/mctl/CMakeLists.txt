@@ -22,6 +22,7 @@ add_library(
     outscan_data.cpp
     ft_sensor_cal.cpp
     ft_tool_transform.cpp
+    joystick/joystick.cpp
     )
 
 link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/") # for rpi

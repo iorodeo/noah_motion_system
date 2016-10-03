@@ -159,6 +159,19 @@ namespace mctl
         {Pwm_3,  false},
     };
 
+    std::map<Axis,double> DefaultAxisToJoystickSpeedMap
+    {
+        {Axis_X, 0.05}, 
+        {Axis_Y, 0.05},
+        {Axis_Z, 0.05},
+        {Axis_A, 10.0},
+        {Axis_B, 10.0}, 
+        {Pwm_0,  10.0},
+        {Pwm_1,  10.0},
+        {Pwm_2,  10.0},
+        {Pwm_3,  10.0},
+    };
+
     // Files and Directories
     extern const std::string DefaultConfigurationDir = std::string(".mctl");
     const std::string DefaultConfigurationFile = std::string("config.json");

@@ -27,9 +27,10 @@ namespace mctl
         config_dir_ = std::string("");
         config_file_ = std::string("");
 
+        joystick_device_ = DefaultJoystickDevice;
         axis_to_joystick_map_ = DefaultAxisToJoystickMap;
         axis_to_joystick_invert_map_ = DefaultAxisToJoystickInvertMap;
-        joystick_device_ = DefaultJoystickDevice;
+        axis_to_joystick_speed_map_ = DefaultAxisToJoystickSpeedMap;
 
         for (auto stepper : StepperList)
         {
@@ -817,6 +818,30 @@ namespace mctl
     {
         return homing_direction_map_;
     }
+
+
+    std::string Configuration::joystick_device()
+    {
+        return joystick_device_;
+    }
+
+
+    std::map<Axis,int> Configuration::axis_to_joystick_map()
+    {
+        return axis_to_joystick_map_;
+    }
+
+
+    std::map<Axis,bool> Configuration::axis_to_joystick_invert_map()
+    {
+        return axis_to_joystick_invert_map_;
+    }
+
+    std::map<Axis,double> Configuration::axis_to_joystick_speed_map()
+    {
+        return axis_to_joystick_speed_map_;
+    }
+
 
     // Protected methods
     // --------------------------------------------------------------------------------------

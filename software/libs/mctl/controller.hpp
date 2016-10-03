@@ -156,6 +156,9 @@ namespace mctl
             RtnStatus outscan(std::string filename, OutscanData &data, bool quiet=false);
             RtnStatus outscan(const char filename[], OutscanData &data, bool quiet=false);
 
+            // Joystick position
+            RtnStatus joystick_pendant();
+
             // Configuration methods
             RtnStatus load_config();
             RtnStatus load_config(std::string filename);
@@ -163,6 +166,7 @@ namespace mctl
             RtnStatus get_device_config_string(std::string &config_string);
             void set_config(Configuration config);
             Configuration config();
+
 
         protected:
 

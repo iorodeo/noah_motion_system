@@ -1,9 +1,11 @@
 #include "controller.hpp"
 #include "rawhid_msg_types.h"
+#include "joystick/joystick.hpp"
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <csignal>
 #include <cstring>
+#include <limits>
 #include <iostream>
 #include <bitset>
 #include <chrono>
@@ -1842,6 +1844,73 @@ namespace mctl
         {
             set_config(config);
         }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::joystick_pendant()
+    {
+        RtnStatus rtn_status;
+        const int32_t int16_max = std::numeric_limits<int16_t>::max();
+
+        Joystick joystick(config_.joystick_device());
+        if (!joystick.isFound())
+        {
+            std::ostringstream oss;
+            oss << "error: unable to find joystick " << config_.joystick_device();
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg(oss.str());
+        }
+
+        std::map<Axis,int> joystick_map = config_.axis_to_joystick_map();
+        std::map<Axis,bool> invert_map = config_.axis_to_joystick_invert_map();
+        std::map<Axis,double> max_speed_map = config_.axis_to_joystick_speed_map(); 
+
+        std::map<Axis,double> velocity_map;
+        for (auto axis : StepperList)
+        {
+            if (joystick_map[axis] >= 0)
+            {
+                velocity_map.emplace(axis,0.0);
+            }
+        }
+
+        while (!quit_flag)
+        {
+            // Get velocity update form joystick
+            JoystickEvent event;
+            if (joystick.sample(&event))
+            {
+                if (event.isAxis())
+                {
+                    for (auto kv : joystick_map)
+                    {
+                        if ((kv.second >= 0) &&(kv.second == event.number))
+                        {
+                            double value = double(event.value)/double(int16_max);
+                            if (invert_map[kv.first])
+                            {
+                                value = -value;
+                            }
+                            velocity_map[kv.first] = max_speed_map[kv.first]*value;
+                        }
+                    }
+                }
+
+                // DEVEL
+                // -----------------------------------------------------------------------------------------
+                for (auto kv : velocity_map)
+                {
+                    std::cout << "velocity " << AxisToStringMap[kv.first] << ": " << kv.second << std::endl;
+                }
+                std::cout << std::endl;
+                // ------------------------------------------------------------------------------------------
+
+            } // if (joystick.sample 
+
+        } // while (!quit_flag)
+
+
         return check_status(rtn_status);
     }
 

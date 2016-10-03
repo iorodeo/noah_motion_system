@@ -62,6 +62,7 @@ namespace mctl
     extern const std::string DefaultJoystickDevice;
     extern std::map<Axis,int> DefaultAxisToJoystickMap;
     extern std::map<Axis,bool> DefaultAxisToJoystickInvertMap;
+    extern std::map<Axis,double> DefaultAxisToJoystickSpeedMap;
 
     // Files and Directories
     extern const std::string DefaultConfigurationDir;

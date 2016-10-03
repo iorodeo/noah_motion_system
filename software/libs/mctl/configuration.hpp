@@ -102,6 +102,11 @@ namespace mctl
             std::map<Axis,double> max_accel_map();
             std::map<Axis,int> homing_direction_map();
 
+            std::string joystick_device();
+            std::map<Axis,int> axis_to_joystick_map();
+            std::map<Axis,bool> axis_to_joystick_invert_map();
+            std::map<Axis,double> axis_to_joystick_speed_map();
+
             std::string info_string();
 
         protected:
@@ -131,9 +136,10 @@ namespace mctl
             double analog_input_offset_;
             Unit analog_input_unit_;
 
+            std::string joystick_device_;
             std::map<Axis,int> axis_to_joystick_map_;
             std::map<Axis,bool> axis_to_joystick_invert_map_;
-            std::string joystick_device_;
+            std::map<Axis,double> axis_to_joystick_speed_map_;
 
             RtnStatus load_homing_enabled(json config_json);
             RtnStatus load_ft_sensor_cal(json config_json);
