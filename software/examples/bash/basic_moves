@@ -1,0 +1,25 @@
+set -e   # exit immediately on error
+
+mcontrol is-outscan-ready 
+printf "\n"
+
+printf "moving to zero\n"
+mcontrol move-to 0 0 0 0 0
+
+printf "moving x to 0.1\n"
+mcontrol move-to x 0.1 
+
+printf "moving y to 0.1\n"
+mcontrol move-to y 0.1
+
+printf "moving x to -0.1\n"
+mcontrol move-to x -0.1 
+
+printf "moving y to -0.1\n"
+mcontrol move-to y -0.1 
+
+printf "moving (x, y) to (0.1, 0.1)\n"
+mcontrol move-to 0.1 0.1 0 0 0 
+
+printf "moving all to 0.0\n"
+mcontrol move-to 0 0 0 0 0 

@@ -1,0 +1,23 @@
+set -e   # exit immediately on error
+
+mcontrol is-outscan-ready 
+printf "\n"
+
+printf "moving to zero\n"
+mcontrol move-to 0 0 0 0 0
+
+printf "sleeping 2s\n"
+sleep 2
+printf "\n"
+
+printf "get force and torque samples ... "
+mcontrol get-ft-samples 100 -o ft_samples.txt
+printf "done\n\n"
+
+mcontrol outscan trajectory1.txt -o dataset1.h5
+
+mcontrol outscan trajectory2.txt -o dataset2.h5
+
+mcontrol outscan trajectory3.txt -o dataset3.h5
+
+mcontrol outscan trajectory4.txt -o dataset4.h5
