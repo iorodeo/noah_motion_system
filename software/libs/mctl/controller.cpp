@@ -1919,7 +1919,7 @@ namespace mctl
             JoystickEvent event;
             if (joystick.sample(&event))
             {
-                if (event.isAxis())
+                if (event.isAxis() && !event.isInitialState())
                 {
                     for (auto kv : joystick_map)
                     {
