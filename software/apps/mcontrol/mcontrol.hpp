@@ -44,8 +44,8 @@ mcontrol  - Motion Controller
       mcontrol trigger-on <trigger>
       mcontrol trigger-off <trigger>
       mcontrol trigger-state <trigger>
-      mcontrol get-ai-samples [-n <number>] [-o <output_file>]
-      mcontrol get-ft-samples [-n <number>] [-o <output_file>]
+      mcontrol get-ai-samples <number> [-o <output_file>]
+      mcontrol get-ft-samples <number> [-o <output_file>]
       mcontrol ai-display 
       mcontrol ft-display
       mcontrol joystick

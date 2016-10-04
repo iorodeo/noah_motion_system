@@ -143,6 +143,12 @@ namespace mctl
             RtnStatus jog_position(std::map<Axis,double> pos_map, bool wait=true);
             RtnStatus jog_position(arma::Row<double> pos_vec, bool wait=true); 
 
+            // Get analog input or force/torque samples
+            RtnStatus get_ai_samples(arma::Mat<double> &samples, int num);
+            RtnStatus get_ft_samples(arma::Mat<double> &samples, int num);
+            RtnStatus ai_display();
+            RtnStatus ft_display();
+
             // Outscan methods 
             RtnStatus is_ready_for_outscan(bool &ready);
             RtnStatus outscan(

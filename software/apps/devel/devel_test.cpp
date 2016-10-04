@@ -17,14 +17,13 @@ int main(int argc, char *argv[])
     controller.open();
     controller.set_mode_ready();
 
-    controller.joystick_pendant();
+    controller.ft_display();
 
+    //arma::Mat<double> data;
+    //controller.get_ft_samples(data,100);
+    //std::cout << data;
 
-    //mctl::Controller controller;
-
-    //controller.set_exit_on_error(true);
-    //controller.open();
-    //controller.set_mode_ready();
+    //controller.joystick_pendant();
 
     //for (auto num : mctl::StepperList)
     //{ 

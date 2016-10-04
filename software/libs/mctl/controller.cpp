@@ -1579,6 +1579,202 @@ namespace mctl
     }
 
 
+    RtnStatus Controller::get_ai_samples(arma::Mat<double> &ai_samples, int num)
+    {
+        RtnStatus rtn_status;
+        if (num <= 0)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: number of analog input samples must be > 0");
+            return check_status(rtn_status);
+        }
+
+        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg;
+        ai_samples = arma::Mat<double>(num,NumAnalogInput,arma::fill::zeros);
+
+        msg_count_ = 0;
+
+        for (int i=0; i<num; i++)
+        {
+            // Receive data from device
+            if (!hid_dev_.recvData(&dev_to_host_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable to sync messaging loop");
+                break;
+            }
+
+            // Create host to device message 
+            host_to_dev_msg.command = Cmd_Empty;
+            host_to_dev_msg.count = msg_count_;
+            msg_count_++;
+
+            // Send message to device
+            if (!hid_dev_.sendData(&host_to_dev_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable to sync messaging loop");
+                break;
+            }
+
+            for (int j=0; j<NumAnalogInput; j++)
+            {
+                ai_samples(i,j) = config_.analog_int_to_volt(dev_to_host_msg.analog_input[j]);
+            }
+        }
+
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::get_ft_samples(arma::Mat<double> &ft_samples, int num)
+    {
+        RtnStatus rtn_status;
+        arma::Mat<double> ai_samples;
+        rtn_status = get_ai_samples(ai_samples,num);
+        if (!rtn_status.success())
+        {
+            return check_status(rtn_status);
+        }
+        rtn_status = config_.get_force_and_torque(ai_samples,ft_samples);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::ai_display()
+    {
+        RtnStatus rtn_status;
+        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg;
+
+        msg_count_ = 0;
+        arma::Row<double> ai_values(NumAnalogInput);
+
+        std::cout << std::endl;
+        std::cout << "Analog Inputs V - (Ctrl-C to exit) " << std::endl << std::endl;
+        std::streamsize original_precision = std::cout.precision();
+        std::cout << std::setprecision(4);
+        std::cout << std::fixed;
+        std::cout << std::endl;
+
+        while (!quit_flag)
+        {
+            // Receive data from device
+            if (!hid_dev_.recvData(&dev_to_host_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable to sync messaging loop");
+                break;
+            }
+
+            // Create host to device message 
+            host_to_dev_msg.command = Cmd_Empty;
+            host_to_dev_msg.count = msg_count_;
+            msg_count_++;
+
+            // Send message to device
+            if (!hid_dev_.sendData(&host_to_dev_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable to sync messaging loop");
+                break;
+            }
+
+            for (int i=0; i<NumAnalogInput; i++)
+            {
+                ai_values(i) = config_.analog_int_to_volt(dev_to_host_msg.analog_input[i]);
+            }
+
+            std::cout << '\r';
+            for (int i=0; i<ai_values.size(); i++)
+            {
+                std::cout << std::setw(10) << ai_values(i);
+            }
+            std::cout << std::flush;
+        }
+        std::cout << std::setprecision(original_precision);
+        std::cout << std::endl << std::endl;
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::ft_display()
+    {
+        RtnStatus rtn_status;
+        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg;
+
+        msg_count_ = 0;
+        arma::Row<double> ai_values(NumAnalogInput);
+        arma::Row<double> ft_values;
+        std::vector<std::string> units_vec;
+        rtn_status = config_.get_force_and_torque_units(units_vec);
+        if (!rtn_status.success())
+        {
+            return check_status(rtn_status);
+        }
+
+        std::cout << std::endl;
+        std::cout << "Forces & Torques - (Ctrl-C to exit) " << std::endl << std::endl;
+        std::streamsize original_precision = std::cout.precision();
+        std::cout << std::setprecision(4);
+        std::cout << std::fixed;
+        std::cout << std::endl;
+
+        for (auto unit_str : units_vec)
+        {
+            std::cout << std::setw(10) << unit_str;
+        }
+        std::cout << std::endl << std::endl;
+
+
+        while (!quit_flag)
+        {
+            // Receive data from device
+            if (!hid_dev_.recvData(&dev_to_host_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable to sync messaging loop");
+                break;
+            }
+
+            // Create host to device message 
+            host_to_dev_msg.command = Cmd_Empty;
+            host_to_dev_msg.count = msg_count_;
+            msg_count_++;
+
+            // Send message to device
+            if (!hid_dev_.sendData(&host_to_dev_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("unable to sync messaging loop");
+                break;
+            }
+
+            for (int i=0; i<NumAnalogInput; i++)
+            {
+                ai_values(i) = config_.analog_int_to_volt(dev_to_host_msg.analog_input[i]);
+            }
+            rtn_status = config_.get_force_and_torque(ai_values,ft_values);
+            if (!rtn_status.success())
+            {
+                break;
+            }
+
+            std::cout << '\r';
+            for (int i=0; i<ft_values.size(); i++)
+            {
+                std::cout << std::setw(10) << ft_values(i);
+            }
+            std::cout << std::flush;
+        }
+        std::cout << std::setprecision(original_precision);
+        std::cout << std::endl << std::endl;
+        return check_status(rtn_status);
+    }
+
+
     RtnStatus Controller::is_ready_for_outscan(bool &ready)
     {
         RtnStatus rtn_status;
@@ -1710,7 +1906,9 @@ namespace mctl
                 }
                 else
                 {
-                    msg_count_ = dev_to_host_msg.count+1;;
+                    //msg_count_ = dev_to_host_msg.count+1;;
+                    msg_count_ = 0;
+                    dev_to_host_msg.count = msg_count_;
                 }
             }
 
@@ -1909,8 +2107,9 @@ namespace mctl
         rtn_status = set_mode_velocity_control();
         if (!rtn_status.success())
         {
-            quit_flag = true;
+            return check_status(rtn_status);
         }
+
         bool is_first = true;
 
         while (!quit_flag)
@@ -1945,7 +2144,7 @@ namespace mctl
                 break;
             }
 
-            // Create host to devive message 
+            // Create host to device message 
             if (is_first) 
             { 
                 msg_count_ = 0; 

@@ -430,36 +430,72 @@ bool cmd_trigger_state(mctl::Controller &controller, StringToValueMap arg_map)
 
 bool cmd_get_ai_samples(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    int num;
+    RtnStatus rtn_status = get_docopt_value_as_int(arg_map["<number>"], num);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;
+        return false;
+    }
+
+    // Get output data filename
+    std::string filename = DefaultSamplesDataFile;
+    if (arg_map["-o"])
+    {
+        if (!arg_map["-o"].isString())
+        {
+            std::cout << "error: <output_file> must be string" << std::endl;
+            return false;
+        }
+        filename = arg_map["-o"].asString();
+    }
+    
+    arma::Mat<double> ai_samples;
+    controller.get_ai_samples(ai_samples,num);
+    ai_samples.save(filename,arma::raw_ascii);
     return true;
 }
 
 
 bool cmd_get_ft_samples(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    int num;
+    RtnStatus rtn_status = get_docopt_value_as_int(arg_map["<number>"], num);
+    if (!rtn_status.success())
+    {
+        std::cout << rtn_status.error_msg() << std::endl;
+        return false;
+    }
+
+    // Get output data filename
+    std::string filename = DefaultSamplesDataFile;
+    if (arg_map["-o"])
+    {
+        if (!arg_map["-o"].isString())
+        {
+            std::cout << "error: <output_file> must be string" << std::endl;
+            return false;
+        }
+        filename = arg_map["-o"].asString();
+    }
+
+    arma::Mat<double> ft_samples;
+    controller.get_ft_samples(ft_samples,num);
+    ft_samples.save(filename,arma::raw_ascii);
     return true;
 }
 
 
 bool cmd_ai_display(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    controller.ai_display();
     return true;
 }
 
 
 bool cmd_ft_display(mctl::Controller &controller, StringToValueMap arg_map)
 {
-    ///////////////////////////////////////////////////////////////////////
-    // NOT DONE
-    //////////////////////////////////////////////////////////////////////
+    controller.ft_display();
     return true;
 }
 

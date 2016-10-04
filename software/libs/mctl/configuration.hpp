@@ -64,15 +64,12 @@ namespace mctl
             arma::Row<uint16_t> analog_volt_to_int(arma::Row<double> volt_vec);
             arma::Mat<uint16_t> analog_volt_to_int(arma::Mat<double> volt_mat);
 
-            // DEVEL - NOT DONE
-            // -------------------------------------------------------------------------
             bool have_ft_sensor_cal();
             std::string ft_sensor_cal_info();
             RtnStatus get_force_and_torque_units(std::vector<std::string> &units_vec);
             RtnStatus get_force_and_torque(std::vector<double> ain_vec, std::vector<double> &ft_vec);
             RtnStatus get_force_and_torque(arma::Row<double> ain_vec, arma::Row<double> &ft_vec);
             RtnStatus get_force_and_torque(arma::Mat<double> ain_mat, arma::Mat<double> &ft_vec);
-            // -------------------------------------------------------------------------
 
             double axis_conversion(Axis axis);
             double axis_conversion_inv(Axis axis);
