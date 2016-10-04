@@ -1593,6 +1593,9 @@ namespace mctl
         HostToDevMsg host_to_dev_msg;
         ai_samples = arma::Mat<double>(num,NumAnalogInput,arma::fill::zeros);
 
+        // Clear buffer to sync messages 
+        hid_dev_.clearRecvBuffer();
+
         msg_count_ = 0;
 
         for (int i=0; i<num; i++)
@@ -1657,6 +1660,9 @@ namespace mctl
         std::cout << std::setprecision(4);
         std::cout << std::fixed;
         std::cout << std::endl;
+
+        // Clear buffer to sync messages 
+        hid_dev_.clearRecvBuffer();
 
         while (!quit_flag)
         {
@@ -1727,6 +1733,9 @@ namespace mctl
             std::cout << std::setw(10) << unit_str;
         }
         std::cout << std::endl << std::endl;
+
+        // Clear buffer to sync messages 
+        hid_dev_.clearRecvBuffer();
 
 
         while (!quit_flag)
