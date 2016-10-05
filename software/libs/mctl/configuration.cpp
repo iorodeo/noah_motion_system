@@ -378,7 +378,8 @@ namespace mctl
 
     std::string Configuration::axis_name(Axis axis)
     {
-        return axis_to_string(axis);
+        std::string name = axis_to_string(axis);
+        return name;
     }
 
 

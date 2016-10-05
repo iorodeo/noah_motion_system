@@ -1214,10 +1214,26 @@ namespace mctl
         RtnStatus rtn_status;
         if (!config_.homing_enabled(axis))
         {
+            if (display_position_on_move_)
+            {
+                std::cout << std::endl;
+                std::cout << "setting " << axis_name(axis) << " homed" << std::endl;
+            }
+
             rtn_status = set_homed_true(axis);
+
+            if (display_position_on_move_)
+            {
+                std::cout << std::endl;
+            }
         }
         else
         {
+            if (display_position_on_move_)
+            {
+                std::cout << std::endl;
+                std::cout << "homing " << axis_name(axis)<< std::endl;
+            }
             HostToDevMsg host_to_dev_msg;
             DevToHostMsg dev_to_host_msg;
             host_to_dev_msg.command = Cmd_SetModeHoming;
@@ -1226,10 +1242,22 @@ namespace mctl
             if (rtn_status.success() && (wait || backoff))
             {
                 rtn_status = wait_for_ready();
+
                 if (rtn_status.success() && backoff)
                 {
+                    if (display_position_on_move_)
+                    {
+                        std::cout << std::endl;
+                        std::cout << "backing off " <<  std::endl;
+                    }
+
                     double backoff_dist = config_.homing_backoff(axis);
                     rtn_status = jog_position(axis,backoff_dist);
+
+                    if (display_position_on_move_)
+                    {
+                        std::cout << std::endl;
+                    }
                 }
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(HomingDebounceSleep_ms));
@@ -1320,6 +1348,7 @@ namespace mctl
         return config_.axis_unit(axis);
     }
 
+
     std::string Controller::axis_unit_string(Axis axis)
     {
         return config_.axis_unit_string(axis);
@@ -1328,7 +1357,8 @@ namespace mctl
 
     std::string Controller::axis_name(Axis axis)
     {
-        return config_.axis_name(axis);
+        std::string name = config_.axis_name(axis);
+        return name;
     }
 
 

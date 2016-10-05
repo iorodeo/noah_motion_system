@@ -64,13 +64,9 @@ bool cmd_home(mctl::Controller &controller, StringToValueMap arg_map)
     {
         if (axis_str.compare(std::string("all")) == 0)
         {
-            std::cout << "setting home=true for all axes" << std::endl;
-            for (mctl::Axis axis : mctl::StepperList)
+            for (auto axis : mctl::StepperList)
             {
-                std::cout << std::endl;
-                std::cout << "homing " << controller.axis_name(axis) << std::cout;
                 controller.home(axis);
-                std::cout << std::endl;
             }
         }
         else
