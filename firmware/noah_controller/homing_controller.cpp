@@ -23,6 +23,7 @@ void HomingController::initialize(uint8_t pin)
 {
     pin_ = pin;
     pinMode(pin_,INPUT);
+    digitalWrite(pin_,HIGH);
 }
 
 

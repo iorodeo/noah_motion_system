@@ -1212,7 +1212,6 @@ namespace mctl
     RtnStatus Controller::home(Axis axis, bool backoff, bool wait)
     {
         RtnStatus rtn_status;
-        std::cout << "backoff: " << backoff << "wait: " << wait << std::endl;
         if (!config_.homing_enabled(axis))
         {
             rtn_status = set_homed_true(axis);
@@ -1227,17 +1226,10 @@ namespace mctl
             if (rtn_status.success() && (wait || backoff))
             {
                 rtn_status = wait_for_ready();
-                std::cout << "home done" << std::endl;
                 if (rtn_status.success() && backoff)
                 {
                     double backoff_dist = config_.homing_backoff(axis);
-                    std::cout << "backing_dist " << backoff_dist << std::endl;
                     rtn_status = jog_position(axis,backoff_dist);
-                    //if (rtn_status.success())
-                    //{
-                    //    rtn_status = wait_for_ready();
-                    //}
-                    std::cout << "done" << std::endl;
                 }
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(HomingDebounceSleep_ms));

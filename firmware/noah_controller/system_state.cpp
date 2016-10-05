@@ -468,7 +468,8 @@ void SystemState::set_mode_homing()
 
 void SystemState::set_mode_positioning()
 {
-    if ((mode_ == constants::Mode_Ready) && all_axes_homed())
+    //if ((mode_ == constants::Mode_Ready) && all_axes_homed())
+    if (mode_ == constants::Mode_Ready)
     { 
         // Check to make sure positions are within bounds
         bool bounds_error = false;
