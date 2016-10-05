@@ -12,14 +12,20 @@ mcontrol move-to x 0.1
 printf "moving y to 0.1\n"
 mcontrol move-to y 0.1
 
+printf "moving z to 0.03\n"
+mcontrol move-to z 0.03
+
 printf "moving x to -0.1\n"
 mcontrol move-to x -0.1 
 
 printf "moving y to -0.1\n"
 mcontrol move-to y -0.1 
 
-printf "moving (x, y) to (0.1, 0.1)\n"
-mcontrol move-to 0.1 0.1 0 0 0 
+printf "moving z to -0.03\n"
+mcontrol move-to z -0.03 
+
+printf "moving (x, y, z) to (0.1, 0.1,0.03)\n"
+mcontrol move-to 0.1 0.1 0.03 0 0 
 
 printf "moving all to 0.0\n"
 mcontrol move-to 0 0 0 0 0 
