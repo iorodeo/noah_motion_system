@@ -20,7 +20,7 @@ if __name__ == '__main__':
             scipy.array([0.1, 0.1 , 0.025 , 0.0, 0.0]),
             ]
 
-    cycles = 4
+    cycles = 1
     period = 7.0
     dt = 0.005
 
