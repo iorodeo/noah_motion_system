@@ -693,6 +693,12 @@ namespace mctl
     RtnStatus Controller::set_max_speed(Axis axis, int32_t ind_speed)
     {
         RtnStatus rtn_status;
+        if ((ind_speed <= 0) || (ind_speed >= UINT16_MAX))
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: ind_speed out of range");
+            return check_status(rtn_status);
+        }
         HostToDevMsg host_to_dev_msg;
         DevToHostMsg dev_to_host_msg;
         host_to_dev_msg.command = Cmd_SetStepperMaxSpeed;
@@ -820,6 +826,12 @@ namespace mctl
     RtnStatus Controller::set_max_accel(Axis axis, int32_t ind_accel)
     {
         RtnStatus rtn_status;
+        if ((ind_accel <= 0) || (ind_accel >= UINT16_MAX))
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: ind_accel out of range");
+            return check_status(rtn_status);
+        }
         HostToDevMsg host_to_dev_msg;
         DevToHostMsg dev_to_host_msg;
         host_to_dev_msg.command = Cmd_SetStepperMaxAccel;
