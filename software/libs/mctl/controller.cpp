@@ -1229,11 +1229,33 @@ namespace mctl
         }
         else
         {
+            double backoff_dist = config_.homing_backoff(axis);
+
+            if (backoff)
+            {
+                // Move away from homing switch by backoff distance - to
+                // get off of homing switch if at the end of travel range.
+                if (display_position_on_move_)
+                {
+                    std::cout << std::endl;
+                    std::cout << "backing away from " << axis_name(axis); 
+                    std::cout << " home switch " <<  std::endl;
+                }
+                rtn_status = jog_position(axis,backoff_dist);
+                if (!rtn_status.success())
+                {
+                    std::cerr << "error: " << rtn_status.error_msg() << std::endl;
+                    return check_status(rtn_status);
+                }
+            }
+
+            // Home axis - axis moves toward homing switch until switch is closed
             if (display_position_on_move_)
             {
                 std::cout << std::endl;
                 std::cout << "homing " << axis_name(axis)<< std::endl;
             }
+
             HostToDevMsg host_to_dev_msg;
             DevToHostMsg dev_to_host_msg;
             host_to_dev_msg.command = Cmd_SetModeHoming;
@@ -1242,22 +1264,16 @@ namespace mctl
             if (rtn_status.success() && (wait || backoff))
             {
                 rtn_status = wait_for_ready();
-
                 if (rtn_status.success() && backoff)
                 {
+                    // Homing finished back axis off homing switch
                     if (display_position_on_move_)
                     {
                         std::cout << std::endl;
-                        std::cout << "backing off " <<  std::endl;
+                        std::cout << "backing away from " << axis_name(axis); 
+                        std::cout << " home switch " <<  std::endl;
                     }
-
-                    double backoff_dist = config_.homing_backoff(axis);
                     rtn_status = jog_position(axis,backoff_dist);
-
-                    if (display_position_on_move_)
-                    {
-                        std::cout << std::endl;
-                    }
                 }
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(HomingDebounceSleep_ms));
