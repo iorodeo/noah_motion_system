@@ -9,7 +9,7 @@
 #include "position_controller.h"
 #include "homing_controller.h"
 #include "estop_monitor.h"
-#include "eeprom_data.h"
+#include "eeprom_config.h"
 
 class SystemState
 {
@@ -58,6 +58,9 @@ class SystemState
         // Time variables
         uint32_t micros_last_ = 0;   // Value from last call to micros
         uint64_t time_us_ = 0;       // Elapsed time in us
+
+        // EEPROM data
+        EEPROM_Data eeprom_data_;
 
         // Messaging methods
         void send_and_recv();               
@@ -118,7 +121,10 @@ class SystemState
         void setup_pwm_output();
         void setup_homing();
         void setup_timer();
-        void load_eeprom_values();
+
+        // EEPROM methods
+        void load_eeprom_config();
+        void save_eeprom_config();
 };
 
 extern SystemState system_state; 

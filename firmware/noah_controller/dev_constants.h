@@ -49,8 +49,8 @@ namespace constants
         Cmd_GetStepperMaxAccel,
         Cmd_SetStepperHomingDirection,
         Cmd_GetStepperHomingDirection,
-        Cmd_GetDigitalOutput
-
+        Cmd_SaveConfigToEEPROM,
+        Cmd_GetDigitalOutput,
     };
 
     const uint8_t NumAnalogInput = 10;
@@ -80,6 +80,8 @@ namespace constants
 
 #ifndef __linux__
 
+    extern const uint16_t DefaultConfigEEPROMAddress;
+
     // Communications timeouts
     extern const uint16_t DevToHostTimeout;
     extern const uint16_t HostToDevTimeout;
@@ -102,11 +104,6 @@ namespace constants
     extern const uint8_t StepperClockHighDelay;
     extern const uint8_t StepperDriveEnablePin;
 
-    //extern const uint16_t EEPROM_Address_StepperMinimumPosition[NumStepper]; 
-    //extern const uint16_t EEPROM_Address_StepperMaximumPosition[NumStepper]; 
-    //extern const uint16_t EEPROM_Address_StepperMaximumSpeed[NumStepper];    
-    //extern const uint16_t EEPROM_Address_StepperMaximumAccel[NumStepper];    
-    //extern const uint16_t EEPROM_Address_StepperHomingDirection[NumStepper]; 
 
     // PositionController  parameters
     extern const uint32_t PositionControllerMaximumSpeed[NumStepper];

@@ -168,10 +168,13 @@ namespace mctl
             // Configuration methods
             RtnStatus load_config();
             RtnStatus load_config(std::string filename);
-            RtnStatus set_device_config();
-            RtnStatus get_device_config_string(std::string &config_string);
+
             void set_config(Configuration config);
             Configuration config();
+
+            RtnStatus set_device_config();
+            RtnStatus get_device_config_string(std::string &config_string);
+            RtnStatus eeprom_write_device_config();
 
 
         protected:

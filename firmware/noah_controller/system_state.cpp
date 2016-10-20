@@ -1,5 +1,4 @@
 #include "system_state.h"
-#include <EEPROM.h>
 
 // SystemState public methods
 // ------------------------------------------------------------------------------------------------
@@ -8,6 +7,7 @@ SystemState::SystemState() { }
 
 void SystemState::initialize()
 { 
+    load_eeprom_config(); // Always first
     
     setup_stepper();
     setup_velocity_controller();
@@ -18,7 +18,6 @@ void SystemState::initialize()
     setup_digital_output();
     setup_pwm_output();
     setup_homing();
-    //load_eeprom_values();
     setup_timer(); // Always last in setup
 
     // DEBUG
@@ -393,6 +392,10 @@ void SystemState::command_switchyard()
             get_stepper_homing_dir_cmd();
             break;
 
+        case constants::Cmd_SaveConfigToEEPROM:
+            save_eeprom_config();
+            break;
+
         case constants::Cmd_GetDigitalOutput:
             break;
 
@@ -730,6 +733,7 @@ void SystemState::set_stepper_max_speed_cmd()
         uint16_t speed = uint16_t(host_to_dev_msg_last_.command_data[1]);
         stepper_[num].set_max_speed(speed);
         velocity_controller_[num].set_max_speed(speed);
+        homing_controller_[num].set_max_speed(speed);
     }
     else
     {
@@ -760,6 +764,7 @@ void SystemState::set_stepper_max_accel_cmd()
     {
         uint16_t max_accel = uint16_t(host_to_dev_msg_last_.command_data[1]);
         velocity_controller_[num].set_max_accel(max_accel);
+        homing_controller_[num].set_accel(max_accel);
     }
     else
     {
@@ -852,9 +857,15 @@ void SystemState::setup_stepper()
         StepperPin pin = constants::StepperPinArray[i];
         stepper_[i] = Stepper(pin.clk,pin.dir); 
         stepper_[i].initialize();
-        stepper_[i].set_min_position(constants::DefaultStepperMinimumPosition[i]);
-        stepper_[i].set_max_position(constants::DefaultStepperMaximumPosition[i]);
-        stepper_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
+
+        stepper_[i].set_min_position(eeprom_data_.stepper_minimum_position[i]);
+        stepper_[i].set_max_position(eeprom_data_.stepper_maximum_position[i]);
+        stepper_[i].set_max_speed(eeprom_data_.stepper_maximum_speed[i]);
+
+        //stepper_[i].set_min_position(constants::DefaultStepperMinimumPosition[i]);
+        //stepper_[i].set_max_position(constants::DefaultStepperMaximumPosition[i]);
+        //stepper_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
+
         stepper_[i].disable_bounds_check();
         stepper_[i].set_velocity(0);
         homed_flag_[i] = false;
@@ -866,10 +877,16 @@ void SystemState::setup_velocity_controller()
 {
     for (int i=0; i<constants::NumStepper; i++)
     {
-        velocity_controller_[i].set_min_position(constants::DefaultStepperMinimumPosition[i]);
-        velocity_controller_[i].set_max_position(constants::DefaultStepperMaximumPosition[i]);
-        velocity_controller_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
-        velocity_controller_[i].set_max_accel(constants::DefaultStepperMaximumAccel[i]);
+        velocity_controller_[i].set_min_position(eeprom_data_.stepper_minimum_position[i]);
+        velocity_controller_[i].set_max_position(eeprom_data_.stepper_maximum_position[i]);
+        velocity_controller_[i].set_max_speed(eeprom_data_.stepper_maximum_speed[i]);
+        velocity_controller_[i].set_max_accel(eeprom_data_.stepper_maximum_accel[i]);
+
+        //velocity_controller_[i].set_min_position(constants::DefaultStepperMinimumPosition[i]);
+        //velocity_controller_[i].set_max_position(constants::DefaultStepperMaximumPosition[i]);
+        //velocity_controller_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
+        //velocity_controller_[i].set_max_accel(constants::DefaultStepperMaximumAccel[i]);
+
         velocity_controller_[i].set_velocity(0);
         velocity_controller_[i].set_velocity_setp(0);
         velocity_controller_[i].enable_bounds_check();
@@ -954,42 +971,50 @@ void SystemState::setup_homing()
     for (int i=0; i<constants::NumStepper; i++)
     {
         homing_controller_[i] = HomingController(
-                constants::DefaultStepperHomingDirection[i], 
+                eeprom_data_.stepper_homing_direction[i],
                 constants::HomingSpeed[i]
                 );
-        homing_controller_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
-        homing_controller_[i].set_accel(constants::DefaultStepperMaximumAccel[i]);
+
+        homing_controller_[i].set_max_speed(eeprom_data_.stepper_maximum_speed[i]);
+        homing_controller_[i].set_accel(eeprom_data_.stepper_maximum_accel[i]);
+
+        //homing_controller_[i] = HomingController(
+        //        constants::DefaultStepperHomingDirection[i], 
+        //        constants::HomingSpeed[i]
+        //        );
+
+        //homing_controller_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
+        //homing_controller_[i].set_accel(constants::DefaultStepperMaximumAccel[i]);
     }
 }
 
 
-//void SystemState::load_eeprom_values()
-//{
-//    EEPROM_Int32_Data data_int32;
-//    EEPROM_Int8_Data data_int8;
-//
-//    for (int i=0; i<constants::NumStepper; i++)
-//    {
-//        EEPROM.get(constants::EEPROM_Address_StepperMinimumPosition[i], data_int32);
-//        if (data_int32.flag == 0)
-//        {
-//            stepper_[i].set_min_position(data_int32.value);
-//            velocity_controller_[i].set_min_position(data_int32.value);
-//        }
-//       
-//
-//        EEPROM.get(constants::EEPROM_Address_StepperMaximumPosition[i], data_int32);
-//        //stepper_[i].set_max_position(data_int32);
-//        //velocity_controller_[i].set_max_position(data_int32);
-//
-//        EEPROM.get(constants::EEPROM_Address_StepperMaximumSpeed[i], data_int32);
-//        //stepper_[i].set_max_speed(data_int32);
-//        //velocity_controller_[i].set_max_speed(data_int32);
-//        
-//        EEPROM.get(constants::EEPROM_Address_StepperMaximumAccel[i], data_int32);
-//        //velocity_controller_[i].set_max_accel(value);
-//    }
-//}
+void SystemState::load_eeprom_config()
+{
+    EEPROM_Config eeprom_config;
+    eeprom_data_ = eeprom_config.get();
+    if (eeprom_data_.flag == EEPROM_Config::NotSetFlagValue)
+    {
+        eeprom_config.set_to_defaults();
+    }
+    eeprom_data_ = eeprom_config.get();
+}
+
+
+void SystemState::save_eeprom_config()
+{
+    eeprom_data_.flag = 0;
+    for (int i=0; i<constants::NumStepper; i++)
+    {
+        eeprom_data_.stepper_homing_direction[i] = homing_controller_[i].direction();
+        eeprom_data_.stepper_minimum_position[i] = stepper_[i].min_position();
+        eeprom_data_.stepper_maximum_position[i] = stepper_[i].max_position();
+        eeprom_data_.stepper_maximum_speed[i] = int32_t(stepper_[i].max_speed());
+        eeprom_data_.stepper_maximum_accel[i] = int32_t(velocity_controller_[i].max_accel());
+    }
+    EEPROM_Config eeprom_config;
+    eeprom_config.put(eeprom_data_);
+}
 
 // SystemState Instance
 // ------------------------------------------------------------------------------------------------

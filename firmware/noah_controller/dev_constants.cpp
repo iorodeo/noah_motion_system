@@ -27,9 +27,13 @@ namespace constants
     const int8_t DefaultStepperHomingDirection[NumStepper] = {1,1,1,1,1}; // 1 or -1.
 
 #ifndef  __linux__
+
     // Communications timeouts
     const uint16_t DevToHostTimeout = 50;
     const uint16_t HostToDevTimeout = 50;
+
+    // EEPROM parameters
+    const uint16_t DefaultConfigEEPROMAddress = 0;
 
     // Timing parameters 
     const uint8_t  TimerPriority = 1;
@@ -48,13 +52,6 @@ namespace constants
     const StepperPin StepperPinArray[NumStepper] = {{2,3}, {4,5}, {6,7}, {8,9}, {24,25}};
     const uint8_t StepperClockHighDelay = 1;  // us
     const uint8_t StepperDriveEnablePin = 32;
-
-    //// EEPROM parameters
-    //const uint16_t EEPROM_Address_StepperMinimumPosition[NumStepper] = {  0,    5,  10,  15,  20};
-    //const uint16_t EEPROM_Address_StepperMaximumPosition[NumStepper] = {  25,  30,  35,  40,  45};
-    //const uint16_t EEPROM_Address_StepperMaximumSpeed[NumStepper]    = {  50,  55,  60,  65,  70};
-    //const uint16_t EEPROM_Address_StepperMaximumAccel[NumStepper]    = {  75,  80,  85,  90,  95};
-    //const uint16_t EEPROM_Address_StepperHomingDirection[NumStepper] = { 100, 102, 103, 105, 107};
 
     // PositionController  parameters
     const uint32_t PositionControllerMaximumSpeed[NumStepper] = {1000, 1000, 3000, 1000, 1000};

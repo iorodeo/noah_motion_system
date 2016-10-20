@@ -2250,6 +2250,18 @@ namespace mctl
     }
 
 
+    void Controller::set_config(Configuration config)
+    {
+        config_ = config;
+    }
+
+
+    Configuration Controller::config()
+    {
+        return config_;
+    }
+
+
     RtnStatus Controller::set_device_config()
     {
         RtnStatus rtn_status;
@@ -2364,15 +2376,15 @@ namespace mctl
         return check_status(rtn_status);
     }
 
-    void Controller::set_config(Configuration config)
-    {
-        config_ = config;
-    }
 
-
-    Configuration Controller::config()
+    RtnStatus Controller::eeprom_write_device_config()
     {
-        return config_;
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg;
+        host_to_dev_msg.command = Cmd_SaveConfigToEEPROM;
+        rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
+        return check_status(rtn_status);
     }
 
 

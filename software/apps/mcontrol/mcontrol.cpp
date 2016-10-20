@@ -508,6 +508,11 @@ bool cmd_set_device_config(mctl::Controller &controller, StringToValueMap arg_ma
     std::cout << "setting device configuration ..." << std::flush;
     controller.set_device_config();
     std::cout << "done" << std::endl;
+
+    std::cout << "writing device configuration to eeprom ..." << std::flush;
+    controller.eeprom_write_device_config();
+    std::cout << "done" << std::endl;
+
     return true;
 }
 
