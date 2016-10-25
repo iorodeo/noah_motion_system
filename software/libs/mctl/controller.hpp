@@ -151,6 +151,15 @@ namespace mctl
 
             // Outscan methods 
             RtnStatus is_ready_for_outscan(bool &ready);
+
+            RtnStatus outscan(
+                    arma::Mat<int32_t> ind_pos_mat, 
+                    arma::Mat<int32_t> ind_vel_mat, 
+                    arma::Mat<uint8_t> dio_mat,
+                    OutscanData &data, 
+                    bool quiet=false
+                    ); 
+
             RtnStatus outscan(
                     arma::Mat<int32_t> ind_pos_mat, 
                     arma::Mat<int32_t> ind_vel_mat, 
@@ -158,6 +167,7 @@ namespace mctl
                     bool quiet=false
                     ); 
 
+            RtnStatus outscan(arma::Mat<double> pos_mat, arma::Mat<uint8_t> dio_mat, OutscanData &data, bool quiet=false);   
             RtnStatus outscan(arma::Mat<double> pos_mat, OutscanData &data, bool quiet=false);   
             RtnStatus outscan(std::string filename, OutscanData &data, bool quiet=false);
             RtnStatus outscan(const char filename[], OutscanData &data, bool quiet=false);

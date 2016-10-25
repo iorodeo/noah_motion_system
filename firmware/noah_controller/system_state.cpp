@@ -90,6 +90,12 @@ void SystemState::update_stop_motion_on_loop()
     {
         set_mode_ready(true);
         stop_motion_flag_ = false;
+        for (int i=0; i<constants::NumDigitalOutput; i++)
+        {
+            uint8_t pin = constants::DigitalOutputPinArray[i];
+            uint8_t value = constants::DefaultDigitalOutputValue[i];
+            digitalWrite(pin,value);
+        }
     }
 }
 
@@ -183,6 +189,19 @@ void SystemState::update_velocity_control_on_loop()
         int32_t velocity = velocity_controller_[i].update(position);
         stepper_[i].set_velocity(velocity);
     }
+    for (int i=0; i<constants::NumDigitalOutput; i++)
+    {
+        uint8_t pin = constants::DigitalOutputPinArray[i];
+        uint8_t value = host_to_dev_msg_last_.digital_output[i];
+        if (value > 0)
+        {
+            digitalWriteFast(pin,HIGH);
+        }
+        else
+        {
+            digitalWriteFast(pin,LOW);
+        }
+    }
 }
 
 
@@ -221,7 +240,7 @@ bool SystemState::send_msg_to_host()
 bool SystemState::recv_msg_from_host()
 {
     bool rtn_val = true;
-    HostToDevMsg host_to_dev_msg;
+    HostToDevMsg host_to_dev_msg = {};
     int num_bytes = RawHID.recv(&host_to_dev_msg,constants::HostToDevTimeout);
     if (num_bytes != sizeof(HostToDevMsg))
     {
@@ -238,7 +257,7 @@ bool SystemState::recv_msg_from_host()
 
 DevToHostMsg SystemState::create_dev_to_host_msg()
 {
-    DevToHostMsg dev_to_host_msg;
+    DevToHostMsg dev_to_host_msg = {};
 
     // Set status information
     dev_to_host_msg.status = 0;
@@ -977,14 +996,6 @@ void SystemState::setup_homing()
 
         homing_controller_[i].set_max_speed(eeprom_data_.stepper_maximum_speed[i]);
         homing_controller_[i].set_accel(eeprom_data_.stepper_maximum_accel[i]);
-
-        //homing_controller_[i] = HomingController(
-        //        constants::DefaultStepperHomingDirection[i], 
-        //        constants::HomingSpeed[i]
-        //        );
-
-        //homing_controller_[i].set_max_speed(constants::DefaultStepperMaximumSpeed[i]);
-        //homing_controller_[i].set_accel(constants::DefaultStepperMaximumAccel[i]);
     }
 }
 

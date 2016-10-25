@@ -43,7 +43,7 @@ namespace mctl
         if (!hid_dev_.open())
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("unable to open device");
+            rtn_status.set_error_msg("error: unable to open device");
         }
         return check_status(rtn_status);
     }
@@ -82,8 +82,8 @@ namespace mctl
     RtnStatus Controller::mode(OperatingMode &mode)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_Empty;
         rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
         if (rtn_status.success())
@@ -110,8 +110,8 @@ namespace mctl
     RtnStatus Controller::set_mode_ready()
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetModeReady;
         rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
         return check_status(rtn_status);
@@ -121,8 +121,8 @@ namespace mctl
     RtnStatus Controller::set_mode_disabled()
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetModeDisabled;
         rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
         return check_status(rtn_status);
@@ -132,8 +132,8 @@ namespace mctl
     RtnStatus Controller::stop_motion(bool wait, bool check)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_StopMotion;
         rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
         if (wait)
@@ -164,8 +164,8 @@ namespace mctl
     RtnStatus Controller::position(std::vector<int32_t> &ind_vec)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_Empty;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
         if (rtn_status.success())
@@ -197,8 +197,8 @@ namespace mctl
     RtnStatus Controller::position(arma::Row<int32_t> &ind_vec)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_Empty;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
         if (rtn_status.success())
@@ -311,8 +311,8 @@ namespace mctl
             rtn_status.set_success(false);
             rtn_status.set_error_msg(oss.str()); 
         }
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetStepperPosition;
         host_to_dev_msg.command_data[0] = axis;
         host_to_dev_msg.command_data[1] = uint16_t(ind);
@@ -445,8 +445,8 @@ namespace mctl
     RtnStatus Controller::set_min_position(Axis axis, int32_t ind)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetStepperMinPosition;
         host_to_dev_msg.command_data[0] = axis;
         host_to_dev_msg.command_data[1] = uint16_t(ind);
@@ -498,8 +498,8 @@ namespace mctl
     RtnStatus Controller::get_min_position(Axis axis, int32_t &ind)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_GetStepperMinPosition;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -570,8 +570,8 @@ namespace mctl
     RtnStatus Controller::set_max_position(Axis axis, int32_t ind)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetStepperMaxPosition;
         host_to_dev_msg.command_data[0] = axis;
         host_to_dev_msg.command_data[1] = uint16_t(ind);
@@ -622,8 +622,8 @@ namespace mctl
     RtnStatus Controller::get_max_position(Axis axis, int32_t &ind)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_GetStepperMaxPosition;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -699,8 +699,8 @@ namespace mctl
             rtn_status.set_error_msg("error: ind_speed out of range");
             return check_status(rtn_status);
         }
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetStepperMaxSpeed;
         host_to_dev_msg.command_data[0] = axis;
         host_to_dev_msg.command_data[1] = uint16_t(ind_speed);
@@ -756,8 +756,8 @@ namespace mctl
     RtnStatus Controller::get_max_speed(Axis axis, int32_t &ind_speed)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_GetStepperMaxSpeed;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -832,8 +832,8 @@ namespace mctl
             rtn_status.set_error_msg("error: ind_accel out of range");
             return check_status(rtn_status);
         }
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetStepperMaxAccel;
         host_to_dev_msg.command_data[0] = axis;
         host_to_dev_msg.command_data[1] = uint16_t(ind_accel);
@@ -890,8 +890,8 @@ namespace mctl
     RtnStatus Controller::get_max_accel(Axis axis, int32_t &ind_accel)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_GetStepperMaxAccel;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -966,8 +966,8 @@ namespace mctl
             rtn_status.set_error_msg("error: homing direction cannot be zero");
             return check_status(rtn_status);
         }
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetStepperHomingDirection;
         host_to_dev_msg.command_data[0] = axis;
         if (dir > 0)
@@ -1001,8 +1001,8 @@ namespace mctl
     RtnStatus Controller::get_homing_direction(Axis axis, int &dir)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_GetStepperHomingDirection;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -1057,8 +1057,8 @@ namespace mctl
     RtnStatus Controller::set_homed_true(Axis axis)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetAxisHomed;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -1069,8 +1069,8 @@ namespace mctl
     RtnStatus Controller::is_homed(Axis axis, bool &is_homed_flag)
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_GetAxisHomed;
         host_to_dev_msg.command_data[0] = axis;
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -1094,8 +1094,8 @@ namespace mctl
             return check_status(rtn_status);
         }
 
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetTriggerEnabled;
         host_to_dev_msg.command_data[0] = uint16_t(trigger);
         host_to_dev_msg.command_data[1] = uint16_t(value);
@@ -1115,8 +1115,8 @@ namespace mctl
             rtn_status.set_error_msg(oss.str());
             return check_status(rtn_status);
         }
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_GetTriggerEnabled;
         host_to_dev_msg.command_data[0] = uint16_t(trigger);
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -1138,8 +1138,8 @@ namespace mctl
             rtn_status.set_error_msg(oss.str());
             return check_status(rtn_status);
         }
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetTriggerCount;
         host_to_dev_msg.command_data[0] = uint16_t(trigger);
         host_to_dev_msg.command_data[1] = value;
@@ -1159,8 +1159,8 @@ namespace mctl
             rtn_status.set_error_msg(oss.str());
             return check_status(rtn_status);
         }
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_GetTriggerCount;
         host_to_dev_msg.command_data[0] = uint16_t(trigger);
         rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -1268,8 +1268,8 @@ namespace mctl
                 std::cout << "homing " << axis_name(axis)<< std::endl;
             }
 
-            HostToDevMsg host_to_dev_msg;
-            DevToHostMsg dev_to_host_msg;
+            HostToDevMsg host_to_dev_msg = {};
+            DevToHostMsg dev_to_host_msg = {};
             host_to_dev_msg.command = Cmd_SetModeHoming;
             host_to_dev_msg.command_data[0] = axis;
             rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -1297,8 +1297,8 @@ namespace mctl
     RtnStatus Controller::wait_for_ready(bool check, bool quiet)
     {
         bool done = false;
-        DevToHostMsg dev_to_host_msg;
-        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg = {};
+        HostToDevMsg host_to_dev_msg = {};
         RtnStatus rtn_status;
 
         std::streamsize original_precision = std::cout.precision();
@@ -1315,7 +1315,7 @@ namespace mctl
             if (!hid_dev_.recvData(&dev_to_host_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("did not receive message from device while in wait loop");
+                rtn_status.set_error_msg("error: did not receive message from device while in wait loop");
                 break;
             }
 
@@ -1325,7 +1325,7 @@ namespace mctl
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable send data to device while in wait loop");
+                rtn_status.set_error_msg("error: unable send data to device while in wait loop");
                 break;
             }
 
@@ -1352,7 +1352,7 @@ namespace mctl
             if (op_mode == Mode_Disabled)
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("system disabled while in wait loop");
+                rtn_status.set_error_msg("error: system disabled while in wait loop");
                 break;
             }
         }
@@ -1397,8 +1397,8 @@ namespace mctl
         rtn_status = position(cur_pos_vec);
         if (rtn_status.success())
         {
-            HostToDevMsg host_to_dev_msg;
-            DevToHostMsg dev_to_host_msg;
+            HostToDevMsg host_to_dev_msg = {};
+            DevToHostMsg dev_to_host_msg = {};
             host_to_dev_msg.command = Cmd_SetModePositioning;
             std::copy(cur_pos_vec.begin(), cur_pos_vec.end(), host_to_dev_msg.stepper_position);
             host_to_dev_msg.stepper_position[axis] = ind;
@@ -1418,12 +1418,12 @@ namespace mctl
         if (ind_vec.size() != NumStepper)
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("position vector size must equal NumStepper");
+            rtn_status.set_error_msg("error: position vector size must equal NumStepper");
         }
         else
         {
-            HostToDevMsg host_to_dev_msg;
-            DevToHostMsg dev_to_host_msg;
+            HostToDevMsg host_to_dev_msg = {};
+            DevToHostMsg dev_to_host_msg = {};
             host_to_dev_msg.command = Cmd_SetModePositioning;
             std::copy(ind_vec.begin(), ind_vec.end(), host_to_dev_msg.stepper_position);
             rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -1447,7 +1447,7 @@ namespace mctl
         if (!ok)
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("axis in not stepper - can't move to position");
+            rtn_status.set_error_msg("error: axis in not stepper - can't move to position");
         }
         else
         {
@@ -1455,8 +1455,8 @@ namespace mctl
             rtn_status = position(cur_ind_vec);
             if (rtn_status.success())
             {
-                HostToDevMsg host_to_dev_msg;
-                DevToHostMsg dev_to_host_msg;
+                HostToDevMsg host_to_dev_msg = {};
+                DevToHostMsg dev_to_host_msg = {};
                 host_to_dev_msg.command = Cmd_SetModePositioning;
                 std::copy(cur_ind_vec.begin(), cur_ind_vec.end(), host_to_dev_msg.stepper_position);
                 for (auto kv : ind_map)
@@ -1480,12 +1480,12 @@ namespace mctl
         if (ind_vec.size() != NumStepper)
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("position vector size must equal NumStepper");
+            rtn_status.set_error_msg("error: position vector size must equal NumStepper");
         }
         else
         {
-            HostToDevMsg host_to_dev_msg;
-            DevToHostMsg dev_to_host_msg;
+            HostToDevMsg host_to_dev_msg = {};
+            DevToHostMsg dev_to_host_msg = {};
             host_to_dev_msg.command = Cmd_SetModePositioning;
             std::copy(ind_vec.begin(), ind_vec.end(), host_to_dev_msg.stepper_position);
             rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
@@ -1642,8 +1642,8 @@ namespace mctl
             return check_status(rtn_status);
         }
 
-        DevToHostMsg dev_to_host_msg;
-        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg = {};
+        HostToDevMsg host_to_dev_msg = {};
         ai_samples = arma::Mat<double>(num,NumAnalogInput,arma::fill::zeros);
 
         // Clear buffer to sync messages 
@@ -1657,7 +1657,7 @@ namespace mctl
             if (!hid_dev_.recvData(&dev_to_host_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -1670,7 +1670,7 @@ namespace mctl
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -1701,8 +1701,8 @@ namespace mctl
     RtnStatus Controller::ai_display()
     {
         RtnStatus rtn_status;
-        DevToHostMsg dev_to_host_msg;
-        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg = {};
+        HostToDevMsg host_to_dev_msg = {};
 
         msg_count_ = 0;
         arma::Row<double> ai_values(NumAnalogInput);
@@ -1723,7 +1723,7 @@ namespace mctl
             if (!hid_dev_.recvData(&dev_to_host_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -1736,7 +1736,7 @@ namespace mctl
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -1761,8 +1761,8 @@ namespace mctl
     RtnStatus Controller::ft_display()
     {
         RtnStatus rtn_status;
-        DevToHostMsg dev_to_host_msg;
-        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg = {};
+        HostToDevMsg host_to_dev_msg = {};
 
         msg_count_ = 0;
         arma::Row<double> ai_values(NumAnalogInput);
@@ -1797,7 +1797,7 @@ namespace mctl
             if (!hid_dev_.recvData(&dev_to_host_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -1810,7 +1810,7 @@ namespace mctl
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -1871,6 +1871,7 @@ namespace mctl
     RtnStatus Controller::outscan(
             arma::Mat<int32_t> ind_pos_mat, 
             arma::Mat<int32_t> ind_vel_mat, 
+            arma::Mat<uint8_t> dio_mat,
             OutscanData &data,
             bool quiet
             )
@@ -1878,16 +1879,36 @@ namespace mctl
         RtnStatus rtn_status;
 
         // Check position and velocity matrix sizes.
-        if ((ind_pos_mat.n_cols != NumStepper) || (ind_vel_mat.n_cols != NumStepper))
+        if (ind_pos_mat.n_cols != NumStepper) 
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("matrices must have #columns == NumStepper");
+            rtn_status.set_error_msg("error: ind_pos_mat must have #columns == NumStepper");
             return check_status(rtn_status);
         }
-        if (ind_pos_mat.n_rows != ind_vel_mat.n_rows)
+        if (ind_vel_mat.n_cols != NumStepper)
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("position and velocity matrices must have the same number of rows");
+            rtn_status.set_error_msg("error: ind_vel_mat must have #columns == NumStepper");
+            return check_status(rtn_status);
+        }
+        if (dio_mat.n_cols != NumDigitalOutput)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: dio_mat must have #columns == NumDigitalOutput");
+            return check_status(rtn_status);
+        }
+
+        if (ind_pos_mat.n_rows != ind_vel_mat.n_rows) 
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: ind_pos_mat and ind_vel_mat must have the same number of rows");
+            return check_status(rtn_status);
+        }
+
+        if (ind_pos_mat.n_rows != dio_mat.n_rows)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: ind_pos_mat and dio_mat must have the same number of rows");
             return check_status(rtn_status);
         }
 
@@ -1930,8 +1951,8 @@ namespace mctl
             std::cout << std::endl;
         }
 
-        DevToHostMsg dev_to_host_msg;
-        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg = {};
+        HostToDevMsg host_to_dev_msg = {};
 
         if (!quiet)
         {
@@ -1953,7 +1974,7 @@ namespace mctl
             if (!hid_dev_.recvData(&dev_to_host_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -1963,7 +1984,7 @@ namespace mctl
                 if (dev_to_host_msg.command != Cmd_SetModeVelocityControl)
                 {
                     rtn_status.set_success(false);
-                    rtn_status.set_error_msg("failed to receive Cmd_SetModeVelocityControl");
+                    rtn_status.set_error_msg("error: failed to receive Cmd_SetModeVelocityControl");
                     break;
                 }
                 else
@@ -1981,7 +2002,7 @@ namespace mctl
             arma::Row<int32_t> error = traj_next - axis_curr;
             arma::Row<int32_t> velo_ctlr = config_.gain()*error + velo_next;
 
-            // Create host to dev message and send to device
+            // Create host to dev message 
             host_to_dev_msg.command = Cmd_Empty;
             host_to_dev_msg.count = msg_count_;
             msg_count_++;
@@ -1989,10 +2010,16 @@ namespace mctl
             {
                 host_to_dev_msg.stepper_velocity[num] = velo_ctlr(num);
             }
+            for (int j=0; j<NumDigitalOutput; j++)
+            {
+                host_to_dev_msg.digital_output[j] = dio_mat(i,j);
+            }
+
+            // Send message to device
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -2031,7 +2058,21 @@ namespace mctl
     }
 
 
-    RtnStatus Controller::outscan(arma::Mat<double> pos_mat, OutscanData &data, bool quiet)   
+    RtnStatus Controller::outscan(
+            arma::Mat<int32_t> ind_pos_mat, 
+            arma::Mat<int32_t> ind_vel_mat, 
+            OutscanData &data, 
+            bool quiet
+            ) 
+    {
+        RtnStatus rtn_status;
+        arma::Mat<uint8_t> dio_mat(ind_pos_mat.n_rows, NumDigitalOutput, arma::fill::zeros);
+        rtn_status = outscan(ind_pos_mat,ind_vel_mat,dio_mat,data,quiet);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::outscan(arma::Mat<double> pos_mat, arma::Mat<uint8_t> dio_mat, OutscanData &data, bool quiet)   
     {
         RtnStatus rtn_status;
 
@@ -2039,13 +2080,13 @@ namespace mctl
         if (pos_mat.n_cols != NumStepper)
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("position matrix size incorrent, n_cols != NumStepper");
+            rtn_status.set_error_msg("error: position matrix size incorrent, n_cols != NumStepper");
             return check_status(rtn_status);
         }
         if (pos_mat.n_rows < 3)
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("position matrix size incorrect, n_row < 3");
+            rtn_status.set_error_msg("error: position matrix size incorrect, n_row < 3");
             return check_status(rtn_status);
         }
 
@@ -2068,7 +2109,16 @@ namespace mctl
         arma::Mat<int32_t> ind_vel_mat = config_.unit_to_index(vel_mat);
 
         // Outscan trajectory
-        rtn_status = outscan(ind_pos_mat,ind_vel_mat,data,quiet);
+        rtn_status = outscan(ind_pos_mat,ind_vel_mat,dio_mat,data,quiet);
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::outscan(arma::Mat<double> pos_mat, OutscanData &data, bool quiet)   
+    {
+        RtnStatus rtn_status;
+        arma::Mat<uint8_t> dio_mat(pos_mat.n_rows, NumDigitalOutput, arma::fill::zeros);
+        rtn_status = outscan(pos_mat,dio_mat,data,quiet);
         return check_status(rtn_status);
     }
 
@@ -2076,15 +2126,31 @@ namespace mctl
     RtnStatus Controller::outscan(std::string filename, OutscanData &data, bool quiet)
     {
         RtnStatus rtn_status;
-        arma::Mat<double> pos_mat;
-        pos_mat.load(filename,arma::raw_ascii);
-        if (pos_mat.n_elem  == 0)
+        arma::Mat<double> file_mat;
+        file_mat.load(filename,arma::raw_ascii);
+        if (file_mat.n_elem  == 0)
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("loading outscan trajectory matrix failed - zero elements loaded");
+            rtn_status.set_error_msg("error: loading outscan trajectory matrix failed - zero elements loaded");
             return check_status(rtn_status);
         }
-        rtn_status = outscan(pos_mat,data,quiet);
+
+        if (file_mat.n_cols == NumStepper)
+        {
+            rtn_status = outscan(file_mat,data,quiet);
+        }
+        else if (file_mat.n_cols == (NumStepper + NumDigitalOutput))
+        {
+            arma::Mat<double>  pos_mat = file_mat.submat(0,0,file_mat.n_rows-1,NumStepper-1);
+            arma::Mat<double>  dio_dbl = file_mat.submat(0,NumStepper,file_mat.n_rows-1,NumStepper+NumDigitalOutput-1);
+            arma::Mat<uint8_t> dio_mat = arma::conv_to<arma::Mat<uint8_t>>::from(dio_dbl);
+            rtn_status = outscan(pos_mat,dio_mat,data,quiet);
+        }
+        else
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: unsupported matrix dimension in trajectory file.");
+        }
         return check_status(rtn_status);
     }
 
@@ -2158,8 +2224,8 @@ namespace mctl
             std::cout << std::endl;
         }
 
-        DevToHostMsg dev_to_host_msg;
-        HostToDevMsg host_to_dev_msg;
+        DevToHostMsg dev_to_host_msg = {};
+        HostToDevMsg host_to_dev_msg = {};
         for (int i=0; i<NumStepper; i++)
         {
             host_to_dev_msg.stepper_velocity[i] = 0;
@@ -2202,7 +2268,7 @@ namespace mctl
             if (!hid_dev_.recvData(&dev_to_host_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -2224,7 +2290,7 @@ namespace mctl
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("unable to sync messaging loop");
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
                 break;
             }
 
@@ -2392,8 +2458,8 @@ namespace mctl
     RtnStatus Controller::eeprom_write_device_config()
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SaveConfigToEEPROM;
         rtn_status = send_command(host_to_dev_msg,dev_to_host_msg);
         return check_status(rtn_status);
@@ -2403,7 +2469,7 @@ namespace mctl
     // Protected Methods
     // ----------------------------------------------------------------------------------
 
-    RtnStatus Controller::send_command( HostToDevMsg &host_to_dev_msg, DevToHostMsg &dev_to_host_msg)
+    RtnStatus Controller::send_command(HostToDevMsg &host_to_dev_msg, DevToHostMsg &dev_to_host_msg)
     {
         RtnStatus rtn_status;
 
@@ -2414,7 +2480,7 @@ namespace mctl
         if (!hid_dev_.recvData(&dev_to_host_msg))
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("unable to sync messaging loop");
+            rtn_status.set_error_msg("error: unable to sync messaging loop");
         }
         else
         {
@@ -2425,7 +2491,7 @@ namespace mctl
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("cound not send command to device");
+                rtn_status.set_error_msg("error: cound not send command to device");
             }
             else
             {
@@ -2433,14 +2499,14 @@ namespace mctl
                 if (!hid_dev_.recvData(&dev_to_host_msg))
                 {
                     rtn_status.set_success(false);
-                    rtn_status.set_error_msg("did not receive response to command");
+                    rtn_status.set_error_msg("error: did not receive response to command");
                 }
                 else
                 {
                     if (dev_to_host_msg.command  != host_to_dev_msg.command)
                     {
                         rtn_status.set_success(false);
-                        rtn_status.set_error_msg("response command does not match");
+                        rtn_status.set_error_msg("error: response command does not match");
                     }
                 }
             }
@@ -2475,8 +2541,8 @@ namespace mctl
     RtnStatus Controller::set_mode_velocity_control()
     {
         RtnStatus rtn_status;
-        HostToDevMsg host_to_dev_msg;
-        DevToHostMsg dev_to_host_msg;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
         host_to_dev_msg.command = Cmd_SetModeVelocityControl;
         for (auto num : StepperList)
         {
@@ -2490,7 +2556,7 @@ namespace mctl
         if (!hid_dev_.recvData(&dev_to_host_msg))
         {
             rtn_status.set_success(false);
-            rtn_status.set_error_msg("unable to sync messaging loop");
+            rtn_status.set_error_msg("error: unable to sync messaging loop");
         }
         else
         {
@@ -2501,7 +2567,7 @@ namespace mctl
             if (!hid_dev_.sendData(&host_to_dev_msg))
             {
                 rtn_status.set_success(false);
-                rtn_status.set_error_msg("cound not send command to device");
+                rtn_status.set_error_msg("error: cound not send command to device");
             }
         }
         return check_status(rtn_status);
