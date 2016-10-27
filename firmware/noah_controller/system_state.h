@@ -95,7 +95,6 @@ class SystemState
         void get_trigger_count_cmd();
         void set_trigger_enabled_cmd();
         void get_trigger_enabled_cmd();
-
         void set_stepper_position_cmd();
         void set_stepper_min_position_cmd();
         void get_stepper_min_position_cmd();
@@ -107,6 +106,7 @@ class SystemState
         void get_stepper_max_accel_cmd();
         void set_stepper_homing_dir_cmd();
         void get_stepper_homing_dir_cmd();
+        void get_homing_pin_state_cmd();
 
         bool all_axes_homed();
 

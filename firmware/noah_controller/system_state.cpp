@@ -415,6 +415,10 @@ void SystemState::command_switchyard()
             save_eeprom_config();
             break;
 
+        case constants::Cmd_GetHomingPinState:
+            get_homing_pin_state_cmd();
+            break;
+
         case constants::Cmd_GetDigitalOutput:
             break;
 
@@ -459,32 +463,32 @@ void SystemState::set_mode_ready(bool ignore_mode)
 
 void SystemState::set_mode_homing()
 {
-   if (mode_ == constants::Mode_Ready)
-   {
-       uint8_t homing_axis_tmp = uint8_t(host_to_dev_msg_last_.command_data[0]);
 
-       if (homing_axis_tmp < constants::NumStepper)
-       {
-           homing_axis_ = homing_axis_tmp;
-           stepper_[homing_axis_].disable_bounds_check();
-           homing_controller_[homing_axis_].reset();
-           HomingController::enable();
-           mode_ = constants::Mode_Homing;
-       }
-       else
-       {
-           // Handle axis out of range error
+    bool pin_state = HomingController::pin_state();
+    if (pin_state == false)
+    {
+        // Error homing switch in closed
+        return;
+    }
 
-       }
-       
-   }
-   else
-   {
-       // Handle incorrect mode error
-       // Note: you must be in Mode_Ready before you can enter a motion mode
-   }
+    if (mode_ != constants::Mode_Ready)
+    {
+        // Error mode incorrect
+        return;
+    }
 
+    uint8_t homing_axis_tmp = uint8_t(host_to_dev_msg_last_.command_data[0]);
+    if (homing_axis_tmp >= constants::NumStepper)
+    {
+        // Error axis out of range
+        return;
+    }
 
+    homing_axis_ = homing_axis_tmp;
+    stepper_[homing_axis_].disable_bounds_check();
+    homing_controller_[homing_axis_].reset();
+    HomingController::enable();
+    mode_ = constants::Mode_Homing;
 }
 
 
@@ -836,6 +840,11 @@ void SystemState::get_stepper_homing_dir_cmd()
     }
 }
 
+
+void SystemState::get_homing_pin_state_cmd()
+{
+    command_response_data_ = uint8_t(HomingController::pin_state());
+}
 
 bool SystemState::all_axes_homed()
 {

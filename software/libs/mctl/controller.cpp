@@ -1082,6 +1082,21 @@ namespace mctl
     }
 
 
+    RtnStatus Controller::get_homing_pin_state(bool &pin_state)
+    {
+        RtnStatus rtn_status;
+        HostToDevMsg host_to_dev_msg = {};
+        DevToHostMsg dev_to_host_msg = {};
+        host_to_dev_msg.command = Cmd_GetHomingPinState;
+        rtn_status = send_command(host_to_dev_msg, dev_to_host_msg);
+        if (rtn_status.success())
+        {
+            pin_state = bool(dev_to_host_msg.command_data);
+        }
+        return check_status(rtn_status);
+    }
+
+
     RtnStatus Controller::set_trigger_enabled(int trigger, bool value)
     {
         RtnStatus rtn_status;
@@ -1259,6 +1274,16 @@ namespace mctl
                     std::cerr << "error: " << rtn_status.error_msg() << std::endl;
                     return check_status(rtn_status);
                 }
+            }
+
+            // Check homing pin state
+            bool pin_state = false;
+            rtn_status = get_homing_pin_state(pin_state);
+            if (pin_state == false)
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: unable to home, pin still low after axis backoff");
+                return check_status(rtn_status);
             }
 
             // Home axis - axis moves toward homing switch until switch is closed
@@ -2522,7 +2547,7 @@ namespace mctl
         {
             if (!rtn_status.success())
             {
-                std::cerr << "error: " << rtn_status.error_msg() << std::endl;
+                std::cerr << rtn_status.error_msg() << std::endl;
             }
             if (rtn_status.user_quit())
             {

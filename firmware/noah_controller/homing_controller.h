@@ -13,6 +13,7 @@ class HomingController
         static void disable();
         static void set_home_found(bool value);
         static bool home_found();
+        static bool pin_state();
 
         HomingController(int8_t direction=1, uint32_t speed=100);
         int32_t update(int32_t position);
@@ -34,7 +35,6 @@ class HomingController
 
         void set_velocity_setp(int32_t velocity);
         int32_t velocity_setp();
-
 
     protected:
 

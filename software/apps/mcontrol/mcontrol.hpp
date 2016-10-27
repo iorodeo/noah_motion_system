@@ -20,6 +20,7 @@ mcontrol  - Motion Controller
       mcontrol home <axis> 
       mcontrol is-homed <axis>
       mcontrol set-homed <axis>
+      mcontrol homing-pin-state
       mcontrol get-mode  
       mcontrol set-mode-ready
       mcontrol set-mode-disabled
@@ -95,6 +96,8 @@ bool cmd_home(mctl::Controller &controller, StringToValueMap arg_map);
 bool cmd_is_homed(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_set_homed(mctl::Controller &controller, StringToValueMap arg_map);
+
+bool cmd_homing_pin_state(mctl::Controller &controller, StringToValueMap arg_map);
 
 bool cmd_get_mode(mctl::Controller &controller, StringToValueMap arg_map);
 
@@ -186,6 +189,7 @@ CmdStringToFuncMap =
     {"home", &cmd_home},
     {"is-homed", &cmd_is_homed},
     {"set-homed", &cmd_set_homed},
+    {"homing-pin-state", &cmd_homing_pin_state},
     {"get-mode", &cmd_get_mode},
     {"set-mode-ready",   &cmd_set_mode_ready},
     {"set-mode-disabled", &cmd_set_mode_disabled},
@@ -197,21 +201,21 @@ CmdStringToFuncMap =
     {"is-outscan-ready", &cmd_is_outscan_ready},
     {"get-position", &cmd_get_position},
     {"get-position-ind", &cmd_get_position_ind},
-    {"set-position", &cmd_set_position},           //
-    {"set-position-ind", &cmd_set_position_ind},   //
+    {"set-position", &cmd_set_position},           
+    {"set-position-ind", &cmd_set_position_ind},   
     {"set-trigger-freq", &cmd_set_trigger_freq},
     {"get-trigger-freq", &cmd_get_trigger_freq},
     {"trigger-on", &cmd_trigger_on},
     {"trigger-off", &cmd_trigger_off},
     {"trigger-state", &cmd_trigger_state},
-    {"get-ai-samples", &cmd_get_ai_samples},       //
-    {"get-ft-samples", &cmd_get_ft_samples},       //
-    {"ai-display", &cmd_ai_display},               //
-    {"ft-display", &cmd_ft_display},               //
-    {"joystick", &cmd_joystick},                   //
+    {"get-ai-samples", &cmd_get_ai_samples},       
+    {"get-ft-samples", &cmd_get_ft_samples},       
+    {"ai-display", &cmd_ai_display},               
+    {"ft-display", &cmd_ft_display},               
+    {"joystick", &cmd_joystick},                   
     {"set-device-config", &cmd_set_device_config},
     {"device-config", &cmd_device_config},
-    {"config-check", &cmd_config_check},           //
+    {"config-check", &cmd_config_check},           
     {"config-file", &cmd_config_file},
     {"config-info", &cmd_config_info},
     {"ft-info", &cmd_ft_info},

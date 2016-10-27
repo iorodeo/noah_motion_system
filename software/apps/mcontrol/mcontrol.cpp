@@ -143,6 +143,31 @@ bool cmd_set_homed(mctl::Controller &controller, StringToValueMap arg_map)
 }
 
 
+bool cmd_homing_pin_state(mctl::Controller &controller, StringToValueMap arg_map)
+{
+    bool pin_state = false;
+    RtnStatus rtn_status = controller.get_homing_pin_state(pin_state);
+    if (rtn_status.success())
+    {
+        std::cout << "homing pin: ";
+        if (pin_state)
+        {
+            std::cout << "high";
+        }
+        else
+        {
+            std::cout << "low";
+        }
+        std::cout << std::endl;
+    }
+    else
+    {
+        std::cout << rtn_status.error_msg() << std::endl;
+    }
+    return true;
+}
+
+
 bool cmd_get_mode(mctl::Controller &controller, StringToValueMap arg_map)
 {
     std::string mode_str;
@@ -771,8 +796,9 @@ bool cmd_status(mctl::Controller &controller, StringToValueMap arg_map)
     std::cout << std::endl;
     cmd_get_mode(controller,arg_map);
     std::cout << std::endl;
-    cmd_trigger_state(controller,arg_map);
+    cmd_homing_pin_state(controller,arg_map);
     std::cout << std::endl;
+    cmd_trigger_state(controller,arg_map);
     cmd_get_trigger_freq(controller,arg_map);
     std::cout << std::endl;
     cmd_is_homed(controller,arg_map);

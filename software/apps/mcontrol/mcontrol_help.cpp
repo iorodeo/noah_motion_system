@@ -20,6 +20,10 @@ const std::string set_homed_help_string(R"(
 mcontrol set-homed <axis>
 )");
 
+const std::string homing_pin_state_help_string(R"( 
+mcontrol homing-pin-state 
+)");
+
 
 const std::string get_mode_help_string(R"( 
 mcontrol get-mode  
@@ -184,6 +188,7 @@ const StringMap CommandToHelpMap =
     {"home", home_help_string}, 
     {"is-homed", is_homed_help_string}, 
     {"set-homed", set_homed_help_string},
+    {"homing-pin-state", homing_pin_state_help_string},
     {"get-mode", get_mode_help_string}, 
     {"set-mode-ready", set_mode_ready_help_string},
     {"set-mode-disabled", set_mode_disabled_help_string},

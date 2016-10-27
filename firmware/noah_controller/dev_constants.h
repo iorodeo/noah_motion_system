@@ -50,6 +50,7 @@ namespace constants
         Cmd_SetStepperHomingDirection,
         Cmd_GetStepperHomingDirection,
         Cmd_SaveConfigToEEPROM,
+        Cmd_GetHomingPinState,
         Cmd_GetDigitalOutput,
     };
 

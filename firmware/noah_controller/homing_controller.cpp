@@ -59,6 +59,12 @@ void HomingController::disable()
     detachInterrupt(pin_);
 }
 
+
+bool HomingController::pin_state()
+{
+    return bool(digitalRead(pin_));
+}
+
 // HomingController Public Methods
 // --------------------------------------------------------------------------------------
 

@@ -106,6 +106,7 @@ namespace mctl
             RtnStatus set_homed_true(Axis axis);
             RtnStatus is_homed(Axis axis, bool &is_homed_flag);
             RtnStatus is_homed(std::map<Axis,bool> &is_homed_map);
+            RtnStatus get_homing_pin_state(bool &pin_state);
 
             RtnStatus set_trigger_enabled(int trigger, bool value);
             RtnStatus get_trigger_enabled(int trigger, bool &value); 
