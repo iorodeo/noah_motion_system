@@ -51,6 +51,25 @@ namespace mctl
         return ft_mat;
     }
 
+
+    arma::Mat<double> OutscanData::stepper_position_cmd()
+    {
+        return mat_from_deque<double>(stepper_position_cmd_,NumStepper);
+    }
+
+
+    arma::Mat<double> OutscanData::stepper_velocity_cmd()
+    {
+        return mat_from_deque<double>(stepper_velocity_cmd_,NumStepper);
+    }
+
+
+    arma::Mat<uint8_t> OutscanData::dio_cmd()
+    {
+        return mat_from_deque<uint8_t>(dio_cmd_,NumDigitalOutput);
+    }
+
+
     arma::Col<uint8_t> OutscanData::status()
     {
         return col_from_deque<uint8_t>(status_);
@@ -85,7 +104,7 @@ namespace mctl
     }
 
 
-    void OutscanData::update(DevToHostMsg msg)
+    void OutscanData::update(DevToHostMsg msg, CommandData cmd)
     {
         // Add time in seconds
         time_.push_back(1.0e-6*double(msg.time_us));
@@ -93,13 +112,19 @@ namespace mctl
         // Add stepper positions and velocities
         std::vector<double> pos_vec(NumStepper);
         std::vector<double> vel_vec(NumStepper);
+        std::vector<double> pos_cmd_vec(NumStepper);
+        std::vector<double> vel_cmd_vec(NumStepper);
         for (int i=0; i<NumStepper;i++)
         {
             pos_vec[i] = config_.index_to_unit(Axis(i), msg.stepper_position[i]);
             vel_vec[i] = config_.index_to_unit(Axis(i), msg.stepper_velocity[i]);
+            pos_cmd_vec[i] = config_.index_to_unit(Axis(i), cmd.stepper_position[i]);
+            vel_cmd_vec[i] = config_.index_to_unit(Axis(i), cmd.stepper_velocity[i]);
         }
         stepper_position_.push_back(pos_vec);
         stepper_velocity_.push_back(vel_vec);
+        stepper_position_cmd_.push_back(pos_cmd_vec);
+        stepper_velocity_cmd_.push_back(vel_cmd_vec);
 
         // Add pwm positions
         std::vector<double> pwm_vec(NumPwm);
@@ -118,6 +143,10 @@ namespace mctl
             analog_vec[i] = config_.analog_int_to_volt(msg.analog_input[i]);
         }
         analog_input_.push_back(analog_vec);
+
+        // Add DIO commands
+        std::vector<uint8_t> dio_vec = arma::conv_to<std::vector<uint8_t>>::from(cmd.dio);
+        dio_cmd_.push_back(dio_vec);
 
         // Add device information - status, count, command, command_data. 
         status_.push_back(msg.status);
@@ -194,6 +223,24 @@ namespace mctl
             return rtn_status;
         }
 
+        rtn_status = add_stepper_position_cmd_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = add_stepper_velocity_cmd_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = add_dio_cmd_dataset(h5file);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
         rtn_status = add_status_dataset(h5file);
         if (!rtn_status.success())
         {
@@ -250,6 +297,24 @@ namespace mctl
     }
 
 
+    arma::Mat<double> OutscanData::stepper_position_cmd_t()
+    {
+        return mat_trans_from_deque<double>(stepper_position_cmd_, NumStepper);
+    }
+
+
+    arma::Mat<double> OutscanData::stepper_velocity_cmd_t()
+    {
+        return mat_trans_from_deque<double>(stepper_velocity_cmd_, NumStepper);
+    }
+
+
+    arma::Mat<uint8_t> OutscanData::dio_cmd_t()
+    {
+        return mat_trans_from_deque<uint8_t>(dio_cmd_, NumDigitalOutput);
+    }
+
+
     RtnStatus OutscanData::open_h5file(H5::H5File &h5file, std::string filename)
     {
         RtnStatus rtn_status;
@@ -302,7 +367,7 @@ namespace mctl
             return rtn_status;
         }
 
-        rtn_status = add_stepper_unit_attribute(h5file,dataset_name);
+        rtn_status = add_stepper_position_unit_attribute(h5file,dataset_name);
         if (!rtn_status.success())
         {
             return rtn_status;
@@ -326,7 +391,7 @@ namespace mctl
         {
             return rtn_status;
         }
-        rtn_status = add_stepper_unit_attribute(h5file,dataset_name);
+        rtn_status = add_stepper_velocity_unit_attribute(h5file,dataset_name);
         if (!rtn_status.success())
         {
             return rtn_status;
@@ -399,6 +464,69 @@ namespace mctl
     }
 
 
+    RtnStatus OutscanData::add_stepper_position_cmd_dataset(H5::H5File &h5file)
+    {
+        // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
+        // matrices in row major order - so we work wiht the transpose matrix.
+        RtnStatus rtn_status;
+        std::string dataset_name("stepper_position_cmd");
+        arma::Mat<double> pos_cmd_mat = stepper_position_cmd_t();
+
+        rtn_status = add_mat_double_dataset(h5file,pos_cmd_mat,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
+        rtn_status = add_stepper_position_unit_attribute(h5file,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        rtn_status = add_stepper_axis_attribute(h5file,dataset_name);
+
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_stepper_velocity_cmd_dataset(H5::H5File &h5file)
+    {
+        // Note, arma matrices are stored in column major order whereas hdf5(C++) expects 
+        // matrices in row major order - so we work wiht the transpose matrix.
+        RtnStatus rtn_status;
+        std::string dataset_name("stepper_velocity_cmd");
+        arma::Mat<double> vel_cmd_mat = stepper_velocity_cmd_t();
+
+        rtn_status = add_mat_double_dataset(h5file,vel_cmd_mat,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        rtn_status = add_stepper_velocity_unit_attribute(h5file,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        rtn_status = add_stepper_axis_attribute(h5file,dataset_name);
+
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_dio_cmd_dataset(H5::H5File &h5file)
+    {
+        RtnStatus rtn_status;
+        std::string dataset_name("dio_cmd");
+        arma::Mat<uint8_t> dio_cmd_mat = dio_cmd_t();
+        rtn_status = add_mat_uint8_dataset(h5file,dio_cmd_mat,dataset_name);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+        return rtn_status;
+    }
+
+
     RtnStatus OutscanData::add_status_dataset(H5::H5File &h5file)
     {
         std::string dataset_name("status");
@@ -445,13 +573,30 @@ namespace mctl
     }
 
 
-    RtnStatus OutscanData::add_stepper_unit_attribute(H5::H5File &h5file, std::string dataset_name)
+    RtnStatus OutscanData::add_stepper_position_unit_attribute(H5::H5File &h5file, std::string dataset_name)
     {
         RtnStatus rtn_status;
         std::ostringstream unit_oss;
         for (int i=0; i<NumStepper; i++)
         {
             unit_oss << config_.axis_unit_string(Axis(i));
+            if (i < (NumStepper-1))
+            {
+                unit_oss << ", ";
+            }
+        }
+        rtn_status = add_dataset_attribute(h5file,dataset_name,unit_attr_name_,unit_oss.str());
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_stepper_velocity_unit_attribute(H5::H5File &h5file, std::string dataset_name)
+    {
+        RtnStatus rtn_status;
+        std::ostringstream unit_oss;
+        for (int i=0; i<NumStepper; i++)
+        {
+            unit_oss << config_.axis_unit_string(Axis(i)) << std::string("/s");
             if (i < (NumStepper-1))
             {
                 unit_oss << ", ";
@@ -617,6 +762,35 @@ namespace mctl
             H5::DataType datatype = H5::PredType::NATIVE_DOUBLE;
             H5::DataSet dataset = h5file.createDataSet(name,datatype,dataspace); 
             dataset.write(col.memptr(),datatype);
+        }
+        catch (H5::Exception &error)
+        {
+            std::ostringstream error_oss;
+            error_oss << "Error: " << __PRETTY_FUNCTION__ << ", ";
+            error_oss << error.getDetailMsg();
+            rtn_status.set_error_msg(error_oss.str());
+            rtn_status.set_success(false);
+        }
+        return rtn_status;
+    }
+
+
+    RtnStatus OutscanData::add_mat_uint8_dataset(H5::H5File &h5file, arma::Mat<uint8_t> &mat_t, std::string name)
+    {
+        // ---------------------------------------------------------------------------------------------------------
+        // Note, mat_t is matrix transpose. This is due to fact that Armadillo stores matrices in column major format
+        // whereas HDF5 expects the matrix to be in row major format.
+        // ----------------------------------------------------------------------------------------------------------
+        RtnStatus rtn_status;
+        int rank = 2;
+        hsize_t dims[] = {mat_t.n_cols, mat_t.n_rows};
+
+        try
+        {
+            H5::DataSpace dataspace(rank,dims);
+            H5::DataType datatype = H5::PredType::NATIVE_UINT8;
+            H5::DataSet dataset = h5file.createDataSet(name,datatype,dataspace); 
+            dataset.write(mat_t.memptr(),datatype);
         }
         catch (H5::Exception &error)
         {

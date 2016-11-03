@@ -1,6 +1,7 @@
 #include "controller.hpp"
 #include "rawhid_msg_types.h"
 #include "joystick/joystick.hpp"
+#include "command_data.hpp"
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <csignal>
@@ -2049,7 +2050,8 @@ namespace mctl
             }
 
             // Update Outscan data
-            data.update(dev_to_host_msg);
+            CommandData cmd_data = {traj_next,velo_next,dio_mat.row(i)};
+            data.update(dev_to_host_msg, cmd_data);
 
             // Display position
             if (display_position_on_move_ && !quiet)

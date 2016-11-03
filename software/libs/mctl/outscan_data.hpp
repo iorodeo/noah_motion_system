@@ -2,12 +2,13 @@
 #define OUTSCAN_DATA_HPP
 #include "rtn_status.hpp"
 #include "configuration.hpp"
+#include "command_data.hpp"
+#include <cstdint>
 #include <string>
 #include <deque>
 #include <armadillo>
 
 namespace H5 { class H5File; } 
-
 
 namespace mctl
 {
@@ -26,6 +27,9 @@ namespace mctl
             arma::Mat<double> pwm_position();
             arma::Mat<double> analog_input();
             arma::Mat<double> force_and_torque();
+            arma::Mat<double> stepper_position_cmd();
+            arma::Mat<double> stepper_velocity_cmd();
+            arma::Mat<uint8_t> dio_cmd();
             arma::Col<uint8_t> status();
             arma::Col<uint8_t> count();
             arma::Col<uint8_t> command();
@@ -33,8 +37,7 @@ namespace mctl
 
             Configuration config();
             void set_config(Configuration new_config);
-
-            void update(DevToHostMsg msg);
+            void update(DevToHostMsg msg, CommandData cmd);
             void clear();
 
             RtnStatus save(std::string filename);
@@ -46,6 +49,9 @@ namespace mctl
             std::deque<std::vector<double>> stepper_velocity_;
             std::deque<std::vector<double>> pwm_position_;
             std::deque<std::vector<double>> analog_input_;
+            std::deque<std::vector<double>> stepper_position_cmd_;
+            std::deque<std::vector<double>> stepper_velocity_cmd_;
+            std::deque<std::vector<uint8_t>> dio_cmd_;
             std::deque<uint8_t> status_;
             std::deque<uint8_t> count_;
             std::deque<uint8_t> command_;
@@ -60,8 +66,10 @@ namespace mctl
             arma::Mat<double> stepper_velocity_t();
             arma::Mat<double> pwm_position_t();
             arma::Mat<double> analog_input_t();
-
             arma::Mat<double> force_and_torque_t();
+            arma::Mat<double> stepper_position_cmd_t();
+            arma::Mat<double> stepper_velocity_cmd_t();
+            arma::Mat<uint8_t> dio_cmd_t();
 
             RtnStatus open_h5file(H5::H5File &h5file, std::string filename);
 
@@ -71,13 +79,17 @@ namespace mctl
             RtnStatus add_pwm_position_dataset(H5::H5File &h5file);
             RtnStatus add_analog_input_dataset(H5::H5File &h5file);
             RtnStatus add_force_and_torque_dataset(H5::H5File &h5file);
+            RtnStatus add_stepper_position_cmd_dataset(H5::H5File &h5file);
+            RtnStatus add_stepper_velocity_cmd_dataset(H5::H5File &h5file);
+            RtnStatus add_dio_cmd_dataset(H5::H5File &h5file);
             RtnStatus add_status_dataset(H5::H5File &h5file);
             RtnStatus add_count_dataset(H5::H5File &h5file);
             RtnStatus add_command_dataset(H5::H5File &h5file);
             RtnStatus add_command_data_dataset(H5::H5File &h5file);
 
             RtnStatus add_date_attribute(H5::H5File &h5file);
-            RtnStatus add_stepper_unit_attribute(H5::H5File &h5file, std::string dataset_name);
+            RtnStatus add_stepper_position_unit_attribute(H5::H5File &h5file, std::string dataset_name);
+            RtnStatus add_stepper_velocity_unit_attribute(H5::H5File &h5file, std::string dataset_name);
             RtnStatus add_stepper_axis_attribute(H5::H5File &h5file, std::string dataset_name);
             RtnStatus add_pwm_unit_attribute(H5::H5File &h5file, std::string dataset_name);
             RtnStatus add_pwm_axis_attribute(H5::H5File &h5file, std::string dataset_name);
@@ -87,7 +99,10 @@ namespace mctl
             RtnStatus add_col_uint8_dataset(H5::H5File &h5file, arma::Col<uint8_t> &col, std::string name);
             RtnStatus add_col_uint16_dataset(H5::H5File &h5file, arma::Col<uint16_t> &col, std::string name);
             RtnStatus add_col_double_dataset(H5::H5File &h5file, arma::Col<double> &col, std::string name);
+
+            RtnStatus add_mat_uint8_dataset(H5::H5File &h5file, arma::Mat<uint8_t> &mat_t, std::string name);
             RtnStatus add_mat_double_dataset(H5::H5File &h5file, arma::Mat<double> &mat_t, std::string name);
+
             RtnStatus add_group_attribute(H5::H5File &h5file, std::string group_name, std::string attr_name, std::string attr_data);
             RtnStatus add_dataset_attribute(H5::H5File &h5file, std::string dataset_name, std::string attr_name, std::string attr_data);
 
