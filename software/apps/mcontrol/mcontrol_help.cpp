@@ -229,7 +229,7 @@ mctl::RtnStatus print_command_help(std::string command)
     if (CommandToHelpMap.count(command)==0)
     {
         std::ostringstream oss;
-        oss << "error: command " << command < " not found";
+        oss << "error: command " << command << " not found";
         rtn_status.set_success(false);
         rtn_status.set_error_msg(oss.str());
         return rtn_status;
