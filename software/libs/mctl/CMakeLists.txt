@@ -26,6 +26,7 @@ add_library(
     )
 
 link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/") # for rpi
+link_directories("/usr/lib/x86_64-linux-gnu/hdf5/serial/")    # for newer
 
 target_link_libraries(mctl usb armadillo hdf5_cpp hdf5)
 

@@ -9,6 +9,8 @@ include_directories(
     )
 
 link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/") # for rpi
+link_directories("/usr/lib/x86_64-linux-gnu/hdf5/serial/")    # for newer
+
 add_executable(devel_test devel_test.cpp)
 target_link_libraries(devel_test mctl atidaq)
 
