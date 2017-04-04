@@ -33,6 +33,7 @@ target_link_libraries(mctl usb armadillo hdf5_cpp hdf5)
 
 # Install include files
 file(GLOB mctl_INCLUDE_FILES ./ *.hpp  *.h)
+file(GLOB mctl_INCLUDE_FILES ./ joystick/*.hpp)
 file(GLOB mctl_filesystem_INCLUDE_FILES ./ filesystem/*.h)
 file(GLOB mctl_json_INCLUDE_FILES ./ json/*.hpp)
 file(GLOB mctl_firmware_INCLUDE_FILES ./ ../../../firmware/noah_controller/dev_constants.h)
