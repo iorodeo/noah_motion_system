@@ -5,6 +5,7 @@
 #include "constants.hpp"
 #include "configuration.hpp"
 #include "outscan_data.hpp"
+#include "trajectory.hpp"
 
 #include <string>
 #include <vector>
@@ -173,6 +174,11 @@ namespace mctl
             RtnStatus outscan(arma::Mat<double> pos_mat, OutscanData &data, bool quiet=false);   
             RtnStatus outscan(std::string filename, OutscanData &data, bool quiet=false);
             RtnStatus outscan(const char filename[], OutscanData &data, bool quiet=false);
+
+            // Run Trajectory methods
+            RtnStatus is_ready_for_run(bool &ready);
+
+            RtnStatus run_trajectory(Trajectory &trajectory, OutscanData &data, bool quiet=false);
 
             // Joystick position
             RtnStatus joystick_pendant();

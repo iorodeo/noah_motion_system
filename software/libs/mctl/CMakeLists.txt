@@ -23,6 +23,7 @@ add_library(
     ft_sensor_cal.cpp
     ft_tool_transform.cpp
     joystick/joystick.cpp
+    trajectory.cpp
     )
 
 link_directories("/usr/lib/arm-linux-gnueabihf/hdf5/serial/") # for rpi
@@ -35,6 +36,7 @@ file(GLOB mctl_INCLUDE_FILES ./ *.hpp  *.h)
 file(GLOB mctl_filesystem_INCLUDE_FILES ./ filesystem/*.h)
 file(GLOB mctl_json_INCLUDE_FILES ./ json/*.hpp)
 file(GLOB mctl_firmware_INCLUDE_FILES ./ ../../../firmware/noah_controller/dev_constants.h)
+file(GLOB mctl_firmware_INCLUDE_FILES ./ ../../../firmware/noah_controller/rawhid_msg_types.h)
 install(FILES ${mctl_INCLUDE_FILES} DESTINATION include/mctl)
 install(FILES ${mctl_filesystem_INCLUDE_FILES} DESTINATION include/mctl/filesystem)
 install(FILES ${mctl_json_INCLUDE_FILES} DESTINATION include/mctl/json)
