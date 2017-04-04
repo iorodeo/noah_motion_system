@@ -2015,7 +2015,6 @@ namespace mctl
                 }
                 else
                 {
-                    //msg_count_ = dev_to_host_msg.count+1;;
                     msg_count_ = 0;
                     dev_to_host_msg.count = msg_count_;
                 }
@@ -2196,6 +2195,182 @@ namespace mctl
         {
             set_config(config);
         }
+        return check_status(rtn_status);
+    }
+
+
+    RtnStatus Controller::is_ready_for_run(bool &ready)
+    {
+        return is_ready_for_outscan(ready);
+    }
+
+
+    RtnStatus Controller::run_trajectory(Trajectory &trajectory, OutscanData &data, bool quiet)
+    {
+        RtnStatus rtn_status;
+
+        // Set Outscan data configuration
+        data.set_config(config_);
+
+        // Move to beginning of trajectory
+        if (!quiet)
+        {
+            arma::Row<double>  start_pos = trajectory.start_pos();
+            
+            std::cout << std::endl;
+            std::cout << "move to start" << std::endl;
+            rtn_status = move_to_position(start_pos,true);
+        }
+
+        if (!rtn_status.success())
+        {
+            return check_status(rtn_status);
+
+        }
+
+        // Wait for outscan delay period before proceeding
+        if (config_.outscan_start_delay() > 0.0)
+        {
+            if (!quiet)
+            {
+                std::cout << "outscan start delay ... " << std::flush;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(config_.outscan_start_delay()));
+            if (!quiet)
+            {
+                std::cout << "done" << std::endl;
+            }
+        }
+
+        // Setup display output
+        std::streamsize original_precision = std::cout.precision();
+        if (display_position_on_move_)
+        {
+            std::cout << std::setprecision(4);
+            std::cout << std::fixed;
+            std::cout << std::endl;
+        }
+
+        DevToHostMsg dev_to_host_msg = {};
+        HostToDevMsg host_to_dev_msg = {};
+
+        if (!quiet)
+        {
+            std::cout << "running trajectory: "<< trajectory.name() << std::endl << std::endl;
+        }
+
+        // Enable velocity control mode
+        rtn_status = set_mode_velocity_control();
+        if (!rtn_status.success())
+        {
+            return check_status(rtn_status);
+
+        }
+
+        // Run trajectory
+        trajectory.initialize();
+
+        bool is_first = true;
+
+        while (!trajectory.done())
+        {
+            // Receive data from device
+            if (!hid_dev_.recvData(&dev_to_host_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
+                break;
+            }
+
+            // On first receive check to ensure device recieved set velocity mode command.
+            if (is_first)
+            {
+                if (dev_to_host_msg.command != Cmd_SetModeVelocityControl)
+                {
+                    rtn_status.set_success(false);
+                    rtn_status.set_error_msg("error: failed to receive Cmd_SetModeVelocityControl");
+                    break;
+                }
+                else
+                {
+                    msg_count_ = 0;
+                    dev_to_host_msg.count = msg_count_;
+                }
+                is_first = false;
+            }
+
+            // Get next position and velocity from trajectory
+            arma::Row<double> pos_next(NumStepper,arma::fill::zeros);
+            arma::Row<double> vel_next(NumStepper,arma::fill::zeros);
+            TrajectoryData traj_data_next;
+
+            rtn_status = trajectory.next(dev_to_host_msg, config_, traj_data_next);
+            if (!rtn_status.success())
+            {
+                break;
+            }
+
+            // convert positions to indices
+            arma::Row<int32_t> ind_pos_next = config_.unit_to_index(traj_data_next.pos);
+            arma::Row<int32_t> ind_vel_next = config_.unit_to_index(traj_data_next.vel);
+
+            arma::Row<int32_t> axis_curr = get_index_position_arma(dev_to_host_msg);
+            arma::Row<int32_t> error = ind_pos_next - axis_curr;
+            arma::Row<int32_t> ind_vel_ctlr = config_.gain()*error + ind_vel_next;
+
+            // Create host to dev message 
+            host_to_dev_msg.command = Cmd_Empty;
+            host_to_dev_msg.count = msg_count_;
+            msg_count_++;
+            for (auto num : StepperList)
+            {
+                host_to_dev_msg.stepper_velocity[num] = ind_vel_ctlr(num);
+            }
+            for (int i=0; i<NumDigitalOutput; i++)
+            {
+                host_to_dev_msg.digital_output[i] = traj_data_next.dio(i);
+            }
+
+            // Send message to device
+            if (!hid_dev_.sendData(&host_to_dev_msg))
+            {
+                rtn_status.set_success(false);
+                rtn_status.set_error_msg("error: unable to sync messaging loop");
+                break;
+            }
+
+            // Update Outscan data
+            CommandData cmd_data = {ind_pos_next, ind_vel_next, traj_data_next.dio};
+            data.update(dev_to_host_msg, cmd_data);
+
+            // Display position
+            if (display_position_on_move_ && !quiet)
+            {
+                arma::Row<double>  axis_pos_vec = config_.index_to_unit(axis_curr);
+                std::cout << '\r';
+                for (auto axis_pos : axis_pos_vec)
+                {
+                    std::cout << std::setw(10) << axis_pos; 
+                }
+                std::cout << std::flush;
+            }
+
+            if (quit_flag)
+            {
+                break;
+            }
+
+        } // while (!done)
+
+        // Restore cout settings
+        if (display_position_on_move_ && !quiet)
+        {
+            std::cout << std::setprecision(original_precision);
+            std::cout << std::endl << std::endl;
+        }
+
+        // Stop velocity control mode 
+        rtn_status = stop_motion(true,true);
         return check_status(rtn_status);
     }
 
