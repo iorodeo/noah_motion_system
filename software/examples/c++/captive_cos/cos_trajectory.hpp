@@ -13,7 +13,7 @@ class CosTrajectory : public Trajectory
         double get_cosine_position(double t);
         double get_cosine_velocity(double t);
 
-        virtual RtnStatus update(DevToHostMsg msg);
+        virtual RtnStatus update(DevToHostMsg msg) override;
 
     protected:
 

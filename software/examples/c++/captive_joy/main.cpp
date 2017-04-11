@@ -29,13 +29,15 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    JoyTrajectory trajectory = JoyTrajectory(&joystick);
+    JoyTrajectory trajectory = JoyTrajectory(joystick);
 
     // Run captive trajectory
     mctl::OutscanData data;
-    controller.run_trajectory(trajectory,data,true);
+    controller.run_trajectory(trajectory,data,false);
 
     controller.close();
+
+    data.save("data.h5");
 
     return 0;
 }

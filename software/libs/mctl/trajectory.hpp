@@ -50,6 +50,7 @@ namespace mctl
             virtual arma::Row<double> analog_input(DevToHostMsg msg);
 
             double time(DevToHostMsg msg);
+            double message_period();
             
 
         protected:

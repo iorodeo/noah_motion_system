@@ -7,31 +7,35 @@ using namespace mctl;
 
 class JoyTrajectory : public Trajectory
 {
+
     public: 
 
-        JoyTrajectory(Joystick *joystick); 
+        JoyTrajectory(Joystick &joystick); 
 
-        void update_state(double dt);
-        double get_joystick_force();
+        virtual arma::Row<double> force_and_torque(DevToHostMsg msg) override;
+        double joystick_value();
 
-        arma::Row<double> get_pos(double t);
-        arma::Row<double> get_vel(double t);
-
-        virtual RtnStatus next(DevToHostMsg msg, Configuration &config, TrajectoryData &data_next) override;
+        virtual RtnStatus update(DevToHostMsg msg) override; 
 
     protected:
 
         Joystick *joystick_ptr_;
+        bool done_ = false;
+
         int joy_axis_ = 1;
-        double joy_const_ = -0.1;
         double joy_value_ = 0.0;
 
-        Axis axis = Axis_X;
-        double axis_pos_ = 0.0;
-        double axis_vel_ = 0.0;
+        int ft_axis_ = 0;
+        double ft_const_ = -0.01;
 
-        double mass_ = 2.0;
-        double spring_const_ = 0.1;
+        Axis captive_axis_ = Axis_X;
+        double captive_pos_ = 0.0;
+        double captive_vel_ = 0.0;
+
+        double mass_ = 5.0;
+        double spring_const_ = 0.5;
+        double spring_zero_ = 0.0;
+        double damping_coef_ = 0.1;
 
 };
 
