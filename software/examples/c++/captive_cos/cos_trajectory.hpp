@@ -10,18 +10,18 @@ class CosTrajectory : public Trajectory
 
         CosTrajectory(); 
 
-        arma::Row<double> get_pos(double t);
-        arma::Row<double> get_vel(double t);
+        double get_cosine_position(double t);
+        double get_cosine_velocity(double t);
 
-        virtual RtnStatus next(DevToHostMsg msg, Configuration &config, TrajectoryData &data_next) override;
+        virtual RtnStatus update(DevToHostMsg msg);
 
     protected:
 
+        Axis axis_ = Axis_X;
         double amplitude_ = 0.1;
         double period_ = 10.0;
         int num_cycles_ = 1;
 
-        Axis axis = Axis_X;
 };
 
 

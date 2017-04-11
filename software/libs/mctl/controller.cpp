@@ -2,6 +2,7 @@
 #include "rawhid_msg_types.h"
 #include "joystick/joystick.hpp"
 #include "command_data.hpp"
+#include "msg_utility.hpp"
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <csignal>
@@ -2215,7 +2216,7 @@ namespace mctl
         // Move to beginning of trajectory
         if (!quiet)
         {
-            arma::Row<double>  start_pos = trajectory.start_pos();
+            arma::Row<double>  start_pos = trajectory.start_position();
             
             std::cout << std::endl;
             std::cout << "move to start" << std::endl;
@@ -2268,12 +2269,13 @@ namespace mctl
         }
 
         // Run trajectory
-        trajectory.initialize();
+        trajectory.initialize(config_);
 
         bool is_first = true;
 
         while (!trajectory.done())
         {
+
             // Receive data from device
             if (!hid_dev_.recvData(&dev_to_host_msg))
             {
@@ -2299,20 +2301,19 @@ namespace mctl
                 is_first = false;
             }
 
-            // Get next position and velocity from trajectory
-            arma::Row<double> pos_next(NumStepper,arma::fill::zeros);
-            arma::Row<double> vel_next(NumStepper,arma::fill::zeros);
-            TrajectoryData traj_data_next;
-
-            rtn_status = trajectory.next(dev_to_host_msg, config_, traj_data_next);
+            rtn_status = trajectory.update(dev_to_host_msg);
             if (!rtn_status.success())
             {
                 break;
             }
 
+            arma::Row<double> pos_next = trajectory.position();
+            arma::Row<double> vel_next = trajectory.velocity();
+            arma::Row<uint8_t> dout_next = trajectory.digital_output();
+
             // convert positions to indices
-            arma::Row<int32_t> ind_pos_next = config_.unit_to_index(traj_data_next.pos);
-            arma::Row<int32_t> ind_vel_next = config_.unit_to_index(traj_data_next.vel);
+            arma::Row<int32_t> ind_pos_next = config_.unit_to_index(pos_next);
+            arma::Row<int32_t> ind_vel_next = config_.unit_to_index(vel_next);
 
             arma::Row<int32_t> axis_curr = get_index_position_arma(dev_to_host_msg);
             arma::Row<int32_t> error = ind_pos_next - axis_curr;
@@ -2328,7 +2329,7 @@ namespace mctl
             }
             for (int i=0; i<NumDigitalOutput; i++)
             {
-                host_to_dev_msg.digital_output[i] = traj_data_next.dio(i);
+                host_to_dev_msg.digital_output[i] = dout_next(i);
             }
 
             // Send message to device
@@ -2340,7 +2341,7 @@ namespace mctl
             }
 
             // Update Outscan data
-            CommandData cmd_data = {ind_pos_next, ind_vel_next, traj_data_next.dio};
+            CommandData cmd_data = {ind_pos_next, ind_vel_next, dout_next};
             data.update(dev_to_host_msg, cmd_data);
 
             // Display position
@@ -2773,35 +2774,6 @@ namespace mctl
             }
         }
         return check_status(rtn_status);
-    }
-
-
-    // Utility functions
-    // ----------------------------------------------------------------------------------
-    OperatingMode get_operating_mode(DevToHostMsg msg)
-    {
-        OperatingMode mode = OperatingMode(msg.status & ModeBitsMask);
-        return mode;
-    }
-
-    std::vector<int32_t> get_index_position_std(DevToHostMsg msg)
-    {
-        std::vector<int32_t> ind_vec(NumStepper);
-        for (auto num : StepperList)
-        {
-            ind_vec[num] = msg.stepper_position[num];
-        }
-        return ind_vec;
-    }
-    
-    arma::Row<int32_t> get_index_position_arma(DevToHostMsg msg)
-    {
-        arma::Row<int32_t> ind_vec(NumStepper);
-        for (auto num : StepperList)
-        {
-            ind_vec(num) = msg.stepper_position[num];
-        }
-        return ind_vec;
     }
 
 } // namespace mctl 
