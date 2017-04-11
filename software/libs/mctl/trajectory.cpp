@@ -89,6 +89,10 @@ namespace mctl
     }
 
 
+    double Trajectory::message_period()
+    {
+        return 1.0e-6*double(MessagePeriod_us);
+    }
 
 
     arma::Row<double> Trajectory::position()
