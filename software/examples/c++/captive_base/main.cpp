@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     if (!ok)
     {
         std::cout << "error: ready for outscan - check mode and homing" << std::endl;
+        exit(0);
     }
 
     // Run captive trajectory

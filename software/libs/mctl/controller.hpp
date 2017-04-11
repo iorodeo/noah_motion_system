@@ -208,21 +208,6 @@ namespace mctl
             RtnStatus set_mode_velocity_control();
     };
 
-    // Utility functions
-    // --------------------------------------------------------------------
-    OperatingMode get_operating_mode(DevToHostMsg msg);
-    std::vector<int32_t> get_index_position_std(DevToHostMsg msg);
-    arma::Row<int32_t>   get_index_position_arma(DevToHostMsg msg);
-
-
 } // namespace mctl
 
-// Using class method as callback
-// --------------------------------------------------------------------------------------
-//void run(std::function<void(int)> update);
-//
-// Calling class method
-// --------------------------------------------------------------------------------------
-//std::function<void(int)> func = std::bind(&Test::update, test, std::placeholders::_1);
-//controller.run(func);
 #endif
