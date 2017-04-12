@@ -38,16 +38,19 @@ RtnStatus JoyTrajectory::update(DevToHostMsg msg)
     captive_vel_ += (dt/mass_)*force_total;
     captive_pos_ += dt*captive_vel_;
 
-    // Set next motor position and velocity
+    // Create matrices for motor positon and velocity 
     arma::Row<double> pos_next(NumStepper,arma::fill::zeros);
     arma::Row<double> vel_next(NumStepper,arma::fill::zeros);
 
+    // Set captive pos and vel for appropriate axis
     pos_next(captive_axis_) = captive_pos_;
     vel_next(captive_axis_) = captive_vel_;
 
+    // Set next motor position and velocity
     set_position(pos_next);
     set_velocity(vel_next);
 
+    // Check if done
     set_done(done_);
 
     return rtn_status;
