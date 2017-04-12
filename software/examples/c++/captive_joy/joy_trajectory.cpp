@@ -17,8 +17,6 @@ JoyTrajectory::JoyTrajectory(Joystick &joystick)
 }
 
 
-
-
 RtnStatus JoyTrajectory::update(DevToHostMsg msg)
 {
     RtnStatus  rtn_status;
@@ -28,7 +26,7 @@ RtnStatus JoyTrajectory::update(DevToHostMsg msg)
     double dt = message_period();
     arma::Row<double> ft_vector = force_and_torque(msg);
 
-    // Extract relevant force axis and compute total force
+    // Extract force for relevant and compute total force
     double force_sensor = ft_vector(ft_axis_);
     double force_spring = -spring_const_*(captive_pos_ - spring_zero_);
     double force_damping = -damping_coef_*captive_vel_;
@@ -46,7 +44,7 @@ RtnStatus JoyTrajectory::update(DevToHostMsg msg)
     pos_next(captive_axis_) = captive_pos_;
     vel_next(captive_axis_) = captive_vel_;
 
-    // Set next motor position and velocity
+    // Set next motor position and velocity for controller
     set_position(pos_next);
     set_velocity(vel_next);
 
