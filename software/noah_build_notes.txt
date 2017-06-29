@@ -1,0 +1,58 @@
+Build instructions
+===================
+
+
+Required tools and libraries
+----------------------------
+
+mercurial    - revision control system
+cmake        - cross-platform, open-source make system
+g++          - gnu c++ compiler, requires version >= 4.9
+libusb       - userspace USB programming library and development files
+libhdf5-dev  - Hierarchical Data Format 5 (HDF5) - development files - serial version
+armadillo    - streamlined C++ linear algebra library - Headers
+
+  
+
+# Install with the following command
+sudo apt-get install mercurial cmake g++ libusb-0.1-4 libusb-dev libhdf5-dev libarmadillo-dev 
+
+
+
+Build and install
+----------------
+
+# clone copy of repository
+hg clone http://bitbucket.org/iorodeo/noah_motion_system
+
+# create a build directory (wherever you want location of your choosing) 
+mkdir build
+
+
+# move into build directory
+cd build
+
+# Run cmake to generate make file
+cmake <path to noah_motion_system/software directory>
+
+# Run make to build software
+make 
+
+# Install
+sudo make install
+
+
+Setup Teensy 3.2 udev rules
+----------------------------
+
+# get udev rules file from here https://www.pjrc.com/teensy/49-teensy.rules
+
+# copy to udev rules location
+sudo cp 49-teensy.rules /etc/udev/rules.d/
+
+# reload rules
+sudo udevadm control --reload-rules
+
+
+
+
