@@ -1,0 +1,50 @@
+<!doctype html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Test Client </title>
+</head>
+
+<body> 
+
+  <!-- css to make things look pretty -->
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.css">
+
+  <!-- javascript libraries -->
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vue-material"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+
+  <div class="container" id="app">
+
+    <md-toolbar>
+      <h2 class="md-title" style="flex: 1"> Socket.io Test Client </h2> 
+    </md-toolbar>
+
+    <md-layout md-column>
+      <md-layout md-row>
+        <md-table>
+          <md-table-header>
+            <md-table-row>
+              <md-table-head> # </md-table-head>
+              <md-table-head> key </md-table-head>
+              <md-table-head> value </md-table-head>
+            </md-table-row>
+          </md-table-header>
+          <md-table-body>
+            <md-table-row v-for="(value, key, index) in message" v-bind:value="value" v-bind:key="key" v-bind:index="index">
+              <md-table-cell> {{index}} </md-table-cell>
+              <md-table-cell> {{key}} </md-table-cell>
+              <md-table-cell> {{value}} </md-table-cell>
+            </md-table-row>
+          </md-table-body>
+        </md-table>
+      </md-layout>
+    </md-layout>
+
+  </div>
+
+  <script src="app.js" type="text/javascript" charset="utf-8"> </script>
+
+</body>
