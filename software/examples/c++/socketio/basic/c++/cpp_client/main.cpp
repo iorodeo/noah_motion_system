@@ -10,8 +10,8 @@
 int main(int argc, char *argv[])
 {
     const int number_of_sends = 2000;
-    const int number_of_items = 10;
-    const int sleep_dt_ms = 20;
+    const int number_of_items = 50;
+    const int sleep_dt_ms = 50;
 
     std::string server_address("http://localhost:3000");
     sio::client sioClient;
