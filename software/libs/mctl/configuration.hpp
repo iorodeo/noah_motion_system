@@ -147,6 +147,7 @@ namespace mctl
             RtnStatus load_max_accel(json config_json);
             RtnStatus load_outscan_config(json config_json);
             RtnStatus load_joystick_config(json config_json);
+            RtnStatus load_gain(json config_json);
             RtnStatus load_stepper_values(json config_json, std::string key, std::map<Axis,double> &value_map);
             RtnStatus get_config_file_ifstream(std::string filename, std::ifstream &config_ifs);
 
