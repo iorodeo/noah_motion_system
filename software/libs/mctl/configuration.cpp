@@ -157,6 +157,12 @@ namespace mctl
             return rtn_status;
         }
 
+        rtn_status = load_gain(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
         rtn_status = load_joystick_config(config_json);
 
         return rtn_status;
@@ -324,6 +330,7 @@ namespace mctl
         ss << "joystick device:         " << joystick_device_ << std::endl;
         ss << "outscan start delay:     " << outscan_start_delay_ << " (ms)" << std::endl;
         ss << "outscan # bias samples:  " << outscan_num_bias_samples_ << std::endl;
+        ss << "gain:                    " << gain_ << std::endl;
         return ss.str();
     }
 
@@ -1254,6 +1261,44 @@ namespace mctl
             }
 
         } // if (config_json.count("joystick"))
+        return rtn_status;
+    }
+
+
+    RtnStatus Configuration::load_gain(json config_json)
+    {
+        RtnStatus rtn_status;
+
+        if (!config_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration root must be object");
+            return rtn_status;
+        }
+
+        if (!config_json.count("gain"))
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: configuration does not contain gain");
+            return rtn_status;
+        }
+
+        if (!config_json["gain"].is_number())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration gain must be number");
+            return rtn_status;
+        }
+
+        int gain_tmp = int(config_json["gain"]);
+        if (gain_tmp < 0)
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration gain must be >=0");
+            return rtn_status;
+        }
+        gain_ = gain_tmp;
+
         return rtn_status;
     }
 
