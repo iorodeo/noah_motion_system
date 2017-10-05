@@ -163,6 +163,12 @@ namespace mctl
             return rtn_status;
         }
 
+        rtn_status = load_axis_to_unit_conversion(config_json);
+        if (!rtn_status.success())
+        {
+            return rtn_status;
+        }
+
         rtn_status = load_joystick_config(config_json);
 
         return rtn_status;
@@ -1039,6 +1045,45 @@ namespace mctl
         return rtn_status;
     }
 
+
+    RtnStatus Configuration::load_axis_values(json config_json, std::string key, std::map<Axis,double> &value_map)
+    {
+        RtnStatus rtn_status;
+        if (!config_json.is_object())
+        {
+            rtn_status.set_success(false);
+            rtn_status.set_error_msg("error: json configuration root must be object");
+            return rtn_status;
+        }
+
+        if (config_json.count(key))
+        {
+            value_map.clear();
+            json key_json = config_json[key];
+            for (auto axis : AxisList)
+            {
+                std::string axis_name = AxisToStringMap[axis];
+                if (key_json.count(axis_name))
+                {
+                    if (key_json[axis_name].is_number())
+                    {
+                        double value = key_json[axis_name];
+                        value_map.emplace(axis, value);
+                    }
+                    else
+                    {
+                        std::ostringstream oss;
+                        oss << "error: " << axis_name << " value for " << key << " is not a number";
+                        rtn_status.set_success(false);
+                        rtn_status.set_error_msg(oss.str());
+                        break;
+                    }
+                }
+            }
+        }
+        return rtn_status;
+    }
+
     RtnStatus Configuration::load_outscan_config(json config_json)
     {
         RtnStatus rtn_status;
@@ -1299,6 +1344,29 @@ namespace mctl
         }
         gain_ = gain_tmp;
 
+        return rtn_status;
+    }
+
+    RtnStatus Configuration::load_axis_to_unit_conversion(json config_json)
+    {
+        RtnStatus rtn_status;
+        rtn_status = load_axis_values(config_json,"axis_to_unit_conversion", axis_to_unit_conversion_map_);
+        if (rtn_status.success())
+        {
+            for (auto kv : axis_to_unit_conversion_map_)
+            {
+                if (kv.second <= 0.0)
+                {
+                    rtn_status.set_success(false);
+                    std::ostringstream oss;
+                    oss << "error: axis to unit conversion for axis="; 
+                    oss << AxisToStringMap[kv.first] << " ";
+                    oss << "must be > 0";
+                    rtn_status.set_error_msg(oss.str());
+                    break;
+                }
+            } 
+        }
         return rtn_status;
     }
 
